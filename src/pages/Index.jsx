@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Search, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { navItems } from '../nav-items';
 
 const Index = () => {
   return (
@@ -34,11 +36,14 @@ const Index = () => {
         <aside className="w-64 mr-8">
           <nav>
             <ul className="space-y-2">
-              {['Library', 'Templates', 'Data', 'Batches', 'Chains'].map((item) => (
-                <li key={item}>
-                  <Button variant="ghost" className="w-full justify-start">
-                    {item}
-                  </Button>
+              {navItems.map((item) => (
+                <li key={item.title}>
+                  <Link to={item.to}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      {item.icon}
+                      <span className="ml-2">{item.title}</span>
+                    </Button>
+                  </Link>
                 </li>
               ))}
             </ul>
