@@ -1,4 +1,3 @@
-```jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useGroupDetails } from '@/hooks/useGroupDetails';
@@ -104,7 +103,7 @@ const GroupDetail = () => {
                 <Card 
                   key={prompt.id}
                   className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-                  onClick={() => navigate(`/prompts/${prompt.id}`)}
+                  onClick={() => { navigate(`/prompts/${prompt.id}`); }}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
@@ -136,4 +135,3 @@ const GroupDetail = () => {
 };
 
 export default GroupDetail;
-```
