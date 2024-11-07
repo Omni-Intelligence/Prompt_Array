@@ -5,9 +5,10 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, Search, Star } from 'lucide-react';
+import { Bell, Search, Star, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { navItems } from '../nav-items';
+import CreatePromptSheet from '@/components/CreatePromptSheet';
 
 const Index = () => {
   return (
@@ -55,7 +56,14 @@ const Index = () => {
             <h1 className="text-3xl font-bold">Your Library</h1>
             <div className="space-x-2">
               <Button variant="outline">Create Group</Button>
-              <Button>Create Prompt</Button>
+              <CreatePromptSheet 
+                trigger={
+                  <Button>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Prompt
+                  </Button>
+                }
+              />
             </div>
           </div>
 

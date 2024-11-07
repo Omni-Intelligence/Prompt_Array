@@ -1,18 +1,10 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft, Plus, Edit2, Trash2, X } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { ArrowLeft, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import CreatePromptSheet from '@/components/CreatePromptSheet';
 import {
   Card,
   CardContent,
@@ -20,20 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
 
 const GroupDetail = () => {
   const { groupId } = useParams();
   const navigate = useNavigate();
-  const [isPromptSheetOpen, setIsPromptSheetOpen] = React.useState(false);
-  const [newPrompt, setNewPrompt] = React.useState({
-    title: '',
-    content: '',
-    description: '',
-    tags: []
-  });
-  const [currentTag, setCurrentTag] = React.useState('');
 
   // Mock data - would be replaced with actual API calls
   const group = {
@@ -61,37 +43,6 @@ const GroupDetail = () => {
     }
   ];
 
-  const handleCreatePrompt = (e) => {
-    e.preventDefault();
-    if (!newPrompt.title || !newPrompt.content) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    
-    // Here you would typically make an API call to create the prompt
-    toast.success("Prompt created successfully!");
-    setIsPromptSheetOpen(false);
-    setNewPrompt({ title: '', content: '', description: '', tags: [] });
-  };
-
-  const handleAddTag = (e) => {
-    e.preventDefault();
-    if (currentTag && !newPrompt.tags.includes(currentTag)) {
-      setNewPrompt(prev => ({
-        ...prev,
-        tags: [...prev.tags, currentTag]
-      }));
-      setCurrentTag('');
-    }
-  };
-
-  const removeTag = (tagToRemove) => {
-    setNewPrompt(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <div className="p-8 max-w-7xl mx-auto">
@@ -107,85 +58,14 @@ const GroupDetail = () => {
 
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Prompts</h2>
-          <Sheet open={isPromptSheetOpen} onOpenChange={setIsPromptSheetOpen}>
-            <SheetTrigger asChild>
+          <CreatePromptSheet 
+            trigger={
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
                 Create Prompt
               </Button>
-            </SheetTrigger>
-            <SheetContent className="w-[400px] sm:w-[540px]">
-              <SheetHeader>
-                <SheetTitle>Create New Prompt</SheetTitle>
-                <SheetDescription>
-                  Add a new prompt to this group
-                </SheetDescription>
-              </SheetHeader>
-              <form onSubmit={handleCreatePrompt} className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <label htmlFor="title" className="text-sm font-medium">
-                    Title
-                  </label>
-                  <Input
-                    id="title"
-                    value={newPrompt.title}
-                    onChange={(e) => setNewPrompt(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Enter prompt title"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="description" className="text-sm font-medium">
-                    Description
-                  </label>
-                  <Input
-                    id="description"
-                    value={newPrompt.description}
-                    onChange={(e) => setNewPrompt(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Enter prompt description"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="content" className="text-sm font-medium">
-                    Prompt Content
-                  </label>
-                  <Textarea
-                    id="content"
-                    value={newPrompt.content}
-                    onChange={(e) => setNewPrompt(prev => ({ ...prev, content: e.target.value }))}
-                    placeholder="Enter your prompt content"
-                    className="min-h-[200px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Tags</label>
-                  <div className="flex gap-2 flex-wrap mb-2">
-                    {newPrompt.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="gap-1">
-                        {tag}
-                        <button
-                          onClick={() => removeTag(tag)}
-                          className="ml-1 hover:text-destructive"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                  <form onSubmit={handleAddTag} className="flex gap-2">
-                    <Input
-                      value={currentTag}
-                      onChange={(e) => setCurrentTag(e.target.value)}
-                      placeholder="Add a tag"
-                    />
-                    <Button type="submit" variant="secondary">Add</Button>
-                  </form>
-                </div>
-                <Button type="submit" className="w-full">
-                  Create Prompt
-                </Button>
-              </form>
-            </SheetContent>
-          </Sheet>
+            }
+          />
         </div>
 
         <ScrollArea className="h-[600px]">
