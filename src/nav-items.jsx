@@ -9,7 +9,6 @@ import {
   Globe2Icon
 } from "lucide-react";
 import Index from "./pages/Index.jsx";
-import Register from "./pages/Register.jsx";
 import Library from "./pages/Library.jsx";
 import Groups from "./pages/Groups.jsx";
 import Favourites from "./pages/Favourites.jsx";
@@ -74,12 +73,5 @@ export const navItems = [
     icon: <Settings2Icon className="h-4 w-4" />,
     page: <TeamSettings />,
     color: "from-violet-500 to-purple-500"
-  },
-  {
-    title: "Register",
-    to: "/register",
-    icon: <HomeIcon className="h-4 w-4" />,
-    page: <Register />,
-    color: "from-pink-500 to-rose-500"
   },
 ];
