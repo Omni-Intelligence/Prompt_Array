@@ -11,6 +11,21 @@ import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import UserNav from '@/components/UserNav';
 
+// Let's extract the QuickAccessGroups into a separate component
+const QuickAccessGroup = ({ group }) => (
+  <Link 
+    to={`/groups/${group.id}`}
+    className="group"
+  >
+    <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 card-hover">
+      <CardContent className="p-6">
+        <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">{group.name}</h3>
+        <p className="text-sm text-muted-foreground">{group.count} prompts</p>
+      </CardContent>
+    </Card>
+  </Link>
+);
+
 const Index = () => {
   const navigate = useNavigate();
   const [isSignedIn, setIsSignedIn] = React.useState(true);
@@ -27,10 +42,10 @@ const Index = () => {
   };
 
   const quickAccessGroups = [
-    { id: 1, name: 'Blog Writing', count: 12, color: 'from-blue-500 to-indigo-500' },
-    { id: 2, name: 'Social Media', count: 8, color: 'from-purple-500 to-pink-500' },
-    { id: 3, name: 'Email Marketing', count: 15, color: 'from-green-500 to-emerald-500' },
-    { id: 4, name: 'SEO Content', count: 6, color: 'from-orange-500 to-red-500' },
+    { id: 1, name: 'Blog Writing', count: 12 },
+    { id: 2, name: 'Social Media', count: 8 },
+    { id: 3, name: 'Email Marketing', count: 15 },
+    { id: 4, name: 'SEO Content', count: 6 },
   ];
 
   const dummyPrompts = {
@@ -120,18 +135,7 @@ const Index = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {quickAccessGroups.map((group) => (
-              <Link 
-                key={group.id}
-                to={`/groups/${group.id}`}
-                className="group"
-              >
-                <Card className={`bg-gradient-to-br ${group.color} hover:shadow-lg transition-all duration-300 hover:scale-[1.02] text-white`}>
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold mb-1">{group.name}</h3>
-                    <p className="text-sm opacity-90">{group.count} prompts</p>
-                  </CardContent>
-                </Card>
-              </Link>
+              <QuickAccessGroup key={group.id} group={group} />
             ))}
           </div>
 
