@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Star, Plus } from 'lucide-react';
+import { Star, Plus, Search, Layout, Folder } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
@@ -20,12 +20,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <header className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="PromptHub Logo" className="h-10 w-10" />
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">PromptHub</span>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <img src="/logo.svg" alt="PromptHub Logo" className="h-8 w-8" />
+            <span className="text-xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              PromptHub
+            </span>
           </div>
           <div className="flex items-center space-x-4">
             <UserNav isSignedIn={isSignedIn} onSignOut={handleSignOut} />
@@ -33,9 +35,9 @@ const Index = () => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-6">
-        <aside className="w-64 flex-shrink-0">
-          <nav className="space-y-1">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-8">
+        <aside className="w-64 flex-shrink-0 hidden md:block">
+          <nav className="space-y-2">
             {navItems.map((item) => (
               <Link 
                 key={item.title}
@@ -45,14 +47,10 @@ const Index = () => {
                 <Button 
                   variant="ghost" 
                   className={`w-full justify-start group relative overflow-hidden transition-all duration-300
-                    before:absolute before:inset-0 before:bg-gradient-to-r ${item.color} before:opacity-0 
-                    before:transition-opacity hover:before:opacity-100 hover:text-white
-                    dark:hover:text-white`}
+                    hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 dark:hover:from-primary/20 dark:hover:to-purple-500/20`}
                 >
                   <span className="relative z-10 flex items-center">
-                    <span className="mr-3 transition-transform group-hover:scale-110">
-                      {item.icon}
-                    </span>
+                    <span className="mr-3 text-primary">{item.icon}</span>
                     <span className="font-medium">{item.title}</span>
                   </span>
                 </Button>
@@ -61,82 +59,88 @@ const Index = () => {
           </nav>
         </aside>
 
-        <main className="flex-1">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+        <main className="flex-1 space-y-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Your Library
             </h1>
-            <div className="space-x-2">
+            <div className="flex gap-2">
               <CreateGroupSheet 
                 trigger={
-                  <Button variant="outline" className="hover:bg-primary/10 hover:text-primary transition-colors">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Group
+                  <Button variant="outline" className="group">
+                    <Folder className="mr-2 h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
+                    New Group
                   </Button>
                 }
               />
               <CreatePromptSheet 
                 trigger={
-                  <Button className="bg-primary hover:bg-primary/90 transition-colors">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Prompt
+                  <Button className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 transition-colors group">
+                    <Plus className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                    New Prompt
                   </Button>
                 }
               />
             </div>
           </div>
 
-          <section className="mb-8">
-            <div className="flex justify-between items-center mb-4">
+          <section>
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Groups</h2>
-              <Button variant="link" className="text-primary">See Less</Button>
+              <Button variant="link" className="text-primary hover:text-primary/80">View All</Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { id: 1, title: 'Content Generation', prompts: 10 },
-                { id: 2, title: 'PromptLab Prompts', prompts: 5 },
-                { id: 3, title: 'Latency Newsletter', prompts: 3 },
-                { id: 4, title: 'Chatbot', prompts: 2 },
-                { id: 5, title: 'Prompt Engineering', prompts: 4 },
-                { id: 6, title: 'Financial Prompts', prompts: 12 },
+                { id: 1, title: 'Content Generation', prompts: 10, icon: '✍️' },
+                { id: 2, title: 'PromptLab Prompts', prompts: 5, icon: '🧪' },
+                { id: 3, title: 'Latency Newsletter', prompts: 3, icon: '📰' },
+                { id: 4, title: 'Chatbot', prompts: 2, icon: '🤖' },
+                { id: 5, title: 'Prompt Engineering', prompts: 4, icon: '⚡' },
+                { id: 6, title: 'Financial Prompts', prompts: 12, icon: '💰' },
               ].map((group) => (
                 <Card 
                   key={group.id}
-                  className="card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50"
+                  className="group cursor-pointer card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50"
                   onClick={() => navigate(`/groups/${group.id}`)}
                 >
-                  <CardHeader>
-                    <CardTitle>{group.title}</CardTitle>
+                  <CardHeader className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl">{group.icon}</span>
+                      <span className="text-sm text-muted-foreground">{group.prompts} prompts</span>
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                      {group.title}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{group.prompts} prompts</p>
-                  </CardContent>
                 </Card>
               ))}
             </div>
           </section>
 
-          <section>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All prompts</h2>
-              <div className="w-64">
+          <section className="mt-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All Prompts</h2>
+              <div className="w-full sm:w-64 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <Input 
                   type="search" 
-                  placeholder="Search" 
-                  className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                  placeholder="Search prompts..." 
+                  className="pl-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50"
                 />
               </div>
             </div>
+            
             <Tabs defaultValue="recent" className="w-full">
-              <TabsList className="w-full justify-start bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+              <TabsList className="w-full justify-start bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50">
                 <TabsTrigger value="recent">Recent</TabsTrigger>
                 <TabsTrigger value="favorites">Favorites</TabsTrigger>
-                <TabsTrigger value="owned">Owned by me</TabsTrigger>
+                <TabsTrigger value="owned">My Prompts</TabsTrigger>
                 <TabsTrigger value="templates">Templates</TabsTrigger>
               </TabsList>
             </Tabs>
+
             <ScrollArea className="h-[400px] mt-4">
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {[
                   { title: 'Notes to blog posts', icon: '📝', time: '8 minutes ago', starred: true },
                   { title: 'Vulnerability scanner - prod', icon: '🔒', time: '10 minutes ago' },
@@ -146,16 +150,20 @@ const Index = () => {
                 ].map((prompt) => (
                   <li 
                     key={prompt.title} 
-                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between border border-gray-200 dark:border-gray-700"
+                    className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-primary/20 transition-all duration-300 flex items-center justify-between cursor-pointer"
                   >
-                    <div className="flex items-center">
-                      <span className="text-2xl mr-3">{prompt.icon}</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl group-hover:scale-110 transition-transform">{prompt.icon}</span>
                       <div>
-                        <h3 className="font-semibold text-gray-800 dark:text-gray-200">{prompt.title}</h3>
+                        <h3 className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors">
+                          {prompt.title}
+                        </h3>
                         <p className="text-sm text-muted-foreground">Last updated {prompt.time}</p>
                       </div>
                     </div>
-                    {prompt.starred && <Star className="text-primary fill-primary" />}
+                    {prompt.starred && (
+                      <Star className="text-primary fill-primary group-hover:scale-110 transition-transform" />
+                    )}
                   </li>
                 ))}
               </ul>
