@@ -2,10 +2,10 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Star, Plus, Search, Layout, Folder } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Star, Plus, Search, Folder } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
@@ -27,7 +27,6 @@ const QuickAccessGroup = ({ group }) => (
 );
 
 const Index = () => {
-  const navigate = useNavigate();
   const [isSignedIn, setIsSignedIn] = React.useState(true);
   const [selectedPrompt, setSelectedPrompt] = React.useState(null);
   const [isEditSheetOpen, setIsEditSheetOpen] = React.useState(false);
@@ -46,6 +45,8 @@ const Index = () => {
     { id: 2, name: 'Social Media', count: 8 },
     { id: 3, name: 'Email Marketing', count: 15 },
     { id: 4, name: 'SEO Content', count: 6 },
+    { id: 5, name: 'Technical Writing', count: 10 },
+    { id: 6, name: 'Creative Stories', count: 9 }
   ];
 
   const dummyPrompts = {
@@ -133,7 +134,7 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {quickAccessGroups.map((group) => (
               <QuickAccessGroup key={group.id} group={group} />
             ))}
