@@ -1,4 +1,16 @@
-import { HomeIcon, BookOpenIcon, FileTextIcon, DatabaseIcon, LayersIcon, LinkIcon, Settings2Icon } from "lucide-react";
+import { 
+  HomeIcon, 
+  BookOpenIcon, 
+  FileTextIcon, 
+  DatabaseIcon, 
+  LayersIcon, 
+  LinkIcon, 
+  Settings2Icon,
+  DollarSignIcon,
+  UsersIcon,
+  StarIcon,
+  LayoutTemplateIcon
+} from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Register from "./pages/Register.jsx";
 import Library from "./pages/Library.jsx";
@@ -20,9 +32,27 @@ export const navItems = [
     page: <Library />,
   },
   {
+    title: "Payments",
+    to: "/payments",
+    icon: <DollarSignIcon className="h-4 w-4" />,
+    page: null,
+  },
+  {
+    title: "Groups",
+    to: "/groups",
+    icon: <UsersIcon className="h-4 w-4" />,
+    page: null,
+  },
+  {
+    title: "Favourites",
+    to: "/favourites",
+    icon: <StarIcon className="h-4 w-4" />,
+    page: null,
+  },
+  {
     title: "Templates",
     to: "/templates",
-    icon: <FileTextIcon className="h-4 w-4" />,
+    icon: <LayoutTemplateIcon className="h-4 w-4" />,
     page: null,
   },
   {
