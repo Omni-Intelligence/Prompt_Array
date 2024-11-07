@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { navItems } from "./nav-items";
 import GroupDetail from "./pages/GroupDetail";
 import PromptDetail from "./pages/PromptDetail";
+import ChainDetail from "./pages/ChainDetail";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           ))}
           <Route path="/groups/:groupId" element={<GroupDetail />} />
           <Route path="/prompts/:promptId" element={<PromptDetail />} />
+          <Route path="/chains/:chainId" element={<ChainDetail />} />
         </Routes>
       </BrowserRouter>
     </>
