@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Star, Plus, Search, Layout, Folder } from 'lucide-react';
@@ -14,9 +14,36 @@ import UserNav from '@/components/UserNav';
 const Index = () => {
   const navigate = useNavigate();
   const [isSignedIn, setIsSignedIn] = React.useState(true);
+  const [selectedPrompt, setSelectedPrompt] = React.useState(null);
+  const [isEditSheetOpen, setIsEditSheetOpen] = React.useState(false);
 
   const handleSignOut = () => {
     setIsSignedIn(false);
+  };
+
+  const handlePromptClick = (prompt) => {
+    setSelectedPrompt(prompt);
+    setIsEditSheetOpen(true);
+  };
+
+  const dummyPrompts = {
+    recent: [
+      { id: 1, title: 'Blog Post Generator', icon: '✍️', time: '8 minutes ago', starred: true, content: 'Create an engaging blog post about [topic] that includes an introduction, three main points, and a conclusion. Use a conversational tone and include relevant examples.' },
+      { id: 2, title: 'Social Media Caption', icon: '📱', time: '10 minutes ago', content: 'Write an engaging social media caption for [product/service] that includes a hook, value proposition, and clear call-to-action. Keep it under 280 characters.' },
+      { id: 3, title: 'Email Newsletter', icon: '📧', time: '20 minutes ago', content: 'Generate a weekly newsletter template that includes a personal greeting, main story highlights, and upcoming events section.' },
+    ],
+    favorites: [
+      { id: 4, title: 'Product Description', icon: '🛍️', time: '3 days ago', starred: true, content: 'Create a compelling product description for [product name] highlighting its key features, benefits, and unique selling points.' },
+      { id: 5, title: 'SEO Meta Tags', icon: '🔍', time: '1 week ago', starred: true, content: 'Generate SEO-optimized meta title and description for [page type] that includes primary keyword and compelling call-to-action.' },
+    ],
+    owned: [
+      { id: 6, title: 'Meeting Summary', icon: '📝', time: '2 days ago', content: 'Summarize the key points, action items, and decisions made during the [meeting topic] meeting.' },
+      { id: 7, title: 'Code Documentation', icon: '💻', time: '4 days ago', content: 'Write clear and concise documentation for [function/feature] including purpose, parameters, and example usage.' },
+    ],
+    templates: [
+      { id: 8, title: 'Customer Support Response', icon: '🎯', time: '1 day ago', content: 'Template for responding to customer inquiries about [issue type] with empathy and clear resolution steps.' },
+      { id: 9, title: 'Project Proposal', icon: '📊', time: '5 days ago', content: 'Create a professional project proposal outline including objectives, scope, timeline, and budget sections.' },
+    ]
   };
 
   return (
@@ -86,39 +113,6 @@ const Index = () => {
 
           <section>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Groups</h2>
-              <Button variant="link" className="text-primary hover:text-primary/80">View All</Button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { id: 1, title: 'Content Generation', prompts: 10, icon: '✍️' },
-                { id: 2, title: 'PromptLab Prompts', prompts: 5, icon: '🧪' },
-                { id: 3, title: 'Latency Newsletter', prompts: 3, icon: '📰' },
-                { id: 4, title: 'Chatbot', prompts: 2, icon: '🤖' },
-                { id: 5, title: 'Prompt Engineering', prompts: 4, icon: '⚡' },
-                { id: 6, title: 'Financial Prompts', prompts: 12, icon: '💰' },
-              ].map((group) => (
-                <Card 
-                  key={group.id}
-                  className="group cursor-pointer card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50"
-                  onClick={() => navigate(`/groups/${group.id}`)}
-                >
-                  <CardHeader className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl">{group.icon}</span>
-                      <span className="text-sm text-muted-foreground">{group.prompts} prompts</span>
-                    </div>
-                    <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                      {group.title}
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-          </section>
-
-          <section className="mt-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All Prompts</h2>
               <div className="w-full sm:w-64 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
@@ -137,40 +131,45 @@ const Index = () => {
                 <TabsTrigger value="owned">My Prompts</TabsTrigger>
                 <TabsTrigger value="templates">Templates</TabsTrigger>
               </TabsList>
-            </Tabs>
 
-            <ScrollArea className="h-[400px] mt-4">
-              <ul className="space-y-3">
-                {[
-                  { title: 'Notes to blog posts', icon: '📝', time: '8 minutes ago', starred: true },
-                  { title: 'Vulnerability scanner - prod', icon: '🔒', time: '10 minutes ago' },
-                  { title: 'LinkedIn post generator', icon: '💼', time: '20 minutes ago' },
-                  { title: 'HTML cleaner', icon: '🧹', time: '3 days ago' },
-                  { title: 'TechCrunch summarizer', icon: '📰', time: '1 week ago' },
-                ].map((prompt) => (
-                  <li 
-                    key={prompt.title} 
-                    className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-primary/20 transition-all duration-300 flex items-center justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-2xl group-hover:scale-110 transition-transform">{prompt.icon}</span>
-                      <div>
-                        <h3 className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors">
-                          {prompt.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">Last updated {prompt.time}</p>
-                      </div>
-                    </div>
-                    {prompt.starred && (
-                      <Star className="text-primary fill-primary group-hover:scale-110 transition-transform" />
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </ScrollArea>
+              {Object.entries(dummyPrompts).map(([category, prompts]) => (
+                <TabsContent key={category} value={category}>
+                  <ScrollArea className="h-[400px]">
+                    <ul className="space-y-3">
+                      {prompts.map((prompt) => (
+                        <li 
+                          key={prompt.id} 
+                          onClick={() => handlePromptClick(prompt)}
+                          className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-primary/20 transition-all duration-300 flex items-center justify-between cursor-pointer"
+                        >
+                          <div className="flex items-center gap-4">
+                            <span className="text-2xl group-hover:scale-110 transition-transform">{prompt.icon}</span>
+                            <div>
+                              <h3 className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors">
+                                {prompt.title}
+                              </h3>
+                              <p className="text-sm text-muted-foreground">Last updated {prompt.time}</p>
+                            </div>
+                          </div>
+                          {prompt.starred && (
+                            <Star className="text-primary fill-primary group-hover:scale-110 transition-transform" />
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </ScrollArea>
+                </TabsContent>
+              ))}
+            </Tabs>
           </section>
         </main>
       </div>
+      <CreatePromptSheet 
+        trigger={<div />}
+        isOpen={isEditSheetOpen}
+        onOpenChange={setIsEditSheetOpen}
+        initialData={selectedPrompt}
+      />
     </div>
   );
 };
