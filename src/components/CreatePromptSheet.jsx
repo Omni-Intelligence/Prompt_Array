@@ -16,16 +16,21 @@ import {
 
 const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
   const [newPrompt, setNewPrompt] = React.useState({
-    title: '',
-    content: '',
-    description: '',
-    tags: []
+    title: initialData?.title || '',
+    content: initialData?.content || '',
+    description: initialData?.description || '',
+    tags: initialData?.tags || []
   });
   const [currentTag, setCurrentTag] = React.useState('');
 
   React.useEffect(() => {
     if (initialData) {
-      setNewPrompt(initialData);
+      setNewPrompt({
+        title: initialData.title || '',
+        content: initialData.content || '',
+        description: initialData.description || '',
+        tags: initialData.tags || []
+      });
     }
   }, [initialData]);
 
