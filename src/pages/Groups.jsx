@@ -120,7 +120,11 @@ const Groups = () => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {groups.map((group) => (
-          <Card key={group.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card 
+            key={group.id} 
+            className="hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => navigate(`/groups/${group.id}`)}
+          >
             <CardHeader>
               <CardTitle>{group.title}</CardTitle>
             </CardHeader>
