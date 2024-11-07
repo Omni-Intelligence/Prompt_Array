@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft, Plus, Edit2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, X } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 const GroupDetail = () => {
@@ -29,8 +30,10 @@ const GroupDetail = () => {
   const [newPrompt, setNewPrompt] = React.useState({
     title: '',
     content: '',
-    description: ''
+    description: '',
+    tags: []
   });
+  const [currentTag, setCurrentTag] = React.useState('');
 
   // Mock data - would be replaced with actual API calls
   const group = {
@@ -45,14 +48,16 @@ const GroupDetail = () => {
       title: 'Blog Post Generator',
       description: 'Creates engaging blog post content',
       content: 'Write a blog post about [topic] that includes...',
-      lastUsed: '2 days ago'
+      lastUsed: '2 days ago',
+      tags: ['content', 'blog']
     },
     {
       id: 2,
       title: 'Social Media Caption',
       description: 'Generates social media captions',
       content: 'Create an engaging social media caption for...',
-      lastUsed: '5 days ago'
+      lastUsed: '5 days ago',
+      tags: ['social', 'marketing']
     }
   ];
 
@@ -66,7 +71,25 @@ const GroupDetail = () => {
     // Here you would typically make an API call to create the prompt
     toast.success("Prompt created successfully!");
     setIsPromptSheetOpen(false);
-    setNewPrompt({ title: '', content: '', description: '' });
+    setNewPrompt({ title: '', content: '', description: '', tags: [] });
+  };
+
+  const handleAddTag = (e) => {
+    e.preventDefault();
+    if (currentTag && !newPrompt.tags.includes(currentTag)) {
+      setNewPrompt(prev => ({
+        ...prev,
+        tags: [...prev.tags, currentTag]
+      }));
+      setCurrentTag('');
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setNewPrompt(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
   };
 
   return (
@@ -133,6 +156,30 @@ const GroupDetail = () => {
                     className="min-h-[200px]"
                   />
                 </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Tags</label>
+                  <div className="flex gap-2 flex-wrap mb-2">
+                    {newPrompt.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="gap-1">
+                        {tag}
+                        <button
+                          onClick={() => removeTag(tag)}
+                          className="ml-1 hover:text-destructive"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                  <form onSubmit={handleAddTag} className="flex gap-2">
+                    <Input
+                      value={currentTag}
+                      onChange={(e) => setCurrentTag(e.target.value)}
+                      placeholder="Add a tag"
+                    />
+                    <Button type="submit" variant="secondary">Add</Button>
+                  </form>
+                </div>
                 <Button type="submit" className="w-full">
                   Create Prompt
                 </Button>
@@ -164,6 +211,13 @@ const GroupDetail = () => {
                 <CardContent>
                   <div className="bg-muted p-4 rounded-md">
                     <pre className="whitespace-pre-wrap text-sm">{prompt.content}</pre>
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    {prompt.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary">
+                        {tag}
+                      </Badge>
+                    ))}
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
                     Last used: {prompt.lastUsed}
