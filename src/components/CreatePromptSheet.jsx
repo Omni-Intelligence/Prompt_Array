@@ -72,7 +72,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
       <SheetTrigger asChild>
         {trigger}
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[640px]">
+      <SheetContent className="w-[95vw] max-w-[850px] sm:w-[850px]">
         <SheetHeader>
           <SheetTitle>{initialData ? 'Edit Prompt' : 'Create New Prompt'}</SheetTitle>
           <SheetDescription>
