@@ -4,16 +4,24 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bell, Search, Star } from 'lucide-react';
+import { Bell, Search, Star, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Library = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <img src="/placeholder.svg" alt="PromptHub Logo" className="h-8 w-auto mr-2" />
-            <span className="text-xl font-bold">PromptHub</span>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center">
+              <img src="/placeholder.svg" alt="PromptHub Logo" className="h-8 w-auto mr-2" />
+              <span className="text-xl font-bold">PromptHub</span>
+            </div>
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="ghost">Blog</Button>
