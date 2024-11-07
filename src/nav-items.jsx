@@ -14,10 +14,15 @@ import {
 import Index from "./pages/Index.jsx";
 import Register from "./pages/Register.jsx";
 import Library from "./pages/Library.jsx";
+import Payments from "./pages/Payments.jsx";
+import Groups from "./pages/Groups.jsx";
+import Favourites from "./pages/Favourites.jsx";
+import Templates from "./pages/Templates.jsx";
+import Database from "./pages/Database.jsx";
+import Batches from "./pages/Batches.jsx";
+import Chains from "./pages/Chains.jsx";
+import TeamSettings from "./pages/TeamSettings.jsx";
 
-/**
- * Central place for defining the navigation items. Used for navigation components and routing.
- */
 export const navItems = [
   {
     title: "Home",
@@ -35,49 +40,49 @@ export const navItems = [
     title: "Payments",
     to: "/payments",
     icon: <DollarSignIcon className="h-4 w-4" />,
-    page: null,
+    page: <Payments />,
   },
   {
     title: "Groups",
     to: "/groups",
     icon: <UsersIcon className="h-4 w-4" />,
-    page: null,
+    page: <Groups />,
   },
   {
     title: "Favourites",
     to: "/favourites",
     icon: <StarIcon className="h-4 w-4" />,
-    page: null,
+    page: <Favourites />,
   },
   {
     title: "Templates",
     to: "/templates",
     icon: <LayoutTemplateIcon className="h-4 w-4" />,
-    page: null,
+    page: <Templates />,
   },
   {
     title: "Database",
     to: "/database",
     icon: <DatabaseIcon className="h-4 w-4" />,
-    page: null,
+    page: <Database />,
   },
   {
     title: "Batches",
     to: "/batches",
     icon: <LayersIcon className="h-4 w-4" />,
-    page: null,
+    page: <Batches />,
   },
   {
     title: "Chains",
     to: "/chains",
     icon: <LinkIcon className="h-4 w-4" />,
-    page: null,
+    page: <Chains />,
   },
   {
     title: "Team Settings",
     to: "/team-settings",
     icon: <Settings2Icon className="h-4 w-4" />,
-    page: null,
+    page: <TeamSettings />,
   },
   {
     title: "Register",
