@@ -1,49 +1,108 @@
-import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    toast.success("Registration successful! Please check your email to verify your account.");
+    navigate('/');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-      <div className="mb-8">
-        <img src="/placeholder.svg" alt="PromptHub Logo" className="h-12 w-auto" />
-        <h1 className="text-3xl font-bold mt-2">PromptHub</h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold">PromptHub</h1>
+        <p className="text-gray-600 mt-2">Create your account to get started</p>
       </div>
+
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-center">Register</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
-              <Input id="fullName" type="text" placeholder="Enter your full name" className="mt-1" />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input 
+                id="fullName" 
+                type="text" 
+                placeholder="Enter your full name" 
+                required 
+              />
             </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-              <Input id="email" type="email" placeholder="Enter your email" className="mt-1" />
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="Enter your email" 
+                required 
+              />
             </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-              <Input id="password" type="password" placeholder="Enter your password" className="mt-1" />
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                placeholder="Create a password" 
+                required 
+              />
             </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-              <Input id="confirmPassword" type="password" placeholder="Confirm your password" className="mt-1" />
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input 
+                id="confirmPassword" 
+                type="password" 
+                placeholder="Confirm your password" 
+                required 
+              />
             </div>
-            <div className="flex items-center">
-              <Checkbox id="terms" />
-              <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
-                I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox id="terms" required />
+              <label 
+                htmlFor="terms" 
+                className="text-sm text-gray-600"
+              >
+                I agree to the{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Privacy Policy
+                </a>
               </label>
             </div>
-            <Button className="w-full">REGISTER</Button>
+
+            <Button type="submit" className="w-full">
+              Create Account
+            </Button>
+
+            <div className="text-center text-sm text-gray-600">
+              Already have an account?{" "}
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
+                className="text-primary hover:underline"
+              >
+                Sign in
+              </a>
+            </div>
           </form>
-          <div className="mt-4 text-center">
-            <a href="#" className="text-sm text-blue-600 hover:underline">Already registered?</a>
-          </div>
         </CardContent>
       </Card>
     </div>
