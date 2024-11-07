@@ -27,24 +27,45 @@ const Groups = () => {
   const groups = [
     {
       id: 1,
-      title: 'Content Generation',
-      description: 'Prompts for generating various types of content',
-      promptCount: 10,
+      title: 'Blog Writing',
+      description: 'Collection of prompts for writing engaging blog content',
+      promptCount: 12,
       lastUpdated: '2 days ago'
     },
     {
       id: 2,
-      title: 'Customer Support',
-      description: 'Templates for customer service responses',
+      title: 'Social Media',
+      description: 'Prompts for creating engaging social media content',
       promptCount: 8,
       lastUpdated: '1 week ago'
     },
     {
       id: 3,
-      title: 'Social Media',
-      description: 'Prompts for social media content and engagement',
+      title: 'Email Marketing',
+      description: 'Templates and prompts for email campaigns',
       promptCount: 15,
       lastUpdated: '3 days ago'
+    },
+    {
+      id: 4,
+      title: 'SEO Content',
+      description: 'Prompts optimized for search engine visibility',
+      promptCount: 6,
+      lastUpdated: '5 days ago'
+    },
+    {
+      id: 5,
+      title: 'Technical Writing',
+      description: 'Prompts for technical documentation and guides',
+      promptCount: 10,
+      lastUpdated: '1 day ago'
+    },
+    {
+      id: 6,
+      title: 'Creative Stories',
+      description: 'Prompts for creative writing and storytelling',
+      promptCount: 9,
+      lastUpdated: '4 days ago'
     }
   ];
 
