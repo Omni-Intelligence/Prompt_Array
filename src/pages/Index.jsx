@@ -13,19 +13,19 @@ import UserNav from '@/components/UserNav';
 
 const Index = () => {
   const navigate = useNavigate();
-  const [isSignedIn, setIsSignedIn] = React.useState(true); // For demo purposes
+  const [isSignedIn, setIsSignedIn] = React.useState(true);
 
   const handleSignOut = () => {
     setIsSignedIn(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen">
+      <header className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <img src="/placeholder.svg" alt="PromptHub Logo" className="h-8 w-auto mr-2" />
-            <span className="text-xl font-bold">PromptHub</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">PromptHub</span>
           </div>
           <div className="flex items-center space-x-4">
             <UserNav isSignedIn={isSignedIn} onSignOut={handleSignOut} />
@@ -40,7 +40,10 @@ const Index = () => {
               {navItems.map((item) => (
                 <li key={item.title}>
                   <Link to={item.to}>
-                    <Button variant="ghost" className="w-full justify-start">
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
                       {item.icon}
                       <span className="ml-2">{item.title}</span>
                     </Button>
@@ -53,11 +56,13 @@ const Index = () => {
 
         <main className="flex-1">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold">Your Library</h1>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              Your Library
+            </h1>
             <div className="space-x-2">
               <CreateGroupSheet 
                 trigger={
-                  <Button variant="outline">
+                  <Button variant="outline" className="hover:bg-primary/10 hover:text-primary transition-colors">
                     <Plus className="mr-2 h-4 w-4" />
                     Create Group
                   </Button>
@@ -65,7 +70,7 @@ const Index = () => {
               />
               <CreatePromptSheet 
                 trigger={
-                  <Button>
+                  <Button className="bg-primary hover:bg-primary/90 transition-colors">
                     <Plus className="mr-2 h-4 w-4" />
                     Create Prompt
                   </Button>
@@ -76,8 +81,8 @@ const Index = () => {
 
           <section className="mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Groups</h2>
-              <Button variant="link">See Less</Button>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Groups</h2>
+              <Button variant="link" className="text-primary">See Less</Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
@@ -90,14 +95,14 @@ const Index = () => {
               ].map((group) => (
                 <Card 
                   key={group.id}
-                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  className="card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50"
                   onClick={() => navigate(`/groups/${group.id}`)}
                 >
                   <CardHeader>
                     <CardTitle>{group.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>{group.prompts} prompts</p>
+                    <p className="text-muted-foreground">{group.prompts} prompts</p>
                   </CardContent>
                 </Card>
               ))}
@@ -106,13 +111,17 @@ const Index = () => {
 
           <section>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">All prompts</h2>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All prompts</h2>
               <div className="w-64">
-                <Input type="search" placeholder="Search" />
+                <Input 
+                  type="search" 
+                  placeholder="Search" 
+                  className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                />
               </div>
             </div>
-            <Tabs defaultValue="recent">
-              <TabsList>
+            <Tabs defaultValue="recent" className="w-full">
+              <TabsList className="w-full justify-start bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
                 <TabsTrigger value="recent">Recent</TabsTrigger>
                 <TabsTrigger value="favorites">Favorites</TabsTrigger>
                 <TabsTrigger value="owned">Owned by me</TabsTrigger>
@@ -128,15 +137,18 @@ const Index = () => {
                   { title: 'HTML cleaner', icon: '🧹', time: '3 days ago' },
                   { title: 'TechCrunch summarizer', icon: '📰', time: '1 week ago' },
                 ].map((prompt) => (
-                  <li key={prompt.title} className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
+                  <li 
+                    key={prompt.title} 
+                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between border border-gray-200 dark:border-gray-700"
+                  >
                     <div className="flex items-center">
                       <span className="text-2xl mr-3">{prompt.icon}</span>
                       <div>
-                        <h3 className="font-semibold">{prompt.title}</h3>
-                        <p className="text-sm text-gray-500">Last updated {prompt.time}</p>
+                        <h3 className="font-semibold text-gray-800 dark:text-gray-200">{prompt.title}</h3>
+                        <p className="text-sm text-muted-foreground">Last updated {prompt.time}</p>
                       </div>
                     </div>
-                    {prompt.starred && <Star className="text-yellow-400" />}
+                    {prompt.starred && <Star className="text-primary fill-primary" />}
                   </li>
                 ))}
               </ul>

@@ -54,89 +54,101 @@ const Groups = () => {
       toast.error("Please fill in all fields");
       return;
     }
-    
-    // Here you would typically make an API call to create the group
     toast.success("Group created successfully!");
     setIsOpen(false);
     setNewGroup({ title: '', description: '' });
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h1 className="text-3xl font-bold">Groups</h1>
-        </div>
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create New Group
+    <div className="min-h-screen">
+      <div className="p-8 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate('/')}
+              className="hover:bg-primary/10 hover:text-primary transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
             </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Create New Group</SheetTitle>
-              <SheetDescription>
-                Add a new group to organize your prompts
-              </SheetDescription>
-            </SheetHeader>
-            <form onSubmit={handleCreateGroup} className="space-y-4 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={newGroup.title}
-                  onChange={(e) => setNewGroup(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder="Enter group title"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={newGroup.description}
-                  onChange={(e) => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Enter group description"
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Create Group
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              Groups
+            </h1>
+          </div>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button className="bg-primary hover:bg-primary/90 transition-colors">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create New Group
               </Button>
-            </form>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      <div className="mb-6 w-full max-w-md">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search groups..." className="pl-8" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Create New Group</SheetTitle>
+                <SheetDescription>
+                  Add a new group to organize your prompts
+                </SheetDescription>
+              </SheetHeader>
+              <form onSubmit={handleCreateGroup} className="space-y-4 mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    value={newGroup.title}
+                    onChange={(e) => setNewGroup(prev => ({ ...prev, title: e.target.value }))}
+                    placeholder="Enter group title"
+                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={newGroup.description}
+                    onChange={(e) => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="Enter group description"
+                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                  />
+                </div>
+                <Button type="submit" className="w-full bg-primary hover:bg-primary/90 transition-colors">
+                  Create Group
+                </Button>
+              </form>
+            </SheetContent>
+          </Sheet>
         </div>
-      </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {groups.map((group) => (
-          <Card 
-            key={group.id} 
-            className="hover:shadow-lg transition-shadow cursor-pointer"
-            onClick={() => navigate(`/groups/${group.id}`)}
-          >
-            <CardHeader>
-              <CardTitle>{group.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>{group.promptCount} prompts</span>
-                <span>Updated {group.lastUpdated}</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <div className="mb-6 w-full max-w-md">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search groups..." 
+              className="pl-8 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {groups.map((group) => (
+            <Card 
+              key={group.id} 
+              className="card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50"
+              onClick={() => navigate(`/groups/${group.id}`)}
+            >
+              <CardHeader>
+                <CardTitle>{group.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{group.promptCount} prompts</span>
+                  <span>Updated {group.lastUpdated}</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
