@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import UpvoteButton from './UpvoteButton';
 
 const PromptDetailCard = ({ prompt, onCopy, onEdit, onDelete }) => {
   return (
@@ -22,6 +23,7 @@ const PromptDetailCard = ({ prompt, onCopy, onEdit, onDelete }) => {
             <CardDescription>{prompt.description}</CardDescription>
           </div>
           <div className="flex gap-2">
+            <UpvoteButton initialCount={prompt.upvotes || 0} promptId={prompt.id} />
             <Button 
               variant="ghost" 
               size="icon"

@@ -1,15 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Search, Copy, ThumbsUp, Share2, MessageSquare, ArrowLeft, Users, Grid3X3 } from "lucide-react";
+import { Search, Grid3X3, Users, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreatePromptSheet from "@/components/CreatePromptSheet";
+import CommunityPromptCard from "@/components/prompt/CommunityPromptCard";
 
 const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,10 +64,6 @@ const Community = () => {
     };
     setEditingPrompt(initialData);
     setIsPromptSheetOpen(true);
-  };
-
-  const handleLike = (promptId) => {
-    toast.success("Prompt liked!");
   };
 
   const handleShare = (promptId) => {
@@ -141,78 +135,13 @@ const Community = () => {
             <ScrollArea className="h-[calc(100vh-300px)]">
               <div className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
                 {communityPrompts.map((prompt) => (
-                  <Card key={prompt.id} className="group backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.01]">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div 
-                          className="space-y-1 cursor-pointer"
-                          onClick={() => navigate(`/prompts/${prompt.id}`)}
-                        >
-                          <CardTitle className="group-hover:text-primary transition-colors">
-                            {prompt.title}
-                          </CardTitle>
-                          <CardDescription>{prompt.description}</CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-3 mb-4">
-                        <Avatar>
-                          <AvatarImage src={prompt.author.avatar} />
-                          <AvatarFallback>{prompt.author.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">{prompt.author.name}</p>
-                          <p className="text-xs text-muted-foreground">{prompt.author.role}</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {prompt.tags.map((tag) => (
-                          <Badge 
-                            key={tag} 
-                            variant="secondary"
-                            className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <ThumbsUp className="h-4 w-4" />
-                          {prompt.stats.likes}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          {prompt.stats.comments}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Copy className="h-4 w-4" />
-                          {prompt.stats.forks}
-                        </div>
-                        <span className="ml-auto">{prompt.lastUpdated}</span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="pt-6">
-                      <div className="flex gap-2 w-full">
-                        <Button
-                          className="flex-1"
-                          onClick={() => handleForkPrompt(prompt)}
-                        >
-                          <Copy className="mr-2 h-4 w-4" />
-                          Fork Prompt
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="flex-1"
-                          onClick={() => handleShare(prompt.id)}
-                        >
-                          <Share2 className="mr-2 h-4 w-4" />
-                          Share
-                        </Button>
-                      </div>
-                    </CardFooter>
-                  </Card>
+                  <CommunityPromptCard
+                    key={prompt.id}
+                    prompt={prompt}
+                    onFork={handleForkPrompt}
+                    onShare={handleShare}
+                    onClick={() => navigate(`/prompts/${prompt.id}`)}
+                  />
                 ))}
               </div>
             </ScrollArea>
