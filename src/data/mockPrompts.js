@@ -1,4 +1,5 @@
 import { emailPrompts } from './groups/emailPrompts';
+import { technicalPrompts } from './groups/technicalPrompts';
 
 export const groupPrompts = {
   1: [ // Blog Writing
@@ -125,7 +126,7 @@ export const groupPrompts = {
       tags: ['linkedin', 'professional']
     }
   ],
-  3: emailPrompts, // Email Marketing
+  3: emailPrompts,
   4: [ // SEO Content
     {
       id: 10,
@@ -152,32 +153,7 @@ export const groupPrompts = {
       tags: ['local-seo', 'content']
     }
   ],
-  5: [ // Technical Writing
-    {
-      id: 13,
-      title: 'API Documentation Generator',
-      description: 'Creates clear API documentation',
-      content: 'Create API documentation for [endpoint/feature] that includes: 1) Endpoint description and purpose, 2) Request method and URL structure, 3) Authentication requirements, 4) Request parameters with types and constraints, 5) Response format and examples, 6) Error codes and handling, 7) Rate limiting information, 8) Code examples in [programming languages]. Use clear, concise technical language.',
-      lastUsed: '2 days ago',
-      tags: ['api', 'documentation']
-    },
-    {
-      id: 14,
-      title: 'Technical Guide Creator',
-      description: 'Generates step-by-step technical guides',
-      content: 'Write a technical guide for [process/feature] that includes: 1) Prerequisites and system requirements, 2) Step-by-step installation/configuration instructions, 3) Command line examples with explanations, 4) Configuration file examples, 5) Troubleshooting section with common issues, 6) Best practices and optimization tips, 7) Security considerations. Include relevant code snippets and command examples.',
-      lastUsed: '5 days ago',
-      tags: ['guide', 'technical']
-    },
-    {
-      id: 15,
-      title: 'Release Notes Template',
-      description: 'Creates structured release notes',
-      content: 'Generate release notes for version [version number] that include: 1) Version number and release date, 2) Summary of major changes, 3) New features with detailed descriptions, 4) Bug fixes with issue references, 5) Performance improvements, 6) Breaking changes and migration steps, 7) Dependencies updates, 8) Contributors acknowledgment. Organize by category and impact level.',
-      lastUsed: '1 week ago',
-      tags: ['release', 'documentation']
-    }
-  ],
+  5: technicalPrompts,
   6: [ // Creative Stories
     {
       id: 16,
