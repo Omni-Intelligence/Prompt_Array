@@ -31,6 +31,31 @@ const Groups = () => {
     parentId: null
   });
 
+  // Mock data for groups
+  const mockGroups = [
+    {
+      id: '1',
+      title: 'Marketing Content',
+      description: 'Collection of prompts for marketing materials',
+      promptCount: 12,
+      lastUpdated: '2 days ago'
+    },
+    {
+      id: '2',
+      title: 'Technical Documentation',
+      description: 'Prompts for creating technical guides and documentation',
+      promptCount: 8,
+      lastUpdated: '1 week ago'
+    },
+    {
+      id: '3',
+      title: 'Social Media',
+      description: 'Templates for social media posts and campaigns',
+      promptCount: 15,
+      lastUpdated: '3 days ago'
+    }
+  ];
+
   // Mock data for folders
   const folders = [
     {
@@ -201,7 +226,7 @@ const Groups = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {groups.map((group) => (
+          {mockGroups.map((group) => (
             <Card 
               key={group.id} 
               className="card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50"
