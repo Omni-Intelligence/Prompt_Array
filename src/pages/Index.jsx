@@ -9,6 +9,7 @@ import { Bell, Search, Star, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
+import CreateGroupSheet from '@/components/CreateGroupSheet';
 
 const Index = () => {
   return (
@@ -55,7 +56,14 @@ const Index = () => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold">Your Library</h1>
             <div className="space-x-2">
-              <Button variant="outline">Create Group</Button>
+              <CreateGroupSheet 
+                trigger={
+                  <Button variant="outline">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Group
+                  </Button>
+                }
+              />
               <CreatePromptSheet 
                 trigger={
                   <Button>
