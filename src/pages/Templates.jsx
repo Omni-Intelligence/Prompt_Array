@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ArrowLeft, Star, BookOpen, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -54,12 +55,10 @@ const Templates = () => {
   ];
 
   const handleSaveTemplate = (templateId) => {
-    // In a real app, this would save to a backend
     toast.success("Template saved to your library!");
   };
 
   const handleFavoriteTemplate = (templateId) => {
-    // In a real app, this would toggle favorite status
     toast.success("Template added to favorites!");
   };
 
