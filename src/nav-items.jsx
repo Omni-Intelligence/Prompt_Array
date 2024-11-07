@@ -2,7 +2,6 @@ import {
   HomeIcon, 
   BookOpenIcon, 
   LayersIcon, 
-  Settings2Icon,
   UsersIcon,
   StarIcon,
   LayoutTemplateIcon,
@@ -14,7 +13,6 @@ import Groups from "./pages/Groups.jsx";
 import Favourites from "./pages/Favourites.jsx";
 import Templates from "./pages/Templates.jsx";
 import Batches from "./pages/Batches.jsx";
-import TeamSettings from "./pages/TeamSettings.jsx";
 import Community from "./pages/Community.jsx";
 
 export const navItems = [
@@ -66,12 +64,5 @@ export const navItems = [
     icon: <LayersIcon className="h-4 w-4" />,
     page: <Batches />,
     color: "from-teal-500 to-green-500"
-  },
-  {
-    title: "Team Settings",
-    to: "/team-settings",
-    icon: <Settings2Icon className="h-4 w-4" />,
-    page: <TeamSettings />,
-    color: "from-violet-500 to-purple-500"
   },
 ];
