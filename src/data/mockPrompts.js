@@ -124,6 +124,46 @@ export const groupPrompts = {
       content: 'Write a LinkedIn post about [topic/achievement/insight] that includes: 1) A powerful hook that draws readers in, 2) Personal experience or professional insight, 3) Key learnings or takeaways, 4) Industry-relevant hashtags, 5) A question or call-to-action to encourage engagement. Format with appropriate line breaks for readability.',
       lastUsed: '4 days ago',
       tags: ['linkedin', 'professional']
+    },
+    {
+      id: 7,
+      title: 'TikTok Script Generator',
+      description: 'Creates engaging scripts for TikTok videos',
+      content: 'Create a TikTok script for a [duration] video about [topic]. Include: 1) A hook within first 3 seconds, 2) Key points or steps, 3) Trending sound/music suggestions, 4) On-screen text recommendations, 5) Transition ideas, 6) Call-to-action for engagement. Keep language conversational and energetic.',
+      lastUsed: '2 days ago',
+      tags: ['tiktok', 'video']
+    },
+    {
+      id: 8,
+      title: 'Social Media Poll Creator',
+      description: 'Generates engaging poll questions for social platforms',
+      content: 'Design an engaging poll for [platform] about [topic]. Include: 1) An attention-grabbing question, 2) 2-4 compelling answer options, 3) Follow-up discussion prompts, 4) Relevant hashtags, 5) Best time to post recommendations. Make it relevant to [target audience] and their interests.',
+      lastUsed: '5 days ago',
+      tags: ['poll', 'engagement']
+    },
+    {
+      id: 9,
+      title: 'Social Media Contest Announcement',
+      description: 'Creates contest/giveaway announcements',
+      content: 'Create a social media contest announcement for [platform]. Include: 1) Exciting prize description, 2) Clear entry rules and steps, 3) Contest duration, 4) Eligibility requirements, 5) Winner selection process, 6) Required disclaimers, 7) Branded hashtags. Make it compelling and easy to understand.',
+      lastUsed: '1 week ago',
+      tags: ['contest', 'giveaway']
+    },
+    {
+      id: 10,
+      title: 'Social Media Story Sequence',
+      description: 'Plans engaging story sequences for Instagram/Facebook',
+      content: 'Design a story sequence for [platform] about [topic]. Plan: 1) Opening hook story, 2) 3-5 content pieces that build narrative, 3) Interactive elements (polls, questions, sliders), 4) Behind-the-scenes content, 5) Call-to-action story. Include suggestions for stickers, music, and timing.',
+      lastUsed: '6 days ago',
+      tags: ['stories', 'sequence']
+    },
+    {
+      id: 11,
+      title: 'Social Media Carousel Creator',
+      description: 'Structures carousel posts for maximum engagement',
+      content: 'Create a carousel post about [topic] for [platform]. Include: 1) Attention-grabbing first slide, 2) 5-10 slides of valuable content, 3) Design suggestions for each slide, 4) Connecting narrative between slides, 5) Effective caption structure, 6) Call-to-action on final slide. Focus on educational or inspirational content.',
+      lastUsed: '2 days ago',
+      tags: ['carousel', 'slides']
     }
   ],
   3: emailPrompts,
