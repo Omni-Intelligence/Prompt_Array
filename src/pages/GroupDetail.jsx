@@ -17,6 +17,8 @@ import {
 const GroupDetail = () => {
   const { groupId } = useParams();
   const navigate = useNavigate();
+  const [selectedPrompt, setSelectedPrompt] = React.useState(null);
+  const [isEditSheetOpen, setIsEditSheetOpen] = React.useState(false);
 
   // Mock data - would be replaced with actual API calls
   const group = {
@@ -52,6 +54,11 @@ const GroupDetail = () => {
 
   const handleDeletePrompt = (id) => {
     toast.success("Prompt deleted successfully!");
+  };
+
+  const handleEditClick = (prompt) => {
+    setSelectedPrompt(prompt);
+    setIsEditSheetOpen(true);
   };
 
   return (
@@ -118,6 +125,7 @@ const GroupDetail = () => {
                       <Button 
                         variant="ghost" 
                         size="icon"
+                        onClick={() => handleEditClick(prompt)}
                         className="hover:bg-primary/10 hover:text-primary transition-colors"
                       >
                         <Edit2 className="h-4 w-4" />
@@ -157,6 +165,12 @@ const GroupDetail = () => {
           </div>
         </ScrollArea>
       </div>
+      <CreatePromptSheet 
+        trigger={<div />} // Hidden trigger as we control opening programmatically
+        isOpen={isEditSheetOpen}
+        onOpenChange={setIsEditSheetOpen}
+        initialData={selectedPrompt}
+      />
     </div>
   );
 };

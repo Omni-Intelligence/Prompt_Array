@@ -14,8 +14,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const CreatePromptSheet = ({ trigger }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
   const [newPrompt, setNewPrompt] = React.useState({
     title: '',
     content: '',
@@ -24,6 +23,12 @@ const CreatePromptSheet = ({ trigger }) => {
   });
   const [currentTag, setCurrentTag] = React.useState('');
 
+  React.useEffect(() => {
+    if (initialData) {
+      setNewPrompt(initialData);
+    }
+  }, [initialData]);
+
   const handleCreatePrompt = (e) => {
     e.preventDefault();
     if (!newPrompt.title || !newPrompt.content) {
@@ -31,9 +36,9 @@ const CreatePromptSheet = ({ trigger }) => {
       return;
     }
     
-    // Here you would typically make an API call to create the prompt
-    toast.success("Prompt created successfully!");
-    setIsOpen(false);
+    // Here you would typically make an API call to create/update the prompt
+    toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
+    onOpenChange?.(false);
     setNewPrompt({ title: '', content: '', description: '', tags: [] });
   };
 
@@ -56,15 +61,15 @@ const CreatePromptSheet = ({ trigger }) => {
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         {trigger}
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle>Create New Prompt</SheetTitle>
+          <SheetTitle>{initialData ? 'Edit Prompt' : 'Create New Prompt'}</SheetTitle>
           <SheetDescription>
-            Add a new prompt to your library
+            {initialData ? 'Edit your prompt details' : 'Add a new prompt to your library'}
           </SheetDescription>
         </SheetHeader>
         <form onSubmit={handleCreatePrompt} className="space-y-4 mt-4">
@@ -128,7 +133,7 @@ const CreatePromptSheet = ({ trigger }) => {
             </form>
           </div>
           <Button type="submit" className="w-full">
-            Create Prompt
+            {initialData ? 'Update Prompt' : 'Create Prompt'}
           </Button>
         </form>
       </SheetContent>
