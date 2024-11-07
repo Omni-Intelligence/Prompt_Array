@@ -20,7 +20,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <header className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
@@ -42,9 +42,11 @@ const Index = () => {
                   <Link to={item.to}>
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start hover:bg-primary/10 hover:text-primary transition-colors"
+                      className={`w-full justify-start group hover:bg-gradient-to-r hover:${item.color} hover:text-white transition-all duration-300`}
                     >
-                      {item.icon}
+                      <span className="group-hover:scale-110 transition-transform">
+                        {item.icon}
+                      </span>
                       <span className="ml-2">{item.title}</span>
                     </Button>
                   </Link>

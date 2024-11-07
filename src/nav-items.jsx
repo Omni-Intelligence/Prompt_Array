@@ -24,53 +24,62 @@ export const navItems = [
     to: "/",
     icon: <HomeIcon className="h-4 w-4" />,
     page: <Index />,
+    color: "from-blue-500 to-indigo-500"
   },
   {
     title: "Library",
     to: "/library",
     icon: <BookOpenIcon className="h-4 w-4" />,
     page: <Library />,
+    color: "from-purple-500 to-pink-500"
   },
   {
     title: "Groups",
     to: "/groups",
     icon: <UsersIcon className="h-4 w-4" />,
     page: <Groups />,
+    color: "from-green-500 to-emerald-500"
   },
   {
     title: "Community",
     to: "/community",
     icon: <Globe2Icon className="h-4 w-4" />,
     page: <Community />,
+    color: "from-orange-500 to-red-500"
   },
   {
     title: "Favourites",
     to: "/favourites",
     icon: <StarIcon className="h-4 w-4" />,
     page: <Favourites />,
+    color: "from-yellow-500 to-amber-500"
   },
   {
     title: "Templates",
     to: "/templates",
     icon: <LayoutTemplateIcon className="h-4 w-4" />,
     page: <Templates />,
+    color: "from-cyan-500 to-blue-500"
   },
   {
     title: "Batches",
     to: "/batches",
     icon: <LayersIcon className="h-4 w-4" />,
     page: <Batches />,
+    color: "from-teal-500 to-green-500"
   },
   {
     title: "Team Settings",
     to: "/team-settings",
     icon: <Settings2Icon className="h-4 w-4" />,
     page: <TeamSettings />,
+    color: "from-violet-500 to-purple-500"
   },
   {
     title: "Register",
     to: "/register",
     icon: <HomeIcon className="h-4 w-4" />,
     page: <Register />,
+    color: "from-pink-500 to-rose-500"
   },
 ];
