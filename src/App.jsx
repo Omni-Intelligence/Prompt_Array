@@ -23,7 +23,8 @@ function App() {
         <Toaster />
         <BrowserRouter>
           <Routes>
-            {navItems.map((item) => (
+            {/* First ensure navItems exists and is an array before mapping */}
+            {Array.isArray(navItems) && navItems.map((item) => (
               <Route key={item.to} path={item.to} element={item.page} />
             ))}
             <Route path="/groups/:groupId" element={<GroupDetail />} />
