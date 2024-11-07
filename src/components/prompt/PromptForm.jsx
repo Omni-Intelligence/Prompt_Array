@@ -7,7 +7,7 @@ import PromptTeamAndGroupFields from './PromptTeamAndGroupFields';
 import PromptTagsField from './PromptTagsField';
 import { toast } from "sonner";
 
-const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData }) => {
+const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData, isEditing }) => {
   const handleImprovePrompt = async () => {
     if (!newPrompt.content) {
       toast.error("Please enter a prompt first");
@@ -15,7 +15,6 @@ const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData }) => {
     }
     
     toast.promise(
-      // This is where we'd integrate with an AI service
       new Promise((resolve) => {
         setTimeout(() => {
           const improvedPrompt = `${newPrompt.content}\n\nImproved with more specific details and clear instructions for better results.`;
@@ -79,6 +78,20 @@ const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData }) => {
           </Button>
         </div>
       </div>
+
+      {isEditing && (
+        <div className="space-y-2">
+          <label htmlFor="changeDescription" className="text-sm font-medium">
+            Change Description
+          </label>
+          <Input
+            id="changeDescription"
+            value={newPrompt.changeDescription}
+            onChange={(e) => setNewPrompt(prev => ({ ...prev, changeDescription: e.target.value }))}
+            placeholder="Describe what changed in this version"
+          />
+        </div>
+      )}
 
       <PromptTeamAndGroupFields newPrompt={newPrompt} setNewPrompt={setNewPrompt} />
       <PromptTagsField newPrompt={newPrompt} setNewPrompt={setNewPrompt} />

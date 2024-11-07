@@ -2,71 +2,20 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft, Plus, Edit2, Trash2, Copy } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Plus } from 'lucide-react';
 import { toast } from "sonner";
 import CreatePromptSheet from '@/components/CreatePromptSheet';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import PromptDetailCard from '@/components/prompt/PromptDetailCard';
 import { groupPrompts } from '@/data/mockPrompts';
+import { useGroupDetails } from '@/hooks/useGroupDetails';
 
 const GroupDetail = () => {
   const { groupId } = useParams();
   const navigate = useNavigate();
   const [selectedPrompt, setSelectedPrompt] = React.useState(null);
   const [isEditSheetOpen, setIsEditSheetOpen] = React.useState(false);
-
-  // Mock data - would be replaced with actual API calls
-  const groups = {
-    1: {
-      id: 1,
-      title: 'Blog Writing',
-      description: 'Collection of prompts for writing engaging blog content',
-      icon: '✍️'
-    },
-    2: {
-      id: 2,
-      title: 'Social Media',
-      description: 'Prompts for creating engaging social media content',
-      icon: '📱'
-    },
-    3: {
-      id: 3,
-      title: 'Email Marketing',
-      description: 'Templates and prompts for email campaigns',
-      icon: '📧'
-    },
-    4: {
-      id: 4,
-      title: 'SEO Content',
-      description: 'Prompts optimized for search engine visibility',
-      icon: '🔍'
-    },
-    5: {
-      id: 5,
-      title: 'Technical Writing',
-      description: 'Prompts for technical documentation and guides',
-      icon: '💻'
-    },
-    6: {
-      id: 6,
-      title: 'Creative Stories',
-      description: 'Prompts for creative writing and storytelling',
-      icon: '📚'
-    }
-  };
-
-  const group = groups[groupId] || {
-    title: 'Group Not Found',
-    description: 'This group does not exist',
-    icon: '❓'
-  };
-
+  
+  const { group } = useGroupDetails(groupId);
   const prompts = groupPrompts[groupId] || [];
 
   const handleCopyPrompt = (content) => {
@@ -123,66 +72,13 @@ const GroupDetail = () => {
         <ScrollArea className="h-[calc(100vh-250px)]">
           <div className="grid gap-4">
             {prompts.map((prompt) => (
-              <Card 
+              <PromptDetailCard
                 key={prompt.id}
-                className="group backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.01]"
-              >
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="group-hover:text-primary transition-colors">
-                        {prompt.title}
-                      </CardTitle>
-                      <CardDescription>{prompt.description}</CardDescription>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => handleCopyPrompt(prompt.content)}
-                        className="hover:bg-primary/10 hover:text-primary transition-colors"
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => handleEditClick(prompt)}
-                        className="hover:bg-primary/10 hover:text-primary transition-colors"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => handleDeletePrompt(prompt.id)}
-                        className="hover:bg-destructive/10 hover:text-destructive transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-muted/50 p-4 rounded-md backdrop-blur-sm mb-4">
-                    <pre className="whitespace-pre-wrap text-sm font-mono">{prompt.content}</pre>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {prompt.tags.map((tag) => (
-                      <Badge 
-                        key={tag} 
-                        variant="secondary"
-                        className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Last used: {prompt.lastUsed}
-                  </p>
-                </CardContent>
-              </Card>
+                prompt={prompt}
+                onCopy={handleCopyPrompt}
+                onEdit={handleEditClick}
+                onDelete={handleDeletePrompt}
+              />
             ))}
           </div>
         </ScrollArea>

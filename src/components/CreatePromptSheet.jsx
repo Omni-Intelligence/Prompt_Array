@@ -18,7 +18,8 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
     tags: initialData?.tags || [],
     isPublic: initialData?.isPublic || false,
     teamId: initialData?.teamId || '',
-    groupId: initialData?.groupId || ''
+    groupId: initialData?.groupId || '',
+    changeDescription: ''
   });
 
   React.useEffect(() => {
@@ -30,7 +31,8 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         tags: initialData.tags || [],
         isPublic: initialData.isPublic || false,
         teamId: initialData.teamId || '',
-        groupId: initialData.groupId || ''
+        groupId: initialData.groupId || '',
+        changeDescription: ''
       });
     }
   }, [initialData]);
@@ -42,6 +44,15 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
       return;
     }
     
+    // In a real app, this would be handled by your backend
+    const newVersion = {
+      id: crypto.randomUUID(),
+      version: initialData ? initialData.currentVersion + 1 : 1,
+      ...newPrompt,
+      createdAt: new Date(),
+      createdBy: 'Current User', // This would come from auth context
+    };
+
     toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
     onOpenChange?.(false);
     setNewPrompt({ 
@@ -51,7 +62,8 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
       tags: [],
       isPublic: false,
       teamId: '',
-      groupId: ''
+      groupId: '',
+      changeDescription: ''
     });
   };
 
@@ -72,6 +84,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
           setNewPrompt={setNewPrompt}
           onSubmit={handleCreatePrompt}
           initialData={initialData}
+          isEditing={!!initialData}
         />
       </SheetContent>
     </Sheet>
