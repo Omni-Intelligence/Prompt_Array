@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { groupPrompts } from '@/data/mockPrompts';
 
 const GroupDetail = () => {
   const { groupId } = useParams();
@@ -66,24 +67,7 @@ const GroupDetail = () => {
     icon: '❓'
   };
 
-  const prompts = [
-    {
-      id: 1,
-      title: 'Blog Post Generator',
-      description: 'Creates engaging blog post content',
-      content: 'Write a blog post about [topic] that includes...',
-      lastUsed: '2 days ago',
-      tags: ['content', 'blog']
-    },
-    {
-      id: 2,
-      title: 'Social Media Caption',
-      description: 'Generates social media captions',
-      content: 'Create an engaging social media caption for...',
-      lastUsed: '5 days ago',
-      tags: ['social', 'marketing']
-    }
-  ];
+  const prompts = groupPrompts[groupId] || [];
 
   const handleCopyPrompt = (content) => {
     navigator.clipboard.writeText(content);
