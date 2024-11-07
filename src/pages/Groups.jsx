@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, Search, ArrowLeft } from 'lucide-react';
+import { PlusCircle, Search, ArrowLeft, FolderPlus, Folder } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   Sheet,
@@ -15,57 +15,52 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { FolderTree } from "@/components/folder/FolderTree";
 
 const Groups = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isFolderOpen, setIsFolderOpen] = React.useState(false);
   const [newGroup, setNewGroup] = React.useState({
     title: '',
     description: ''
   });
+  const [newFolder, setNewFolder] = React.useState({
+    name: '',
+    description: '',
+    parentId: null
+  });
 
-  const groups = [
+  // Mock data for folders
+  const folders = [
     {
-      id: 1,
-      title: 'Blog Writing',
-      description: 'Collection of prompts for writing engaging blog content',
-      promptCount: 12,
-      lastUpdated: '2 days ago'
+      id: '1',
+      name: 'Marketing Materials',
+      parentId: null,
+      groupId: '1',
+      children: [
+        {
+          id: '2',
+          name: 'Social Media',
+          parentId: '1',
+          groupId: '1',
+          children: []
+        },
+        {
+          id: '3',
+          name: 'Blog Posts',
+          parentId: '1',
+          groupId: '1',
+          children: []
+        }
+      ]
     },
     {
-      id: 2,
-      title: 'Social Media',
-      description: 'Prompts for creating engaging social media content',
-      promptCount: 8,
-      lastUpdated: '1 week ago'
-    },
-    {
-      id: 3,
-      title: 'Email Marketing',
-      description: 'Templates and prompts for email campaigns',
-      promptCount: 15,
-      lastUpdated: '3 days ago'
-    },
-    {
-      id: 4,
-      title: 'SEO Content',
-      description: 'Prompts optimized for search engine visibility',
-      promptCount: 6,
-      lastUpdated: '5 days ago'
-    },
-    {
-      id: 5,
-      title: 'Technical Writing',
-      description: 'Prompts for technical documentation and guides',
-      promptCount: 10,
-      lastUpdated: '1 day ago'
-    },
-    {
-      id: 6,
-      title: 'Creative Stories',
-      description: 'Prompts for creative writing and storytelling',
-      promptCount: 9,
-      lastUpdated: '4 days ago'
+      id: '4',
+      name: 'Product Documentation',
+      parentId: null,
+      groupId: '1',
+      children: []
     }
   ];
 
@@ -78,6 +73,17 @@ const Groups = () => {
     toast.success("Group created successfully!");
     setIsOpen(false);
     setNewGroup({ title: '', description: '' });
+  };
+
+  const handleCreateFolder = (e) => {
+    e.preventDefault();
+    if (!newFolder.name) {
+      toast.error("Please enter a folder name");
+      return;
+    }
+    toast.success("Folder created successfully!");
+    setIsFolderOpen(false);
+    setNewFolder({ name: '', description: '', parentId: null });
   };
 
   return (
@@ -97,47 +103,91 @@ const Groups = () => {
               Groups
             </h1>
           </div>
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90 transition-colors">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Create New Group
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Create New Group</SheetTitle>
-                <SheetDescription>
-                  Add a new group to organize your prompts
-                </SheetDescription>
-              </SheetHeader>
-              <form onSubmit={handleCreateGroup} className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    value={newGroup.title}
-                    onChange={(e) => setNewGroup(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Enter group title"
-                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={newGroup.description}
-                    onChange={(e) => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Enter group description"
-                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-primary hover:bg-primary/90 transition-colors">
-                  Create Group
+          <div className="flex gap-2">
+            <Sheet open={isFolderOpen} onOpenChange={setIsFolderOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="hover:bg-primary/10 hover:text-primary transition-colors">
+                  <FolderPlus className="mr-2 h-4 w-4" />
+                  New Folder
                 </Button>
-              </form>
-            </SheetContent>
-          </Sheet>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Create New Folder</SheetTitle>
+                  <SheetDescription>
+                    Add a new folder to organize your prompts
+                  </SheetDescription>
+                </SheetHeader>
+                <form onSubmit={handleCreateFolder} className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      value={newFolder.name}
+                      onChange={(e) => setNewFolder(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Enter folder name"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description (Optional)</Label>
+                    <Textarea
+                      id="description"
+                      value={newFolder.description}
+                      onChange={(e) => setNewFolder(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Enter folder description"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 transition-colors">
+                    Create Folder
+                  </Button>
+                </form>
+              </SheetContent>
+            </Sheet>
+
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/90 transition-colors">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Create New Group
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Create New Group</SheetTitle>
+                  <SheetDescription>
+                    Add a new group to organize your prompts
+                  </SheetDescription>
+                </SheetHeader>
+                <form onSubmit={handleCreateGroup} className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      id="title"
+                      value={newGroup.title}
+                      onChange={(e) => setNewGroup(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="Enter group title"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={newGroup.description}
+                      onChange={(e) => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Enter group description"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 transition-colors">
+                    Create Group
+                  </Button>
+                </form>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
 
         <div className="mb-6 w-full max-w-md">
@@ -165,6 +215,9 @@ const Groups = () => {
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>{group.promptCount} prompts</span>
                   <span>Updated {group.lastUpdated}</span>
+                </div>
+                <div className="mt-4">
+                  <FolderTree folders={folders} groupId={group.id} />
                 </div>
               </CardContent>
             </Card>

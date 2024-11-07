@@ -1,53 +1,68 @@
+```jsx
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft, Plus } from 'lucide-react';
-import { toast } from "sonner";
-import CreatePromptSheet from '@/components/CreatePromptSheet';
-import PromptDetailCard from '@/components/prompt/PromptDetailCard';
-import { groupPrompts } from '@/data/mockPrompts';
+import { useParams } from 'react-router-dom';
 import { useGroupDetails } from '@/hooks/useGroupDetails';
+import { FolderTree } from '@/components/folder/FolderTree';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Search, Star, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { groupPrompts } from '@/data/mockPrompts';
+import { Badge } from "@/components/ui/badge";
 
 const GroupDetail = () => {
   const { groupId } = useParams();
-  const navigate = useNavigate();
-  const [selectedPrompt, setSelectedPrompt] = React.useState(null);
-  const [isEditSheetOpen, setIsEditSheetOpen] = React.useState(false);
-  
   const { group } = useGroupDetails(groupId);
+  const navigate = useNavigate();
   const prompts = groupPrompts[groupId] || [];
 
-  const handleCopyPrompt = (content) => {
-    navigator.clipboard.writeText(content);
-    toast.success("Prompt copied to clipboard!");
-  };
-
-  const handleDeletePrompt = (id) => {
-    toast.success("Prompt deleted successfully!");
-  };
-
-  const handleEditClick = (prompt) => {
-    setSelectedPrompt(prompt);
-    setIsEditSheetOpen(true);
-  };
+  // Mock folders data - replace with actual data fetching
+  const folders = [
+    {
+      id: '1',
+      name: 'Marketing Materials',
+      parentId: null,
+      groupId: groupId,
+      children: [
+        {
+          id: '2',
+          name: 'Social Media',
+          parentId: '1',
+          groupId: groupId,
+          children: []
+        },
+        {
+          id: '3',
+          name: 'Blog Posts',
+          parentId: '1',
+          groupId: groupId,
+          children: []
+        }
+      ]
+    },
+    {
+      id: '4',
+      name: 'Product Documentation',
+      parentId: null,
+      groupId: groupId,
+      children: []
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="p-8 max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate('/groups')}
-            className="hover:bg-primary/10 hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
+      <header className="bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-4">
-            <span className="text-4xl animate-in fade-in slide-in-from-left-5 duration-500">
-              {group.icon}
-            </span>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate('/groups')}
+              className="hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                 {group.title}
@@ -56,41 +71,69 @@ const GroupDetail = () => {
             </div>
           </div>
         </div>
+      </header>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">Prompts</h2>
-          <CreatePromptSheet 
-            trigger={
-              <Button className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 transition-colors group">
-                <Plus className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                Create Prompt
-              </Button>
-            }
-          />
-        </div>
-
-        <ScrollArea className="h-[calc(100vh-250px)]">
-          <div className="grid gap-4">
-            {prompts.map((prompt) => (
-              <PromptDetailCard
-                key={prompt.id}
-                prompt={prompt}
-                onCopy={handleCopyPrompt}
-                onEdit={handleEditClick}
-                onDelete={handleDeletePrompt}
-              />
-            ))}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid gap-6 md:grid-cols-4">
+          <div className="md:col-span-1">
+            <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-200/50 dark:border-gray-700/50">
+              <h2 className="text-lg font-semibold mb-4">Folders</h2>
+              <FolderTree folders={folders} groupId={groupId} />
+            </div>
           </div>
-        </ScrollArea>
-      </div>
-      <CreatePromptSheet 
-        trigger={<div />}
-        isOpen={isEditSheetOpen}
-        onOpenChange={setIsEditSheetOpen}
-        initialData={selectedPrompt}
-      />
+
+          <div className="md:col-span-3 space-y-6">
+            <div className="flex justify-between items-center">
+              <div className="w-64">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    type="search" 
+                    placeholder="Search prompts..." 
+                    className="pl-8 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                  />
+                </div>
+              </div>
+              <Button className="bg-primary hover:bg-primary/90 transition-colors">
+                Add Prompt
+              </Button>
+            </div>
+
+            <div className="grid gap-4">
+              {prompts.map((prompt) => (
+                <Card 
+                  key={prompt.id}
+                  className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                  onClick={() => navigate(`/prompts/${prompt.id}`)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold text-lg">{prompt.title}</h3>
+                        <p className="text-muted-foreground text-sm">{prompt.description}</p>
+                        <div className="flex gap-2 mt-2">
+                          {prompt.tags.map((tag) => (
+                            <Badge key={tag} variant="secondary" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <Star className={`${prompt.isStarred ? 'fill-primary text-primary' : 'text-gray-400'} h-5 w-5`} />
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-4">
+                      Last used {prompt.lastUsed}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
 
 export default GroupDetail;
+```
