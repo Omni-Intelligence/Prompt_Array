@@ -7,20 +7,22 @@ import GroupDetail from "./pages/GroupDetail";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <BrowserRouter>
-        <Routes>
-          {navItems.map(({ to, page }) => (
-            <Route key={to} path={to} element={page} />
-          ))}
-          <Route path="/groups/:groupId" element={<GroupDetail />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <BrowserRouter>
+          <Routes>
+            {navItems.map((item) => (
+              <Route key={item.to} path={item.to} element={item.page} />
+            ))}
+            <Route path="/groups/:groupId" element={<GroupDetail />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
