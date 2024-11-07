@@ -6,9 +6,17 @@ import { navItems } from "./nav-items";
 import GroupDetail from "./pages/GroupDetail";
 import Account from "./pages/Account";
 
-const queryClient = new QueryClient();
+// Initialize the QueryClient outside of the component
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-const App = () => {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -25,6 +33,6 @@ const App = () => {
       </TooltipProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
