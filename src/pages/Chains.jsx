@@ -19,7 +19,7 @@ const Chains = () => {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-purple-600 bg-clip-text text-transparent">
               Prompt Chains
             </h1>
             <p className="text-muted-foreground">Create and manage prompt sequences</p>

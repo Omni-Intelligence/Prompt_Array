@@ -5,7 +5,8 @@ import {
   UsersIcon,
   StarIcon,
   LayoutTemplateIcon,
-  Globe2Icon
+  Globe2Icon,
+  GitBranchIcon
 } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Library from "./pages/Library.jsx";
@@ -14,6 +15,7 @@ import Favourites from "./pages/Favourites.jsx";
 import Templates from "./pages/Templates.jsx";
 import Batches from "./pages/Batches.jsx";
 import Community from "./pages/Community.jsx";
+import Chains from "./pages/Chains.jsx";
 
 export const navItems = [
   {
@@ -65,4 +67,11 @@ export const navItems = [
     page: <Batches />,
     color: "from-teal-500 to-green-500"
   },
+  {
+    title: "Chains",
+    to: "/chains",
+    icon: <GitBranchIcon className="h-4 w-4" />,
+    page: <Chains />,
+    color: "from-violet-500 to-purple-500"
+  }
 ];
