@@ -5,7 +5,8 @@ import {
   Settings2Icon,
   UsersIcon,
   StarIcon,
-  LayoutTemplateIcon
+  LayoutTemplateIcon,
+  Globe2Icon
 } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Register from "./pages/Register.jsx";
@@ -15,6 +16,7 @@ import Favourites from "./pages/Favourites.jsx";
 import Templates from "./pages/Templates.jsx";
 import Batches from "./pages/Batches.jsx";
 import TeamSettings from "./pages/TeamSettings.jsx";
+import Community from "./pages/Community.jsx";
 
 export const navItems = [
   {
@@ -34,6 +36,12 @@ export const navItems = [
     to: "/groups",
     icon: <UsersIcon className="h-4 w-4" />,
     page: <Groups />,
+  },
+  {
+    title: "Community",
+    to: "/community",
+    icon: <Globe2Icon className="h-4 w-4" />,
+    page: <Community />,
   },
   {
     title: "Favourites",
