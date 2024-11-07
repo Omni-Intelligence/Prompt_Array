@@ -1,11 +1,8 @@
 import { 
   HomeIcon, 
   BookOpenIcon, 
-  FileTextIcon, 
   LayersIcon, 
-  LinkIcon, 
   Settings2Icon,
-  DollarSignIcon,
   UsersIcon,
   StarIcon,
   LayoutTemplateIcon
@@ -13,12 +10,10 @@ import {
 import Index from "./pages/Index.jsx";
 import Register from "./pages/Register.jsx";
 import Library from "./pages/Library.jsx";
-import Payments from "./pages/Payments.jsx";
 import Groups from "./pages/Groups.jsx";
 import Favourites from "./pages/Favourites.jsx";
 import Templates from "./pages/Templates.jsx";
 import Batches from "./pages/Batches.jsx";
-import Chains from "./pages/Chains.jsx";
 import TeamSettings from "./pages/TeamSettings.jsx";
 
 export const navItems = [
@@ -33,12 +28,6 @@ export const navItems = [
     to: "/library",
     icon: <BookOpenIcon className="h-4 w-4" />,
     page: <Library />,
-  },
-  {
-    title: "Payments",
-    to: "/payments",
-    icon: <DollarSignIcon className="h-4 w-4" />,
-    page: <Payments />,
   },
   {
     title: "Groups",
@@ -63,12 +52,6 @@ export const navItems = [
     to: "/batches",
     icon: <LayersIcon className="h-4 w-4" />,
     page: <Batches />,
-  },
-  {
-    title: "Chains",
-    to: "/chains",
-    icon: <LinkIcon className="h-4 w-4" />,
-    page: <Chains />,
   },
   {
     title: "Team Settings",
