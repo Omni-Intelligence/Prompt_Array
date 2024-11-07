@@ -54,7 +54,6 @@ const Community = () => {
   };
 
   const handleShare = (promptId) => {
-    // In a real app, this would copy a sharing link
     toast.success("Sharing link copied to clipboard!");
   };
 
@@ -103,8 +102,13 @@ const Community = () => {
                   <Card key={prompt.id} className="flex flex-col">
                     <CardHeader>
                       <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <CardTitle className="line-clamp-1">{prompt.title}</CardTitle>
+                        <div 
+                          className="space-y-1 cursor-pointer"
+                          onClick={() => navigate(`/prompts/${prompt.id}`)}
+                        >
+                          <CardTitle className="line-clamp-1 hover:text-primary transition-colors">
+                            {prompt.title}
+                          </CardTitle>
                           <CardDescription>by {prompt.author}</CardDescription>
                         </div>
                         <Button
