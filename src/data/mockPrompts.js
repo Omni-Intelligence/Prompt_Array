@@ -23,6 +23,78 @@ export const groupPrompts = {
       content: 'Create a list-style blog post about [topic] with [number] items. Each item should have: 1) A clear subheading, 2) A detailed explanation, 3) Real-world examples or applications, 4) Action steps or takeaways. Include an introduction explaining why these items are important and a conclusion summarizing key points.',
       lastUsed: '1 week ago',
       tags: ['listicle', 'blog']
+    },
+    {
+      id: 4,
+      title: 'Product Review Template',
+      description: 'Creates detailed product review posts',
+      content: 'Write a comprehensive product review for [product name]. Include: 1) First impressions and unboxing experience, 2) Key features and specifications, 3) Real-world testing results, 4) Pros and cons, 5) Comparison with alternatives, 6) Value for money assessment, 7) Final verdict and rating. Use a balanced and objective tone.',
+      lastUsed: '3 days ago',
+      tags: ['review', 'product', 'blog']
+    },
+    {
+      id: 5,
+      title: 'Case Study Framework',
+      description: 'Generates detailed case study blog posts',
+      content: 'Create a case study about [subject/company]. Structure: 1) Background and challenge, 2) Goals and objectives, 3) Methodology and approach, 4) Implementation details, 5) Results and metrics, 6) Key learnings and takeaways, 7) Future recommendations. Include relevant data and quotes.',
+      lastUsed: '6 days ago',
+      tags: ['case-study', 'business', 'blog']
+    },
+    {
+      id: 6,
+      title: 'Industry News Analysis',
+      description: 'Creates analytical posts about industry trends',
+      content: 'Write an analysis of [recent industry development/news]. Include: 1) Overview of the news/development, 2) Historical context and background, 3) Potential impact on the industry, 4) Expert opinions and quotes, 5) Implications for different stakeholders, 6) Future predictions and recommendations.',
+      lastUsed: '4 days ago',
+      tags: ['news', 'analysis', 'blog']
+    },
+    {
+      id: 7,
+      title: 'Expert Interview Post',
+      description: 'Structures expert interview content',
+      content: 'Create an interview-style blog post with [expert name/role]. Include: 1) Expert introduction and credentials, 2) Key questions about [topic], 3) Expert insights and opinions, 4) Practical advice and recommendations, 5) Future trends and predictions, 6) Key takeaways for readers.',
+      lastUsed: '1 week ago',
+      tags: ['interview', 'expert', 'blog']
+    },
+    {
+      id: 8,
+      title: 'Ultimate Guide Creator',
+      description: 'Generates comprehensive guide posts',
+      content: 'Create an ultimate guide about [topic]. Include: 1) Comprehensive introduction and importance, 2) Historical background, 3) Current state and trends, 4) Best practices and strategies, 5) Tools and resources, 6) Expert tips and advice, 7) Common challenges and solutions, 8) Future outlook.',
+      lastUsed: '5 days ago',
+      tags: ['guide', 'comprehensive', 'blog']
+    },
+    {
+      id: 9,
+      title: 'Comparison Post Generator',
+      description: 'Creates detailed comparison articles',
+      content: 'Write a comparison post between [option 1] and [option 2]. Include: 1) Brief overview of both options, 2) Feature-by-feature comparison, 3) Pricing comparison, 4) Use case scenarios, 5) Pros and cons of each, 6) Ideal user profiles, 7) Final recommendations based on different needs.',
+      lastUsed: '2 days ago',
+      tags: ['comparison', 'review', 'blog']
+    },
+    {
+      id: 10,
+      title: 'Research Summary Post',
+      description: 'Summarizes research findings for blog format',
+      content: 'Create a blog post summarizing research about [topic]. Include: 1) Research background and objectives, 2) Methodology overview, 3) Key findings and statistics, 4) Practical implications, 5) Expert commentary, 6) Limitations and future research needs, 7) Action steps for readers.',
+      lastUsed: '1 week ago',
+      tags: ['research', 'academic', 'blog']
+    },
+    {
+      id: 11,
+      title: 'Trend Analysis Post',
+      description: 'Analyzes and predicts industry trends',
+      content: 'Write a trend analysis post about [industry/topic]. Include: 1) Current state of the industry, 2) Emerging trends and patterns, 3) Data and statistics supporting trends, 4) Expert predictions, 5) Impact on businesses and consumers, 6) How to prepare for these trends, 7) Action steps for readers.',
+      lastUsed: '3 days ago',
+      tags: ['trends', 'analysis', 'blog']
+    },
+    {
+      id: 12,
+      title: 'Problem-Solution Post',
+      description: 'Creates solution-focused content',
+      content: 'Write a problem-solution blog post about [common challenge]. Include: 1) Problem definition and impact, 2) Root causes and contributing factors, 3) Common misconceptions, 4) Step-by-step solution process, 5) Alternative approaches, 6) Prevention strategies, 7) Success stories and examples.',
+      lastUsed: '4 days ago',
+      tags: ['solution', 'how-to', 'blog']
     }
   ],
   2: [ // Social Media
