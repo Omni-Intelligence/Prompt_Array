@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from 'lucide-react';
 import { toast } from "sonner";
 import {
@@ -19,9 +21,26 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
     title: initialData?.title || '',
     content: initialData?.content || '',
     description: initialData?.description || '',
-    tags: initialData?.tags || []
+    tags: initialData?.tags || [],
+    isPublic: initialData?.isPublic || false,
+    teamId: initialData?.teamId || '',
+    groupId: initialData?.groupId || ''
   });
   const [currentTag, setCurrentTag] = React.useState('');
+
+  // Dummy data for teams and groups - replace with actual data
+  const teams = [
+    { id: '1', name: 'Marketing Team' },
+    { id: '2', name: 'Content Team' },
+    { id: '3', name: 'Development Team' }
+  ];
+
+  const groups = [
+    { id: '1', name: 'Blog Writing' },
+    { id: '2', name: 'Social Media' },
+    { id: '3', name: 'Email Marketing' },
+    { id: '4', name: 'SEO Content' }
+  ];
 
   React.useEffect(() => {
     if (initialData) {
@@ -29,7 +48,10 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         title: initialData.title || '',
         content: initialData.content || '',
         description: initialData.description || '',
-        tags: initialData.tags || []
+        tags: initialData.tags || [],
+        isPublic: initialData.isPublic || false,
+        teamId: initialData.teamId || '',
+        groupId: initialData.groupId || ''
       });
     }
   }, [initialData]);
@@ -41,10 +63,17 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
       return;
     }
     
-    // Here you would typically make an API call to create/update the prompt
     toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
     onOpenChange?.(false);
-    setNewPrompt({ title: '', content: '', description: '', tags: [] });
+    setNewPrompt({ 
+      title: '', 
+      content: '', 
+      description: '', 
+      tags: [],
+      isPublic: false,
+      teamId: '',
+      groupId: ''
+    });
   };
 
   const handleAddTag = (e) => {
@@ -112,6 +141,60 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
               className="min-h-[200px]"
             />
           </div>
+
+          <div className="flex items-center justify-between space-x-2">
+            <label htmlFor="public" className="text-sm font-medium">
+              Make Public
+            </label>
+            <Switch
+              id="public"
+              checked={newPrompt.isPublic}
+              onCheckedChange={(checked) => setNewPrompt(prev => ({ ...prev, isPublic: checked }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="team" className="text-sm font-medium">
+              Add to Team
+            </label>
+            <Select
+              value={newPrompt.teamId}
+              onValueChange={(value) => setNewPrompt(prev => ({ ...prev, teamId: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a team" />
+              </SelectTrigger>
+              <SelectContent>
+                {teams.map((team) => (
+                  <SelectItem key={team.id} value={team.id}>
+                    {team.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="group" className="text-sm font-medium">
+              Add to Group
+            </label>
+            <Select
+              value={newPrompt.groupId}
+              onValueChange={(value) => setNewPrompt(prev => ({ ...prev, groupId: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a group" />
+              </SelectTrigger>
+              <SelectContent>
+                {groups.map((group) => (
+                  <SelectItem key={group.id} value={group.id}>
+                    {group.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Tags</label>
             <div className="flex gap-2 flex-wrap mb-2">
