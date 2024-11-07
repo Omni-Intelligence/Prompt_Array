@@ -27,7 +27,10 @@ const Chains = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.02]">
+          <Card 
+            onClick={() => navigate('/chains/new')}
+            className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.02] cursor-pointer"
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Plus className="h-5 w-5 text-primary" />
@@ -45,13 +48,14 @@ const Chains = () => {
           </Card>
 
           {[
-            { title: 'Content Creation', prompts: 3, status: 'Active' },
-            { title: 'Customer Support', prompts: 5, status: 'Draft' },
-            { title: 'Data Analysis', prompts: 4, status: 'Active' },
+            { id: '1', title: 'Content Creation', prompts: 3, status: 'Active' },
+            { id: '2', title: 'Customer Support', prompts: 5, status: 'Draft' },
+            { id: '3', title: 'Data Analysis', prompts: 4, status: 'Active' },
           ].map((chain) => (
             <Card 
-              key={chain.title}
-              className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.02]"
+              key={chain.id}
+              onClick={() => navigate(`/chains/${chain.id}`)}
+              className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.02] cursor-pointer"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
