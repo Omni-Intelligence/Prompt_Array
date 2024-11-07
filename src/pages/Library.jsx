@@ -24,7 +24,6 @@ const Library = () => {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">Blog</Button>
             <Button variant="ghost">Log In</Button>
             <Button variant="outline">Book Demo</Button>
             <Button>Sign Up</Button>

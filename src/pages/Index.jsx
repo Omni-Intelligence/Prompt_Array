@@ -28,7 +28,6 @@ const Index = () => {
             <span className="text-xl font-bold">PromptHub</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">Blog</Button>
             <UserNav isSignedIn={isSignedIn} onSignOut={handleSignOut} />
           </div>
         </div>
