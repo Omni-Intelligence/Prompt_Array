@@ -1,70 +1,242 @@
-# Welcome to your GPT Engineer project
+# Prompt Engineering Platform - Backend Implementation Guide
 
-## Project info
+## Database Requirements for MVP
 
-**URL**: https://run.gptengineer.app/projects/92d7c7f4-b756-4fec-8b15-bca5fd56489e/improve
+### Core Tables
 
-## How can I edit this code?
+1. **Users**
+   ```sql
+   users {
+     id: uuid (primary key)
+     email: string (unique)
+     name: string
+     avatar_url: string (optional)
+     created_at: timestamp
+     updated_at: timestamp
+   }
+   ```
 
-There are several ways of editing your application.
+2. **Prompts**
+   ```sql
+   prompts {
+     id: uuid (primary key)
+     title: string
+     content: text
+     description: text
+     user_id: uuid (foreign key -> users.id)
+     is_template: boolean
+     category: string
+     created_at: timestamp
+     updated_at: timestamp
+   }
+   ```
 
-**Use GPT Engineer**
+3. **Groups**
+   ```sql
+   groups {
+     id: uuid (primary key)
+     name: string
+     description: text
+     user_id: uuid (foreign key -> users.id)
+     created_at: timestamp
+     updated_at: timestamp
+   }
+   ```
 
-Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/92d7c7f4-b756-4fec-8b15-bca5fd56489e/improve) and start prompting.
+4. **Group_Prompts**
+   ```sql
+   group_prompts {
+     group_id: uuid (foreign key -> groups.id)
+     prompt_id: uuid (foreign key -> prompts.id)
+     position: integer
+     created_at: timestamp
+   }
+   ```
 
-Changes made via gptengineer.app will be committed automatically to this repo.
+5. **Favorites**
+   ```sql
+   favorites {
+     user_id: uuid (foreign key -> users.id)
+     prompt_id: uuid (foreign key -> prompts.id)
+     created_at: timestamp
+     PRIMARY KEY (user_id, prompt_id)
+   }
+   ```
 
-**Use your preferred IDE**
+### Key Features to Implement
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in the GPT Engineer UI.
+1. **Authentication & Authorization**
+   - User registration and login
+   - JWT token-based authentication
+   - Role-based access control (Admin, User)
+   - Password reset functionality
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. **Prompt Management**
+   - CRUD operations for prompts
+   - Template management
+   - Version history
+   - Search and filtering
+   - Categories and tags
 
-Follow these steps:
+3. **Group Management**
+   - Create and manage prompt groups
+   - Add/remove prompts from groups
+   - Reorder prompts within groups
+   - Share groups with other users
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. **User Features**
+   - Favorite prompts
+   - Personal library
+   - Usage history
+   - User preferences
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### API Endpoints Required
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. **Authentication**
+   ```
+   POST /auth/register
+   POST /auth/login
+   POST /auth/forgot-password
+   POST /auth/reset-password
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+2. **Prompts**
+   ```
+   GET /prompts
+   GET /prompts/:id
+   POST /prompts
+   PUT /prompts/:id
+   DELETE /prompts/:id
+   GET /prompts/templates
+   ```
 
-**Edit a file directly in GitHub**
+3. **Groups**
+   ```
+   GET /groups
+   GET /groups/:id
+   POST /groups
+   PUT /groups/:id
+   DELETE /groups/:id
+   POST /groups/:id/prompts
+   DELETE /groups/:id/prompts/:promptId
+   PUT /groups/:id/reorder
+   ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+4. **User Management**
+   ```
+   GET /users/me
+   PUT /users/me
+   GET /users/favorites
+   POST /users/favorites/:promptId
+   DELETE /users/favorites/:promptId
+   ```
 
-**Use GitHub Codespaces**
+### Implementation Steps
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Set Up Database**
+   - Choose a database provider (recommended: PostgreSQL)
+   - Set up database schemas
+   - Implement migrations system
+   - Set up backup system
 
-## What technologies are used for this project?
+2. **Backend Framework Setup**
+   - Choose a backend framework (recommended: Node.js with Express/NestJS)
+   - Set up project structure
+   - Implement authentication middleware
+   - Set up error handling
 
-This project is built with .
+3. **API Implementation**
+   - Implement all required endpoints
+   - Add request validation
+   - Implement rate limiting
+   - Add API documentation (Swagger/OpenAPI)
 
-- Vite
-- React
-- shadcn-ui
-- Tailwind CSS
+4. **Security Measures**
+   - Implement CORS
+   - Add request validation
+   - Set up SSL/TLS
+   - Implement rate limiting
+   - Add API key management
 
-## How can I deploy this project?
+### Deployment Considerations
 
-All GPT Engineer projects can be deployed directly via the GPT Engineer app.
+1. **Environment Setup**
+   - Development
+   - Staging
+   - Production
 
-Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/92d7c7f4-b756-4fec-8b15-bca5fd56489e/improve) and click on Share -> Publish.
+2. **Infrastructure**
+   - Choose cloud provider (AWS/GCP/Azure)
+   - Set up CI/CD pipeline
+   - Configure monitoring and logging
+   - Set up automated backups
 
-## I want to use a custom domain - is that possible?
+3. **Performance**
+   - Implement caching strategy
+   - Set up database indexing
+   - Configure connection pooling
+   - Implement query optimization
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+### Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```env
+   DATABASE_URL=your_database_url
+   JWT_SECRET=your_jwt_secret
+   SMTP_CONFIG=your_smtp_config
+   ```
+
+4. Run migrations:
+   ```bash
+   npm run migrate
+   ```
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+### Testing
+
+1. **Unit Tests**
+   ```bash
+   npm run test
+   ```
+
+2. **Integration Tests**
+   ```bash
+   npm run test:integration
+   ```
+
+3. **E2E Tests**
+   ```bash
+   npm run test:e2e
+   ```
+
+### Monitoring and Maintenance
+
+1. Set up monitoring for:
+   - API endpoint performance
+   - Database performance
+   - Error rates
+   - User authentication attempts
+
+2. Regular maintenance tasks:
+   - Database backups
+   - Security updates
+   - Performance optimization
+   - Log rotation
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
