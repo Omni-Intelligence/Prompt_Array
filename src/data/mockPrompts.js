@@ -1,5 +1,7 @@
 import { emailPrompts } from './groups/emailPrompts';
 import { technicalPrompts } from './groups/technicalPrompts';
+import { seoPrompts } from './groups/seoPrompts';
+import { creativeStoryPrompts } from './groups/creativeStoryPrompts';
 
 export const groupPrompts = {
   1: [ // Blog Writing
@@ -167,57 +169,7 @@ export const groupPrompts = {
     }
   ],
   3: emailPrompts,
-  4: [ // SEO Content
-    {
-      id: 10,
-      title: 'Meta Description Generator',
-      description: 'Creates optimized meta descriptions',
-      content: 'Write a compelling meta description for [page type] that: 1) Includes the primary keyword [keyword] naturally, 2) Summarizes the page content in 150-160 characters, 3) Includes a clear value proposition, 4) Contains a call-to-action, 5) Uses active voice and action words. The description should entice clicks while accurately representing the page content.',
-      lastUsed: '3 days ago',
-      tags: ['seo', 'meta']
-    },
-    {
-      id: 11,
-      title: 'Product Description SEO',
-      description: 'Generates SEO-friendly product descriptions',
-      content: 'Create an SEO-optimized product description for [product name] that includes: 1) A compelling headline with primary keyword, 2) Unique selling propositions, 3) Technical specifications and features, 4) Benefits and use cases, 5) Natural keyword placement for [list of keywords], 6) Trust signals and social proof. Length should be 300-500 words.',
-      lastUsed: '1 week ago',
-      tags: ['product', 'seo']
-    },
-    {
-      id: 12,
-      title: 'Local SEO Content',
-      description: 'Creates location-specific content',
-      content: 'Write a locally optimized page for [business type] in [location] that includes: 1) Location-specific keywords naturally integrated, 2) Local landmarks and area references, 3) Specific services for the area, 4) Local customer testimonials, 5) Area-specific promotions or offerings, 6) Local business schema markup suggestions. Content should be 800-1000 words.',
-      lastUsed: '4 days ago',
-      tags: ['local-seo', 'content']
-    }
-  ],
+  4: seoPrompts,
   5: technicalPrompts,
-  6: [ // Creative Stories
-    {
-      id: 16,
-      title: 'Story Premise Generator',
-      description: 'Creates unique story premises',
-      content: 'Create a story premise that includes: 1) A unique protagonist with [defining characteristic], 2) Their main goal or desire, 3) The central conflict or obstacle, 4) The stakes (what they stand to lose), 5) The setting and time period, 6) A unique twist or complication, 7) Potential themes to explore. The premise should be specific enough to guide the story but leave room for creative development.',
-      lastUsed: '3 days ago',
-      tags: ['creative', 'story']
-    },
-    {
-      id: 17,
-      title: 'Character Profile Builder',
-      description: 'Generates detailed character profiles',
-      content: 'Create a detailed character profile that includes: 1) Basic information (name, age, occupation), 2) Physical description and distinctive features, 3) Personality traits and quirks, 4) Background and personal history, 5) Goals and motivations, 6) Fears and weaknesses, 7) Relationships and connections, 8) Character arc potential. Focus on making the character unique and three-dimensional.',
-      lastUsed: '6 days ago',
-      tags: ['character', 'creative']
-    },
-    {
-      id: 18,
-      title: 'Scene Setting Creator',
-      description: 'Creates vivid scene descriptions',
-      content: 'Write a scene setting description that includes: 1) Time of day and weather, 2) Physical environment details, 3) Sensory details (sights, sounds, smells, etc.), 4) Mood and atmosphere, 5) Important objects or elements in the scene, 6) How the setting affects the characters, 7) Potential for conflict or story development. Use vivid language and specific details.',
-      lastUsed: '4 days ago',
-      tags: ['scene', 'description']
-    }
-  ]
+  6: creativeStoryPrompts
 };
