@@ -6,12 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Search, Star, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow-sm">
@@ -82,14 +84,18 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { title: 'Content Generation', prompts: 10 },
-                { title: 'PromptLab Prompts', prompts: 5 },
-                { title: 'Latency Newsletter', prompts: 3 },
-                { title: 'Chatbot', prompts: 2 },
-                { title: 'Prompt Engineering', prompts: 4 },
-                { title: 'Financial Prompts', prompts: 12 },
+                { id: 1, title: 'Content Generation', prompts: 10 },
+                { id: 2, title: 'PromptLab Prompts', prompts: 5 },
+                { id: 3, title: 'Latency Newsletter', prompts: 3 },
+                { id: 4, title: 'Chatbot', prompts: 2 },
+                { id: 5, title: 'Prompt Engineering', prompts: 4 },
+                { id: 6, title: 'Financial Prompts', prompts: 12 },
               ].map((group) => (
-                <Card key={group.title}>
+                <Card 
+                  key={group.id}
+                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/groups/${group.id}`)}
+                >
                   <CardHeader>
                     <CardTitle>{group.title}</CardTitle>
                   </CardHeader>
