@@ -4,15 +4,20 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, Search, Star, Plus } from 'lucide-react';
+import { Star, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
+import UserNav from '@/components/UserNav';
 
 const Index = () => {
   const navigate = useNavigate();
+  const [isSignedIn, setIsSignedIn] = React.useState(true); // For demo purposes
+
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -24,14 +29,7 @@ const Index = () => {
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="ghost">Blog</Button>
-            <Button variant="ghost">Log In</Button>
-            <Button variant="outline">Book Demo</Button>
-            <Button>Sign Up</Button>
-            <Avatar>
-              <AvatarImage src="/placeholder.svg" alt="User" />
-              <AvatarFallback>DC</AvatarFallback>
-            </Avatar>
-            <span>Dan Cleary</span>
+            <UserNav isSignedIn={isSignedIn} onSignOut={handleSignOut} />
           </div>
         </div>
       </header>
