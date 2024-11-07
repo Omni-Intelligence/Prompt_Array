@@ -5,11 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Search, Star, BookOpen, Save, ThumbsUp, Share2, MessageSquare } from "lucide-react";
+import { Search, Star, BookOpen, Save, ThumbsUp, Share2, MessageSquare, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   // Mock data - would come from backend in real app
   const communityPrompts = [
@@ -59,11 +61,16 @@ const Community = () => {
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold">Community Prompts</h1>
-          <p className="text-muted-foreground">
-            Discover and share prompts with the community. Save your favorites or add them to your library.
-          </p>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold">Community Prompts</h1>
+            <p className="text-muted-foreground">
+              Discover and share prompts with the community. Save your favorites or add them to your library.
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
