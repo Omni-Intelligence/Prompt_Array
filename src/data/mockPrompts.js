@@ -1,3 +1,5 @@
+import { emailPrompts } from './groups/emailPrompts';
+
 export const groupPrompts = {
   1: [ // Blog Writing
     {
@@ -123,32 +125,7 @@ export const groupPrompts = {
       tags: ['linkedin', 'professional']
     }
   ],
-  3: [ // Email Marketing
-    {
-      id: 7,
-      title: 'Welcome Email Sequence',
-      description: 'Creates engaging onboarding emails',
-      content: 'Create a welcome email for new subscribers that: 1) Warmly greets them by name, 2) Thanks them for subscribing, 3) Sets clear expectations about email frequency and content, 4) Delivers the promised lead magnet or welcome gift, 5) Introduces your best content or products, 6) Includes a small action step or quick win. Tone should be friendly yet professional.',
-      lastUsed: '2 days ago',
-      tags: ['email', 'onboarding']
-    },
-    {
-      id: 8,
-      title: 'Promotional Email Template',
-      description: 'Generates compelling promotional emails',
-      content: 'Write a promotional email for [product/service] that includes: 1) An attention-grabbing subject line, 2) A personalized greeting, 3) Problem statement that resonates with the reader, 4) Solution presentation with clear benefits, 5) Social proof or testimonials, 6) Clear pricing and offer details, 7) Urgent call-to-action with deadline, 8) P.S. section with bonus or scarcity element.',
-      lastUsed: '1 week ago',
-      tags: ['promotion', 'sales']
-    },
-    {
-      id: 9,
-      title: 'Newsletter Content Generator',
-      description: 'Creates engaging newsletter content',
-      content: 'Create a newsletter about [topic/industry] that includes: 1) A personal introduction or industry update, 2) Main article or feature story, 3) Curated content section with 3-5 relevant industry articles, 4) Tips or quick wins section, 5) Upcoming events or announcements, 6) Interactive element (poll, question, or feedback request). Maintain a consistent voice that matches [brand tone].',
-      lastUsed: '5 days ago',
-      tags: ['newsletter', 'content']
-    }
-  ],
+  3: emailPrompts, // Email Marketing
   4: [ // SEO Content
     {
       id: 10,
