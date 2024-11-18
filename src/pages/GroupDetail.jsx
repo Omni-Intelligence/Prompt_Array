@@ -1,20 +1,27 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useGroupDetails } from '@/hooks/useGroupDetails';
 import { FolderTree } from '@/components/folder/FolderTree';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Star, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { groupPrompts } from '@/data/mockPrompts';
 import { Badge } from "@/components/ui/badge";
+import { groupPrompts } from '@/data/mockPrompts';
 
 const GroupDetail = () => {
   const { groupId } = useParams();
-  const { group } = useGroupDetails(groupId);
+  const { group, isLoading } = useGroupDetails(groupId);
   const navigate = useNavigate();
   const prompts = groupPrompts[groupId] || [];
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (!group) {
+    return <Navigate to="/app/dashboard" replace />;
+  }
 
   // Mock folders data - replace with actual data fetching
   const folders = [
@@ -57,7 +64,7 @@ const GroupDetail = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={() => navigate('/groups')}
+              onClick={() => navigate('/app/dashboard')}
               className="hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -111,7 +118,7 @@ const GroupDetail = () => {
                         <h3 className="font-semibold text-lg">{prompt.title}</h3>
                         <p className="text-muted-foreground text-sm">{prompt.description}</p>
                         <div className="flex gap-2 mt-2">
-                          {prompt.tags.map((tag) => (
+                          {prompt.tags?.map((tag) => (
                             <Badge key={tag} variant="secondary" className="text-xs">
                               {tag}
                             </Badge>
