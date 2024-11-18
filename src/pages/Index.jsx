@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus, Folder } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import UserNav from '@/components/UserNav';
-import QuickAccessGroups from '@/components/dashboard/QuickAccessGroups';
-import PromptsList from '@/components/dashboard/PromptsList';
 
 const Index = () => {
   const [isSignedIn, setIsSignedIn] = useState(true);
@@ -17,20 +15,6 @@ const Index = () => {
   const handleSignOut = () => {
     setIsSignedIn(false);
   };
-
-  const handlePromptClick = (prompt) => {
-    setSelectedPrompt(prompt);
-    setIsEditSheetOpen(true);
-  };
-
-  const quickAccessGroups = [
-    { id: 1, name: 'Blog Writing', count: 12 },
-    { id: 2, name: 'Social Media', count: 8 },
-    { id: 3, name: 'Email Marketing', count: 15 },
-    { id: 4, name: 'SEO Content', count: 6 },
-    { id: 5, name: 'Technical Writing', count: 10 },
-    { id: 6, name: 'Creative Stories', count: 9 }
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -54,7 +38,7 @@ const Index = () => {
             {navItems.map((item) => (
               <Link 
                 key={item.title}
-                to={item.to}
+                to={item.to.replace('/app/', '')}
                 className="group w-full"
               >
                 <Button 
@@ -72,33 +56,8 @@ const Index = () => {
           </nav>
         </aside>
 
-        <main className="flex-1 space-y-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Your Library
-            </h1>
-            <div className="flex gap-2">
-              <CreateGroupSheet 
-                trigger={
-                  <Button variant="outline" className="group">
-                    <Folder className="mr-2 h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
-                    New Group
-                  </Button>
-                }
-              />
-              <CreatePromptSheet 
-                trigger={
-                  <Button className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 transition-colors group">
-                    <Plus className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                    New Prompt
-                  </Button>
-                }
-              />
-            </div>
-          </div>
-
-          <QuickAccessGroups groups={quickAccessGroups} />
-          <PromptsList onPromptClick={handlePromptClick} />
+        <main className="flex-1">
+          <Outlet />
         </main>
       </div>
 

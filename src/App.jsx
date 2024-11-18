@@ -33,16 +33,17 @@ const AppRoutes = () => {
       <Route path="/signin" element={<SignIn />} />
 
       {/* App route that contains all protected routes */}
-      <Route path="/app" element={
+      <Route path="/app/*" element={
         <PrivateRoute>
           <Index />
         </PrivateRoute>
       }>
         {/* Protected routes as children of /app */}
+        <Route index element={<Navigate to="dashboard" replace />} />
         {Array.isArray(navItems) && navItems.map((item) => (
           <Route 
             key={item.to} 
-            path={`${item.to}`} 
+            path={item.to.replace('/app/', '')} 
             element={item.page} 
           />
         ))}
