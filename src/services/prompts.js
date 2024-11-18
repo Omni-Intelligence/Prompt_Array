@@ -1,13 +1,24 @@
 import { supabase } from '@/lib/supabase'
+import { toast } from "sonner"
 
 export const createPrompt = async (promptData) => {
   console.log('Creating prompt with data:', promptData);
 
   if (!promptData.title || !promptData.content) {
+    toast.error('Title and content are required');
     throw new Error('Title and content are required');
   }
 
   try {
+    // First check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      console.error('Authentication error:', authError);
+      toast.error('Please sign in to create prompts');
+      throw new Error('Authentication required');
+    }
+
     const { data, error } = await supabase
       .from('prompts')
       .insert([
@@ -21,24 +32,31 @@ export const createPrompt = async (promptData) => {
           group_id: promptData.groupId || null,
           version: 1,
           change_description: promptData.changeDescription || null,
-          user_id: (await supabase.auth.getUser()).data.user?.id
+          user_id: user.id
         }
       ])
       .select();
 
     if (error) {
       console.error('Supabase error:', error);
+      toast.error(`Failed to create prompt: ${error.message}`);
       throw error;
     }
 
     if (!data || data.length === 0) {
-      throw new Error('No data returned from Supabase');
+      const noDataError = 'No data returned from Supabase';
+      console.error(noDataError);
+      toast.error(noDataError);
+      throw new Error(noDataError);
     }
 
     console.log('Prompt created successfully:', data[0]);
+    toast.success('Prompt created successfully!');
     return data[0];
   } catch (error) {
     console.error('Error in createPrompt:', error);
-    throw new Error(error.message || 'Failed to create prompt');
+    // Ensure the user sees the error message
+    toast.error(error.message || 'Failed to create prompt');
+    throw error;
   }
 }
