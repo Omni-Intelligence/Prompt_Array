@@ -10,6 +10,15 @@ export const createPrompt = async (promptData) => {
   }
 
   try {
+    // Get the current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      console.error('Authentication error:', userError);
+      toast.error('Please sign in to create prompts');
+      throw new Error('Authentication required');
+    }
+
     // Test the connection first
     const { data: connectionTest, error: connectionError } = await supabase
       .from('prompts')
@@ -48,8 +57,7 @@ export const createPrompt = async (promptData) => {
           group_id: promptData.groupId || null,
           version: 1,
           change_description: promptData.changeDescription || null,
-          // Using a placeholder user_id for testing
-          user_id: '00000000-0000-0000-0000-000000000000'
+          user_id: user.id
         }
       ])
       .select();
