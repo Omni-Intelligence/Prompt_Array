@@ -33,13 +33,13 @@ export const createPrompt = async (promptData) => {
 
     console.log('Database connection successful');
 
-    // Prepare the prompt data without the changeDescription field
+    // Prepare the prompt data
     const promptInsertData = {
       title: promptData.title,
       content: promptData.content,
-      description: promptData.description,
-      tags: promptData.tags,
-      is_public: promptData.isPublic,
+      description: promptData.description || null,
+      tags: promptData.tags || [],
+      is_public: promptData.isPublic || false,
       team_id: promptData.teamId || null,
       group_id: promptData.groupId || null,
       version: 1,
