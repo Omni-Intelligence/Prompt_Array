@@ -3,18 +3,18 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
-  // Dummy data for teams and groups - replace with actual data
+  // Mock data with proper UUID formats
   const teams = [
-    { id: '1', name: 'Marketing Team' },
-    { id: '2', name: 'Content Team' },
-    { id: '3', name: 'Development Team' }
+    { id: '123e4567-e89b-12d3-a456-426614174000', name: 'Marketing Team' },
+    { id: '123e4567-e89b-12d3-a456-426614174001', name: 'Content Team' },
+    { id: '123e4567-e89b-12d3-a456-426614174002', name: 'Development Team' }
   ];
 
   const groups = [
-    { id: '1', name: 'Blog Writing' },
-    { id: '2', name: 'Social Media' },
-    { id: '3', name: 'Email Marketing' },
-    { id: '4', name: 'SEO Content' }
+    { id: '123e4567-e89b-12d3-a456-426614174003', name: 'Blog Writing' },
+    { id: '123e4567-e89b-12d3-a456-426614174004', name: 'Social Media' },
+    { id: '123e4567-e89b-12d3-a456-426614174005', name: 'Email Marketing' },
+    { id: '123e4567-e89b-12d3-a456-426614174006', name: 'SEO Content' }
   ];
 
   return (
