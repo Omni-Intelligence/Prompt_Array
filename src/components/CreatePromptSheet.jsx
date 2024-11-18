@@ -46,10 +46,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
     }
     
     try {
-      console.log('Submitting prompt with data:', newPrompt);
       const createdPrompt = await createPrompt(newPrompt);
-      console.log('Created prompt response:', createdPrompt);
-      
       toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
       onOpenChange?.(false);
       setNewPrompt({ 
@@ -63,7 +60,6 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         changeDescription: ''
       });
 
-      // Force a page reload to show the new prompt
       window.location.reload();
     } catch (error) {
       console.error('Error creating prompt:', error);
@@ -76,20 +72,25 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
       <SheetTrigger asChild>
         {trigger}
       </SheetTrigger>
-      <SheetContent className="w-[95vw] max-w-[850px] sm:w-[850px]">
+      <SheetContent 
+        className="w-[95vw] max-w-[850px] sm:w-[850px] overflow-y-auto"
+        side="right"
+      >
         <SheetHeader>
           <SheetTitle>{initialData ? 'Edit Prompt' : 'Create New Prompt'}</SheetTitle>
           <SheetDescription>
             {initialData ? 'Edit your prompt details' : 'Add a new prompt to your library'}
           </SheetDescription>
         </SheetHeader>
-        <PromptForm
-          newPrompt={newPrompt}
-          setNewPrompt={setNewPrompt}
-          onSubmit={handleCreatePrompt}
-          initialData={initialData}
-          isEditing={!!initialData}
-        />
+        <div className="mt-6">
+          <PromptForm
+            newPrompt={newPrompt}
+            setNewPrompt={setNewPrompt}
+            onSubmit={handleCreatePrompt}
+            initialData={initialData}
+            isEditing={!!initialData}
+          />
+        </div>
       </SheetContent>
     </Sheet>
   );
