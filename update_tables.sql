@@ -4,7 +4,9 @@ ADD COLUMN IF NOT EXISTS description text,
 ADD COLUMN IF NOT EXISTS tags text[] DEFAULT '{}',
 ADD COLUMN IF NOT EXISTS is_public boolean DEFAULT false,
 ADD COLUMN IF NOT EXISTS version integer DEFAULT 1,
-ADD COLUMN IF NOT EXISTS change_description text;
+ADD COLUMN IF NOT EXISTS change_description text,
+ADD COLUMN IF NOT EXISTS team_id uuid,
+ADD COLUMN IF NOT EXISTS group_id uuid REFERENCES groups(id);
 
 -- Add missing columns to groups table
 ALTER TABLE groups 
