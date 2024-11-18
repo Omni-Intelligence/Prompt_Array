@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import UserNav from "@/components/UserNav";
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <header className="py-6">
+        <header className="py-6 flex justify-between items-center">
           <img src="/logo.svg" alt="Prompt Central Logo" className="h-10" />
+          <UserNav />
         </header>
         
         <main className="py-20 sm:py-32">
