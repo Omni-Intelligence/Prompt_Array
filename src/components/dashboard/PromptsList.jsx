@@ -14,10 +14,9 @@ import { queryClient } from '@/lib/react-query';
 
 const PromptItem = ({ prompt, onClick }) => {
   const handleFavorite = async (e) => {
-    e.stopPropagation(); // Prevent triggering onClick of parent
+    e.stopPropagation();
     try {
       await toggleFavorite(prompt.id);
-      // Invalidate prompts query to refresh the list
       queryClient.invalidateQueries({ queryKey: ['prompts'] });
     } catch (error) {
       console.error('Error toggling favorite:', error);
@@ -71,11 +70,10 @@ const PromptsList = ({ onPromptClick }) => {
     return <div>Error loading prompts: {error.message}</div>;
   }
 
-  // All user prompts are considered "owned" since we're filtering by user_id in usePrompts
   const categorizedPrompts = {
-    recent: userPrompts || [],
-    favorites: userPrompts?.filter(p => p.starred) || [],
-    owned: userPrompts || [], // All prompts fetched are owned by the user
+    recent: Array.isArray(userPrompts) ? userPrompts : [],
+    favorites: Array.isArray(userPrompts) ? userPrompts.filter(p => p.starred) : [],
+    owned: Array.isArray(userPrompts) ? userPrompts : [],
     templates: templatePrompts
   };
 
@@ -104,9 +102,9 @@ const PromptsList = ({ onPromptClick }) => {
         {Object.entries(categorizedPrompts).map(([category, categoryPrompts]) => (
           <TabsContent key={category} value={category}>
             <ScrollArea className="h-[400px]">
-              {categoryPrompts.length === 0 && category !== 'templates' ? (
+              {categoryPrompts.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">
-                  No prompts found. Create your first prompt by clicking the "New Prompt" button above.
+                  {category === 'templates' ? 'No template prompts available.' : 'No prompts found. Create your first prompt by clicking the "New Prompt" button above.'}
                 </p>
               ) : (
                 <ul className="space-y-3">
