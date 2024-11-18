@@ -9,25 +9,45 @@
    - Usage metrics
 
 2. **prompts**
-   - Version control
-   - Content management
-   - Metadata storage
-   - Analytics tracking
+   ```sql
+   CREATE TABLE IF NOT EXISTS prompts (
+     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+     title TEXT NOT NULL,
+     content TEXT NOT NULL,
+     description TEXT,
+     tags TEXT[] DEFAULT '{}',
+     is_public BOOLEAN DEFAULT false,
+     team_id UUID REFERENCES teams(id),
+     group_id UUID REFERENCES groups(id),
+     version INTEGER DEFAULT 1,
+     user_id UUID REFERENCES auth.users(id) NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+   );
+   ```
 
 3. **groups**
-   - Hierarchical structure
-   - Access control
-   - Sharing settings
+   ```sql
+   CREATE TABLE IF NOT EXISTS groups (
+     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+     title TEXT NOT NULL,
+     description TEXT,
+     user_id UUID REFERENCES auth.users(id) NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+   );
+   ```
 
-4. **prompt_versions**
-   - Version history
-   - Change tracking
-   - Rollback capability
-
-5. **favorites**
-   - User preferences
-   - Quick access storage
-   - Analytics data
+4. **teams**
+   ```sql
+   CREATE TABLE IF NOT EXISTS teams (
+     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+     name TEXT NOT NULL,
+     description TEXT,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+   );
+   ```
 
 ## Optimization Strategies
 
