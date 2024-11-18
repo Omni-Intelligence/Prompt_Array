@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Plus, Folder } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
 import { navItems } from '../nav-items';
+import CreatePromptSheet from '@/components/CreatePromptSheet';
+import CreateGroupSheet from '@/components/CreateGroupSheet';
 import UserNav from '@/components/UserNav';
 
 const Index = () => {
+  const [isSignedIn, setIsSignedIn] = useState(true);
+  const [selectedPrompt, setSelectedPrompt] = useState(null);
+  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
-              <img src="/logo.svg" alt="PromptHub Logo" className="h-8" />
-            </Link>
+            <img src="/logo.svg" alt="PromptHub Logo" className="h-8 w-8" />
+            <span className="text-xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              PromptHub
+            </span>
           </div>
-          <UserNav />
+          <div className="flex items-center space-x-4">
+            <UserNav isSignedIn={isSignedIn} onSignOut={handleSignOut} />
+          </div>
         </div>
       </header>
 
@@ -26,24 +41,32 @@ const Index = () => {
                 to={item.to}
                 className="group w-full"
               >
-                <button 
-                  className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200
-                    text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white
-                    hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 
-                    dark:hover:from-primary/20 dark:hover:to-purple-500/20"
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start group relative overflow-hidden transition-all duration-300
+                    hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 dark:hover:from-primary/20 dark:hover:to-purple-500/20"
                 >
-                  <span className="text-primary">{item.icon}</span>
-                  {item.title}
-                </button>
+                  <span className="relative z-10 flex items-center">
+                    <span className="mr-3 text-primary">{item.icon}</span>
+                    <span className="font-medium">{item.title}</span>
+                  </span>
+                </Button>
               </Link>
             ))}
           </nav>
         </aside>
 
-        <main className="flex-1 min-w-0">
+        <main className="flex-1">
           <Outlet />
         </main>
       </div>
+
+      <CreatePromptSheet 
+        trigger={<div />}
+        isOpen={isEditSheetOpen}
+        onOpenChange={setIsEditSheetOpen}
+        initialData={selectedPrompt}
+      />
     </div>
   );
 };
