@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { navItems } from "./nav-items";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import HomePage from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import GroupDetail from "./pages/GroupDetail";
 import PromptDetail from "./pages/PromptDetail";
@@ -24,6 +25,7 @@ const PrivateRoute = ({ children }) => {
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
       {Array.isArray(navItems) && navItems.map((item) => (
         <Route 
