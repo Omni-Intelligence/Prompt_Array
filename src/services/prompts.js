@@ -24,6 +24,17 @@ export const createPrompt = async (promptData) => {
 
     console.log('Database connection successful');
 
+    // Log the actual insert operation
+    console.log('Attempting to insert prompt with data:', {
+      title: promptData.title,
+      content: promptData.content,
+      description: promptData.description,
+      tags: promptData.tags,
+      is_public: promptData.isPublic,
+      team_id: promptData.teamId,
+      group_id: promptData.groupId,
+    });
+
     const { data, error } = await supabase
       .from('prompts')
       .insert([

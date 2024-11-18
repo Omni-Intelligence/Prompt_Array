@@ -46,7 +46,10 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
     }
     
     try {
-      await createPrompt(newPrompt);
+      console.log('Submitting prompt with data:', newPrompt);
+      const createdPrompt = await createPrompt(newPrompt);
+      console.log('Created prompt response:', createdPrompt);
+      
       toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
       onOpenChange?.(false);
       setNewPrompt({ 
@@ -59,6 +62,9 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         groupId: '',
         changeDescription: ''
       });
+
+      // Force a page reload to show the new prompt
+      window.location.reload();
     } catch (error) {
       console.error('Error creating prompt:', error);
       toast.error("Failed to create prompt. Please try again.");
