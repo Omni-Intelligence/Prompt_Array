@@ -24,8 +24,6 @@ const PrivateRoute = ({ children }) => {
 };
 
 const AppRoutes = () => {
-  const { user } = useAuth();
-
   return (
     <Routes>
       {/* Public routes */}
@@ -44,7 +42,7 @@ const AppRoutes = () => {
           <Route 
             key={item.to} 
             path={item.to} 
-            element={item.page} 
+            element={item.component} 
           />
         ))}
       </Route>
