@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 import {
   Sheet,
   SheetContent,
@@ -11,25 +12,58 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useQueryClient } from '@tanstack/react-query';
 
 const CreateGroupSheet = ({ trigger }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const queryClient = useQueryClient();
   const [newGroup, setNewGroup] = React.useState({
     title: '',
     description: ''
   });
 
-  const handleCreateGroup = (e) => {
+  const handleCreateGroup = async (e) => {
     e.preventDefault();
     if (!newGroup.title || !newGroup.description) {
       toast.error("Please fill in all fields");
       return;
     }
     
-    // Here you would typically make an API call to create the group
-    toast.success("Group created successfully!");
-    setIsOpen(false);
-    setNewGroup({ title: '', description: '' });
+    setIsLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("You must be logged in to create a group");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('groups')
+        .insert([{
+          name: newGroup.title,
+          description: newGroup.description,
+          user_id: user.id
+        }])
+        .select();
+
+      if (error) {
+        console.error('Error creating group:', error);
+        toast.error(`Failed to create group: ${error.message}`);
+        return;
+      }
+
+      toast.success("Group created successfully!");
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+      setIsOpen(false);
+      setNewGroup({ title: '', description: '' });
+    } catch (error) {
+      console.error('Error in handleCreateGroup:', error);
+      toast.error("Failed to create group. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -67,8 +101,12 @@ const CreateGroupSheet = ({ trigger }) => {
               placeholder="Enter group description"
             />
           </div>
-          <Button type="submit" className="w-full">
-            Create Group
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "Creating..." : "Create Group"}
           </Button>
         </form>
       </SheetContent>
