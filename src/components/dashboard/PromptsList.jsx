@@ -50,11 +50,11 @@ const PromptsList = ({ onPromptClick }) => {
     return <div>Error loading prompts: {error.message}</div>;
   }
 
-  // Categorize prompts
+  // All user prompts are considered "owned" since we're filtering by user_id in usePrompts
   const categorizedPrompts = {
     recent: userPrompts || [],
     favorites: userPrompts?.filter(p => p.starred) || [],
-    owned: userPrompts?.filter(p => p.is_owned) || [],
+    owned: userPrompts || [], // All prompts fetched are owned by the user
     templates: templatePrompts
   };
 
@@ -83,15 +83,21 @@ const PromptsList = ({ onPromptClick }) => {
         {Object.entries(categorizedPrompts).map(([category, categoryPrompts]) => (
           <TabsContent key={category} value={category}>
             <ScrollArea className="h-[400px]">
-              <ul className="space-y-3">
-                {categoryPrompts.map((prompt) => (
-                  <PromptItem 
-                    key={prompt.id} 
-                    prompt={prompt}
-                    onClick={onPromptClick}
-                  />
-                ))}
-              </ul>
+              {categoryPrompts.length === 0 && category !== 'templates' ? (
+                <p className="text-center text-muted-foreground py-8">
+                  No prompts found. Create your first prompt by clicking the "New Prompt" button above.
+                </p>
+              ) : (
+                <ul className="space-y-3">
+                  {categoryPrompts.map((prompt) => (
+                    <PromptItem 
+                      key={prompt.id} 
+                      prompt={prompt}
+                      onClick={onPromptClick}
+                    />
+                  ))}
+                </ul>
+              )}
             </ScrollArea>
           </TabsContent>
         ))}
