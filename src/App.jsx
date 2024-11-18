@@ -7,6 +7,7 @@ import SignIn from "./pages/SignIn";
 import GroupDetail from "./pages/GroupDetail";
 import PromptDetail from "./pages/PromptDetail";
 import ChainDetail from "./pages/ChainDetail";
+import Index from "./pages/Index";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -31,18 +32,23 @@ const AppRoutes = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
 
-      {/* Protected routes */}
-      {Array.isArray(navItems) && navItems.map((item) => (
-        <Route 
-          key={item.to} 
-          path={item.to} 
-          element={
-            <PrivateRoute>
-              {item.page}
-            </PrivateRoute>
-          } 
-        />
-      ))}
+      {/* App route that contains all protected routes */}
+      <Route path="/app" element={
+        <PrivateRoute>
+          <Index />
+        </PrivateRoute>
+      }>
+        {/* Protected routes as children of /app */}
+        {Array.isArray(navItems) && navItems.map((item) => (
+          <Route 
+            key={item.to} 
+            path={`${item.to}`} 
+            element={item.page} 
+          />
+        ))}
+      </Route>
+
+      {/* Other protected routes */}
       <Route 
         path="/groups/:groupId" 
         element={
