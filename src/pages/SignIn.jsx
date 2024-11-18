@@ -25,7 +25,7 @@ const SignIn = () => {
         await signUp(formData.email, formData.password);
       } else {
         await signIn(formData.email, formData.password);
-        navigate("/");
+        navigate("/app"); // Changed from "/" to "/app"
       }
     } catch (error) {
       console.error("Authentication error:", error);
