@@ -33,33 +33,24 @@ export const createPrompt = async (promptData) => {
 
     console.log('Database connection successful');
 
-    // Log the actual insert operation
-    console.log('Attempting to insert prompt with data:', {
+    // Prepare the prompt data without the changeDescription field
+    const promptInsertData = {
       title: promptData.title,
       content: promptData.content,
       description: promptData.description,
       tags: promptData.tags,
       is_public: promptData.isPublic,
-      team_id: promptData.teamId,
-      group_id: promptData.groupId,
-    });
+      team_id: promptData.teamId || null,
+      group_id: promptData.groupId || null,
+      version: 1,
+      user_id: user.id
+    };
+
+    console.log('Attempting to insert prompt with data:', promptInsertData);
 
     const { data, error } = await supabase
       .from('prompts')
-      .insert([
-        {
-          title: promptData.title,
-          content: promptData.content,
-          description: promptData.description,
-          tags: promptData.tags,
-          is_public: promptData.isPublic,
-          team_id: promptData.teamId || null,
-          group_id: promptData.groupId || null,
-          version: 1,
-          change_description: promptData.changeDescription || null,
-          user_id: user.id
-        }
-      ])
+      .insert([promptInsertData])
       .select();
 
     if (error) {
