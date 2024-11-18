@@ -40,10 +40,10 @@ const AppRoutes = () => {
       }>
         {/* Protected routes as children of /app */}
         <Route index element={<Navigate to="dashboard" replace />} />
-        {Array.isArray(navItems) && navItems.map((item) => (
+        {navItems.map((item) => (
           <Route 
             key={item.to} 
-            path={item.to.replace('/app/', '')} 
+            path={item.to} 
             element={item.page} 
           />
         ))}
