@@ -13,20 +13,35 @@ export const useGroups = () => {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        toast.error(`Error fetching groups: ${error.message}`);
+        throw error;
+      }
       return data;
     }
   });
 
   const createGroup = useMutation({
     mutationFn: async (newGroup) => {
+      const user = await supabase.auth.getUser();
+      if (!user.data?.user) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('groups')
-        .insert([newGroup])
+        .insert([{
+          name: newGroup.title,
+          description: newGroup.description,
+          user_id: user.data.user.id,
+        }])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        toast.error(`Error creating group: ${error.message}`);
+        throw error;
+      }
       return data;
     },
     onSuccess: () => {
