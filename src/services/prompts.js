@@ -33,18 +33,22 @@ export const createPrompt = async (promptData) => {
 
     console.log('Database connection successful');
 
-    // Prepare the prompt data
+    // Prepare the prompt data - handle null/empty values for UUID fields
     const promptInsertData = {
       title: promptData.title,
       content: promptData.content,
       description: promptData.description || null,
       tags: promptData.tags || [],
       is_public: promptData.isPublic || false,
-      team_id: promptData.teamId || null,
-      group_id: promptData.groupId || null,
+      team_id: promptData.teamId || null,  // Handle null/empty values
+      group_id: promptData.groupId || null, // Handle null/empty values
       version: 1,
       user_id: user.id
     };
+
+    // Remove any undefined or null UUID fields to prevent database errors
+    if (!promptInsertData.team_id) delete promptInsertData.team_id;
+    if (!promptInsertData.group_id) delete promptInsertData.group_id;
 
     console.log('Attempting to insert prompt with data:', promptInsertData);
 
