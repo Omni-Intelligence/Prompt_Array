@@ -1,6 +1,7 @@
 import React from 'react';
 import PromptForm from './prompt/PromptForm';
 import { toast } from "sonner";
+import { createPrompt } from '@/services/prompts';
 import {
   Sheet,
   SheetContent,
@@ -37,34 +38,31 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
     }
   }, [initialData]);
 
-  const handleCreatePrompt = (e) => {
+  const handleCreatePrompt = async (e) => {
     e.preventDefault();
     if (!newPrompt.title || !newPrompt.content) {
       toast.error("Please fill in all required fields");
       return;
     }
     
-    // In a real app, this would be handled by your backend
-    const newVersion = {
-      id: crypto.randomUUID(),
-      version: initialData ? initialData.currentVersion + 1 : 1,
-      ...newPrompt,
-      createdAt: new Date(),
-      createdBy: 'Current User', // This would come from auth context
-    };
-
-    toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
-    onOpenChange?.(false);
-    setNewPrompt({ 
-      title: '', 
-      content: '', 
-      description: '', 
-      tags: [],
-      isPublic: false,
-      teamId: '',
-      groupId: '',
-      changeDescription: ''
-    });
+    try {
+      await createPrompt(newPrompt);
+      toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
+      onOpenChange?.(false);
+      setNewPrompt({ 
+        title: '', 
+        content: '', 
+        description: '', 
+        tags: [],
+        isPublic: false,
+        teamId: '',
+        groupId: '',
+        changeDescription: ''
+      });
+    } catch (error) {
+      console.error('Error creating prompt:', error);
+      toast.error("Failed to create prompt. Please try again.");
+    }
   };
 
   return (
