@@ -18,7 +18,7 @@ export const createPrompt = async (promptData) => {
 
     if (connectionError) {
       console.error('Connection error:', connectionError);
-      toast.error('Failed to connect to database. Please check your configuration.');
+      toast.error(`Database connection failed: ${connectionError.message}`);
       throw new Error('Database connection failed');
     }
 
@@ -48,14 +48,14 @@ export const createPrompt = async (promptData) => {
           group_id: promptData.groupId || null,
           version: 1,
           change_description: promptData.changeDescription || null,
-          // Temporarily remove user_id requirement
-          user_id: '00000000-0000-0000-0000-000000000000' // Placeholder UUID
+          // Using a placeholder user_id for testing
+          user_id: '00000000-0000-0000-0000-000000000000'
         }
       ])
       .select();
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Supabase insert error:', error);
       toast.error(`Failed to create prompt: ${error.message}`);
       throw error;
     }
@@ -72,7 +72,7 @@ export const createPrompt = async (promptData) => {
     return data[0];
   } catch (error) {
     console.error('Error in createPrompt:', error);
-    toast.error(error.message || 'Failed to create prompt');
+    toast.error(`Failed to create prompt: ${error.message}`);
     throw error;
   }
 }
