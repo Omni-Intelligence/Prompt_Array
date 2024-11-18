@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { toast } from "sonner"
+import { queryClient } from '@/lib/react-query'
 
 export const createPrompt = async (promptData) => {
   console.log('Creating prompt with data:', promptData);
@@ -72,6 +73,9 @@ export const createPrompt = async (promptData) => {
       toast.error(noDataError);
       throw new Error(noDataError);
     }
+
+    // Invalidate the prompts query to trigger a refetch
+    queryClient.invalidateQueries({ queryKey: ['prompts'] });
 
     console.log('Prompt created successfully:', data[0]);
     toast.success('Prompt created successfully!');
