@@ -10,38 +10,42 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
-const UserNav = ({ isSignedIn, onSignOut }) => {
+const UserNav = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
-  if (!isSignedIn) {
+  if (!user) {
     return (
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => navigate("/register")}>Sign Up</Button>
-        <Button onClick={() => navigate("/register")}>Sign In</Button>
+        <Button variant="ghost" onClick={() => navigate("/signin")}>Sign Up</Button>
+        <Button onClick={() => navigate("/signin")}>Sign In</Button>
       </div>
     );
   }
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/signin");
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage 
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
-              alt="User avatar" 
-            />
-            <AvatarFallback>DC</AvatarFallback>
+            <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
+            <AvatarFallback>{user.email?.[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Dan Cleary</p>
+            <p className="text-sm font-medium leading-none">{user.email}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              dan@example.com
+              {user.user_metadata?.full_name || user.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -55,7 +59,7 @@ const UserNav = ({ isSignedIn, onSignOut }) => {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onSignOut}>
+        <DropdownMenuItem onClick={handleSignOut}>
           Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
