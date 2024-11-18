@@ -4,6 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePrompts } from '@/hooks/usePrompts';
+import { seoPrompts } from '@/data/groups/seoPrompts';
+import { technicalPrompts } from '@/data/groups/technicalPrompts';
+import { emailPrompts } from '@/data/groups/emailPrompts';
+import { creativeStoryPrompts } from '@/data/groups/creativeStoryPrompts';
 
 const PromptItem = ({ prompt, onClick }) => (
   <li 
@@ -16,7 +20,9 @@ const PromptItem = ({ prompt, onClick }) => (
         <h3 className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors">
           {prompt.title}
         </h3>
-        <p className="text-sm text-muted-foreground">Last updated {prompt.time || prompt.updated_at}</p>
+        <p className="text-sm text-muted-foreground">
+          {prompt.lastUsed ? `Last used ${prompt.lastUsed}` : prompt.updated_at ? `Last updated ${new Date(prompt.updated_at).toLocaleDateString()}` : 'Recently added'}
+        </p>
       </div>
     </div>
     {prompt.starred && (
@@ -26,7 +32,15 @@ const PromptItem = ({ prompt, onClick }) => (
 );
 
 const PromptsList = ({ onPromptClick }) => {
-  const { data: prompts, isLoading, error } = usePrompts();
+  const { data: userPrompts, isLoading, error } = usePrompts();
+
+  // Combine all template prompts
+  const templatePrompts = [
+    ...seoPrompts,
+    ...technicalPrompts,
+    ...emailPrompts,
+    ...creativeStoryPrompts
+  ];
 
   if (isLoading) {
     return <div>Loading prompts...</div>;
@@ -38,10 +52,10 @@ const PromptsList = ({ onPromptClick }) => {
 
   // Categorize prompts
   const categorizedPrompts = {
-    recent: prompts || [],
-    favorites: prompts?.filter(p => p.starred) || [],
-    owned: prompts?.filter(p => p.is_owned) || [],
-    templates: prompts?.filter(p => p.is_template) || []
+    recent: userPrompts || [],
+    favorites: userPrompts?.filter(p => p.starred) || [],
+    owned: userPrompts?.filter(p => p.is_owned) || [],
+    templates: templatePrompts
   };
 
   return (
