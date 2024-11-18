@@ -23,9 +23,10 @@ const SignIn = () => {
     try {
       if (isSignUp) {
         await signUp(formData.email, formData.password);
+        navigate("/app");
       } else {
         await signIn(formData.email, formData.password);
-        navigate("/app"); // Changed from "/" to "/app"
+        navigate("/app");
       }
     } catch (error) {
       console.error("Authentication error:", error);
