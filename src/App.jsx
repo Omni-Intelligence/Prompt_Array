@@ -23,10 +23,15 @@ const PrivateRoute = ({ children }) => {
 };
 
 const AppRoutes = () => {
+  const { user } = useAuth();
+
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
+
+      {/* Protected routes */}
       {Array.isArray(navItems) && navItems.map((item) => (
         <Route 
           key={item.to} 
