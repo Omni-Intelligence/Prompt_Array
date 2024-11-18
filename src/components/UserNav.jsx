@@ -51,6 +51,9 @@ const UserNav = () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => navigate("/app/dashboard")}>
+            Go to Dashboard
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/account")}>
             Account Settings
           </DropdownMenuItem>
