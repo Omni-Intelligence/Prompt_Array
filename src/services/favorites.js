@@ -9,13 +9,18 @@ export const toggleFavorite = async (promptId) => {
     throw userError;
   }
 
-  // Check if prompt is already favorited
-  const { data: existingFavorite } = await supabase
+  // Check if prompt is already favorited - using maybeSingle() instead of single()
+  const { data: existingFavorite, error: fetchError } = await supabase
     .from('favorites')
     .select()
     .eq('user_id', user.id)
     .eq('prompt_id', promptId)
-    .single();
+    .maybeSingle();
+
+  if (fetchError) {
+    toast.error('Failed to check favorite status');
+    throw fetchError;
+  }
 
   if (existingFavorite) {
     // Remove favorite
