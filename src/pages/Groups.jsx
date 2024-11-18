@@ -73,7 +73,11 @@ const Groups = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
@@ -84,11 +88,35 @@ const Groups = () => {
           onCreateFolder={() => setIsFolderOpen(true)}
         />
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {groups.map((group) => (
-            <GroupCard key={group.id} group={group} folders={folders} />
-          ))}
-        </div>
+        {groups.length === 0 ? (
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No groups yet</h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              Get started by creating a new group
+            </p>
+            <Button 
+              onClick={() => setIsOpen(true)}
+              className="mt-4"
+            >
+              Create Group
+            </Button>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {groups.map((group) => (
+              <GroupCard 
+                key={group.id} 
+                group={{
+                  ...group,
+                  title: group.name,
+                  promptCount: 0,
+                  lastUpdated: new Date(group.updated_at).toLocaleDateString()
+                }} 
+                folders={folders} 
+              />
+            ))}
+          </div>
+        )}
 
         <Sheet open={isFolderOpen} onOpenChange={setIsFolderOpen}>
           <SheetContent>
