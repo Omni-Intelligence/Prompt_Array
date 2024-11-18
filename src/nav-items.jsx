@@ -8,14 +8,14 @@ import {
   Globe2Icon,
   GitBranchIcon
 } from "lucide-react";
-import Index from "./pages/Index.jsx";
-import Library from "./pages/Library.jsx";
-import Groups from "./pages/Groups.jsx";
-import Favourites from "./pages/Favourites.jsx";
-import Templates from "./pages/Templates.jsx";
-import Batches from "./pages/Batches.jsx";
-import Community from "./pages/Community.jsx";
-import Chains from "./pages/Chains.jsx";
+import Library from "./pages/Library";
+import Groups from "./pages/Groups";
+import Favourites from "./pages/Favourites";
+import Templates from "./pages/Templates";
+import Batches from "./pages/Batches";
+import Community from "./pages/Community";
+import Chains from "./pages/Chains";
+import Index from "./pages/Index";
 
 export const navItems = [
   {
