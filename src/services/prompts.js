@@ -44,13 +44,13 @@ export const createPrompt = async (promptData) => {
       user_id: user.id
     };
 
-    // Only add team_id and group_id if they are valid UUIDs
-    if (promptData.teamId && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(promptData.teamId)) {
-      promptInsertData.team_id = promptData.teamId;
+    // Remove any potential invalid values
+    if (!promptData.teamId) {
+      delete promptInsertData.team_id;
     }
     
-    if (promptData.groupId && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(promptData.groupId)) {
-      promptInsertData.group_id = promptData.groupId;
+    if (!promptData.groupId) {
+      delete promptInsertData.group_id;
     }
 
     console.log('Attempting to insert prompt with data:', promptInsertData);
