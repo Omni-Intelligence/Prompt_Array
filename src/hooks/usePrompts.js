@@ -11,21 +11,16 @@ export const usePrompts = () => {
         throw new Error('User not authenticated');
       }
 
-      // Get user's prompts with favorite status
+      // Get all prompts for the user
       const { data: prompts, error } = await supabase
         .from('prompts')
-        .select(`
-          *,
-          favorites!inner (
-            user_id
-          )
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
 
-      // Get user's favorites
+      // Get user's favorites in a separate query
       const { data: favorites, error: favoritesError } = await supabase
         .from('favorites')
         .select('prompt_id')
