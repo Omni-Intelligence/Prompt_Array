@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { navItems } from "./nav-items";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import HomePage from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import GroupDetail from "./pages/GroupDetail";
 import PromptDetail from "./pages/PromptDetail";
@@ -27,53 +26,35 @@ const PrivateRoute = ({ children }) => {
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Redirect root to dashboard */}
+      <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
+      
       {/* Public routes */}
-      <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
 
-      {/* App route that contains all protected routes */}
-      <Route path="/app" element={
-        <PrivateRoute>
-          <Index />
-        </PrivateRoute>
-      }>
-        {/* Protected routes as children of /app */}
-        <Route index element={<Navigate to="dashboard" replace />} />
+      {/* Protected routes */}
+      <Route path="/app" element={<PrivateRoute><Index /></PrivateRoute>}>
+        {/* Dashboard */}
+        <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
+        
+        {/* Dynamic routes from navItems */}
         {navItems.filter(item => item.to !== 'dashboard').map((item) => (
           <Route 
             key={item.to} 
             path={item.to} 
-            element={item.component} 
+            element={<item.component />} 
           />
         ))}
       </Route>
 
-      {/* Other protected routes */}
-      <Route 
-        path="/groups/:groupId" 
-        element={
-          <PrivateRoute>
-            <GroupDetail />
-          </PrivateRoute>
-        } 
-      />
-      <Route 
-        path="/prompts/:promptId" 
-        element={
-          <PrivateRoute>
-            <PromptDetail />
-          </PrivateRoute>
-        } 
-      />
-      <Route 
-        path="/chains/:chainId" 
-        element={
-          <PrivateRoute>
-            <ChainDetail />
-          </PrivateRoute>
-        } 
-      />
+      {/* Detail pages */}
+      <Route path="/app/groups/:groupId" element={<PrivateRoute><GroupDetail /></PrivateRoute>} />
+      <Route path="/app/prompts/:promptId" element={<PrivateRoute><PromptDetail /></PrivateRoute>} />
+      <Route path="/app/chains/:chainId" element={<PrivateRoute><ChainDetail /></PrivateRoute>} />
+
+      {/* Catch all - redirect to dashboard */}
+      <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
     </Routes>
   );
 };

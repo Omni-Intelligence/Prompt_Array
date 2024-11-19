@@ -22,7 +22,7 @@ const Index = () => {
             {navItems.map((item) => (
               <Link 
                 key={item.to}
-                to={item.to}
+                to={`/app/${item.to}`}
                 className="group w-full"
               >
                 <Button 

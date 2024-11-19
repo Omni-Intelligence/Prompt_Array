@@ -8,15 +8,28 @@ export const getGroups = async () => {
       name,
       description,
       created_at,
-      prompts:chain_prompts(count)
+      updated_at
     `)
-    .order('created_at', { ascending: false })
-    .limit(6);
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
+  return data;
+};
 
-  return data.map(group => ({
-    ...group,
-    count: group.prompts[0]?.count || 0
-  }));
+export const getGroupPrompts = async (groupId) => {
+  const { data, error } = await supabase
+    .from('prompts')
+    .select(`
+      id,
+      title,
+      content,
+      created_at,
+      updated_at,
+      user_id
+    `)
+    .eq('group_id', groupId)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
 };

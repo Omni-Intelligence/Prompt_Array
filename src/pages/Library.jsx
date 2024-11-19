@@ -4,12 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bell, Search, Star, ArrowLeft, Plus, BookOpen } from 'lucide-react';
+import { Search, Star, ArrowLeft, Plus, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from "@/components/ui/badge";
+import PromptsList from "@/components/dashboard/PromptsList";
+import CreatePromptSheet from "@/components/CreatePromptSheet";
+import CreateGroupSheet from "@/components/CreateGroupSheet";
 
 const Library = () => {
   const navigate = useNavigate();
+  const [isCreatePromptOpen, setIsCreatePromptOpen] = React.useState(false);
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = React.useState(false);
+  const [selectedPrompt, setSelectedPrompt] = React.useState(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -32,10 +38,6 @@ const Library = () => {
                 <p className="text-muted-foreground">Your personal prompt collection</p>
               </div>
             </div>
-            <Button variant="ghost" size="icon" className="relative hover:bg-white/20 dark:hover:bg-gray-800/20">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 h-2 w-2 bg-primary rounded-full"></span>
-            </Button>
           </div>
         </div>
       </header>
@@ -52,91 +54,38 @@ const Library = () => {
                 <Button 
                   variant="outline" 
                   className="hover:bg-primary/10 hover:text-primary transition-colors"
+                  onClick={() => setIsCreateGroupOpen(true)}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Group
                 </Button>
-                <Button className="bg-primary hover:bg-primary/90 transition-colors">
+                <Button 
+                  onClick={() => setIsCreatePromptOpen(true)} 
+                  className="bg-primary hover:bg-primary/90 transition-colors"
+                >
                   <Plus className="h-4 w-4 mr-2" />
-                  New Project
+                  New Prompt
                 </Button>
               </div>
             </div>
-
-            <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-primary" />
-                  Getting Started
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">Create your first project or explore templates to kickstart your journey.</p>
-                <Button className="bg-primary hover:bg-primary/90 transition-colors">
-                  Start Building
-                </Button>
-              </CardContent>
-            </Card>
           </section>
 
           <section>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">All prompts</h2>
-              <div className="w-64">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    type="search" 
-                    placeholder="Search prompts..." 
-                    className="pl-8 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <Tabs defaultValue="recent" className="w-full">
-              <TabsList className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50">
-                <TabsTrigger value="recent">Recent</TabsTrigger>
-                <TabsTrigger value="favorites">Favorites</TabsTrigger>
-                <TabsTrigger value="owned">Owned by me</TabsTrigger>
-                <TabsTrigger value="templates">Templates</TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <ScrollArea className="h-[400px] mt-4">
-              <ul className="space-y-2">
-                {[
-                  { title: 'Blog Post Generator', icon: '✍️', time: '8 minutes ago', starred: true },
-                  { title: 'Social Media Caption', icon: '📱', time: '10 minutes ago' },
-                  { title: 'Email Newsletter', icon: '📧', time: '20 minutes ago' },
-                  { title: 'Product Description', icon: '🛍️', time: '3 days ago' },
-                  { title: 'SEO Meta Tags', icon: '🔍', time: '1 week ago' },
-                ].map((prompt) => (
-                  <li 
-                    key={prompt.title} 
-                    className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-primary/20 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <span className="text-2xl mr-3 group-hover:scale-110 transition-transform">{prompt.icon}</span>
-                        <div>
-                          <h3 className="font-semibold text-gray-800 dark:text-gray-200">{prompt.title}</h3>
-                          <p className="text-sm text-muted-foreground">Last updated {prompt.time}</p>
-                        </div>
-                      </div>
-                      {prompt.starred ? (
-                        <Star className="text-primary fill-primary group-hover:scale-110 transition-transform" />
-                      ) : (
-                        <Star className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary" />
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </ScrollArea>
+            <PromptsList onPromptClick={setSelectedPrompt} />
           </section>
         </div>
       </main>
+
+      <CreatePromptSheet
+        isOpen={isCreatePromptOpen}
+        onOpenChange={setIsCreatePromptOpen}
+        initialData={selectedPrompt}
+      />
+
+      <CreateGroupSheet
+        isOpen={isCreateGroupOpen}
+        onOpenChange={setIsCreateGroupOpen}
+      />
     </div>
   );
 };

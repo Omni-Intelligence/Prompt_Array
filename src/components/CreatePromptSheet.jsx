@@ -2,6 +2,7 @@ import React from 'react';
 import PromptForm from './prompt/PromptForm';
 import { toast } from "sonner";
 import { createPrompt } from '@/services/prompts';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Sheet,
   SheetContent,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 
 const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
+  const queryClient = useQueryClient();
   const [newPrompt, setNewPrompt] = React.useState({
     title: initialData?.title || '',
     content: initialData?.content || '',
@@ -48,6 +50,13 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
     try {
       const createdPrompt = await createPrompt(newPrompt);
       toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
+      
+      // Invalidate both prompts and group-prompts queries
+      queryClient.invalidateQueries({ queryKey: ['prompts'] });
+      if (newPrompt.groupId) {
+        queryClient.invalidateQueries({ queryKey: ['group-prompts', newPrompt.groupId] });
+      }
+      
       onOpenChange?.(false);
       setNewPrompt({ 
         title: '', 
@@ -59,8 +68,6 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         groupId: '',
         changeDescription: ''
       });
-
-      window.location.reload();
     } catch (error) {
       console.error('Error creating prompt:', error);
       toast.error("Failed to create prompt. Please try again.");

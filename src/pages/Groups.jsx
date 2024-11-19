@@ -2,11 +2,14 @@ import React from 'react';
 import { useGroups } from '@/hooks/useGroups';
 import { Button } from "@/components/ui/button";
 import { Plus } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import GroupCard from '@/components/groups/GroupCard';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 
 const Groups = () => {
+  const navigate = useNavigate();
   const { groups, isLoading } = useGroups();
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
@@ -18,20 +21,26 @@ const Groups = () => {
     );
   }
 
-  // Mock folders data for demonstration
-  const mockFolders = [
-    {
-      id: '1',
-      name: 'Getting Started',
-      parentId: null,
-      children: []
-    }
-  ];
-
   return (
     <div className="container mx-auto p-6 space-y-8">
+      <div className="flex items-center gap-4 mb-8">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate('/')}
+          className="hover:bg-primary/10 hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            Groups
+          </h1>
+          <p className="text-muted-foreground">Organize and manage your prompt collections</p>
+        </div>
+      </div>
+
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Groups</h1>
         <Button
           onClick={() => setIsCreateGroupOpen(true)}
           className="bg-primary hover:bg-primary/90 transition-colors"
@@ -50,14 +59,7 @@ const Groups = () => {
           {groups.map((group) => (
             <GroupCard
               key={group.id}
-              group={{
-                id: group.id,
-                title: group.name,
-                description: group.description,
-                promptCount: 0,
-                lastUpdated: new Date(group.updated_at).toLocaleDateString()
-              }}
-              folders={mockFolders}
+              group={group}
             />
           ))}
         </div>

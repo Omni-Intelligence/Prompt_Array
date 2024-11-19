@@ -1,21 +1,22 @@
 import React from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQuery } from '@tanstack/react-query';
+import { getGroups } from '@/services/groups';
 
 const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
-  // Mock data with proper UUID formats
+  // Mock teams data for now
   const teams = [
     { id: '123e4567-e89b-12d3-a456-426614174000', name: 'Marketing Team' },
     { id: '123e4567-e89b-12d3-a456-426614174001', name: 'Content Team' },
     { id: '123e4567-e89b-12d3-a456-426614174002', name: 'Development Team' }
   ];
 
-  const groups = [
-    { id: '123e4567-e89b-12d3-a456-426614174003', name: 'Blog Writing' },
-    { id: '123e4567-e89b-12d3-a456-426614174004', name: 'Social Media' },
-    { id: '123e4567-e89b-12d3-a456-426614174005', name: 'Email Marketing' },
-    { id: '123e4567-e89b-12d3-a456-426614174006', name: 'SEO Content' }
-  ];
+  // Fetch real groups from the database
+  const { data: groups = [] } = useQuery({
+    queryKey: ['groups'],
+    queryFn: getGroups
+  });
 
   return (
     <>
@@ -56,7 +57,7 @@ const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
           Add to Group
         </label>
         <Select
-          value={newPrompt.groupId}
+          value={newPrompt.groupId || ''}
           onValueChange={(value) => setNewPrompt(prev => ({ ...prev, groupId: value }))}
         >
           <SelectTrigger>
