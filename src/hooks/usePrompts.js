@@ -11,30 +11,46 @@ export const usePrompts = () => {
         throw new Error('User not authenticated');
       }
 
-      // Get all prompts for the user
-      const { data: prompts, error } = await supabase
+      console.log('Fetching prompts for user:', user.id);
+
+      // First, let's verify the prompts table structure
+      const { data: tableInfo } = await supabase
         .from('prompts')
         .select('*')
-        .eq('user_id', user.id)
+        .limit(1);
+      
+      console.log('Table structure:', tableInfo);
+
+      // Get all prompts without any filters first
+      const { data: prompts, error } = await supabase
+        .from('prompts')
+        .select('*, favorites!inner(*)')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      console.log('Fetched prompts:', prompts);
+      console.log('Query error if any:', error);
 
-      // Get user's favorites in a separate query
-      const { data: favorites, error: favoritesError } = await supabase
-        .from('favorites')
-        .select('prompt_id')
-        .eq('user_id', user.id);
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
 
-      if (favoritesError) throw favoritesError;
+      if (!prompts) {
+        console.log('No prompts found');
+        return [];
+      }
 
-      // Add favorite status to prompts
+      // Transform the data to include the starred status
       const promptsWithFavorites = prompts.map(prompt => ({
         ...prompt,
-        starred: favorites.some(fav => fav.prompt_id === prompt.id)
+        starred: prompt.favorites?.some(fav => fav.user_id === user.id) || false
       }));
 
+      console.log('Processed prompts:', promptsWithFavorites);
+
       return promptsWithFavorites;
-    }
+    },
+    retry: 1,
+    refetchOnWindowFocus: true
   });
 };
