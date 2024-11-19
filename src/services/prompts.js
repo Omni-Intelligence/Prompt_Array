@@ -1,6 +1,6 @@
-import { supabase } from '@/lib/supabase'
-import { toast } from "sonner"
-import { queryClient } from '@/lib/react-query'
+import { supabase } from '@/lib/supabase';
+import { toast } from "sonner";
+import { queryClient } from '@/lib/react-query';
 
 export const createPrompt = async (promptData) => {
   console.log('Creating prompt with data:', promptData);
@@ -11,7 +11,6 @@ export const createPrompt = async (promptData) => {
   }
 
   try {
-    // Get the current user
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     
     if (userError || !user) {
@@ -20,21 +19,7 @@ export const createPrompt = async (promptData) => {
       throw new Error('Authentication required');
     }
 
-    // Test the connection first
-    const { data: connectionTest, error: connectionError } = await supabase
-      .from('prompts')
-      .select('count')
-      .limit(1);
-
-    if (connectionError) {
-      console.error('Connection error:', connectionError);
-      toast.error(`Database connection failed: ${connectionError.message}`);
-      throw new Error('Database connection failed');
-    }
-
-    console.log('Database connection successful');
-
-    // Prepare the prompt data
+    // Prepare the prompt data according to the database schema
     const promptInsertData = {
       title: promptData.title,
       content: promptData.content,
@@ -42,19 +27,11 @@ export const createPrompt = async (promptData) => {
       tags: promptData.tags || [],
       is_public: promptData.isPublic || false,
       version: 1,
-      user_id: user.id
+      user_id: user.id,
+      team_id: promptData.teamId || null,
+      group_id: promptData.groupId || null,
+      change_description: promptData.changeDescription || null
     };
-
-    // Remove any potential invalid values
-    if (!promptData.teamId) {
-      delete promptInsertData.team_id;
-    }
-    
-    if (!promptData.groupId) {
-      delete promptInsertData.group_id;
-    }
-
-    console.log('Attempting to insert prompt with data:', promptInsertData);
 
     const { data, error } = await supabase
       .from('prompts')
@@ -74,10 +51,7 @@ export const createPrompt = async (promptData) => {
       throw new Error(noDataError);
     }
 
-    // Invalidate the prompts query to trigger a refetch
     queryClient.invalidateQueries({ queryKey: ['prompts'] });
-
-    console.log('Prompt created successfully:', data[0]);
     toast.success('Prompt created successfully!');
     return data[0];
   } catch (error) {

@@ -42,7 +42,7 @@ const CreateGroupSheet = ({ trigger }) => {
       const { data, error } = await supabase
         .from('groups')
         .insert([{
-          name: newGroup.title,
+          name: newGroup.title, // Changed from title to name to match DB schema
           description: newGroup.description,
           user_id: user.id
         }])
