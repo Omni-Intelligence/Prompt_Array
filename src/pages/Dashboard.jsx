@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import QuickAccessGroups from '@/components/dashboard/QuickAccessGroups';
 import PromptsList from '@/components/dashboard/PromptsList';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
+import { getGroups } from '@/services/groups';
 
 const Dashboard = () => {
   const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState(null);
+
+  const { data: groups = [], isLoading: isLoadingGroups } = useQuery({
+    queryKey: ['groups'],
+    queryFn: getGroups
+  });
 
   return (
     <div className="container mx-auto p-6 space-y-8">
@@ -39,7 +46,13 @@ const Dashboard = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Quick Access Groups</h2>
-        <QuickAccessGroups groups={[]} />
+        {isLoadingGroups ? (
+          <div className="flex items-center justify-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <QuickAccessGroups groups={groups} />
+        )}
       </section>
 
       <PromptsList onPromptClick={setSelectedPrompt} />
