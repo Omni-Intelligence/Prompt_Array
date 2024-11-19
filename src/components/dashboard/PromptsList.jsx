@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Star, Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +11,7 @@ import { emailPrompts } from '@/data/groups/emailPrompts';
 import { creativeStoryPrompts } from '@/data/groups/creativeStoryPrompts';
 import { Button } from "@/components/ui/button";
 import { queryClient } from '@/lib/react-query';
+import { toast } from "sonner";
 
 const PromptItem = ({ prompt, onClick }) => {
   const handleFavorite = async (e) => {
@@ -18,8 +19,10 @@ const PromptItem = ({ prompt, onClick }) => {
     try {
       await toggleFavorite(prompt.id);
       queryClient.invalidateQueries({ queryKey: ['prompts'] });
+      toast.success(prompt.starred ? "Removed from favorites" : "Added to favorites");
     } catch (error) {
       console.error('Error toggling favorite:', error);
+      toast.error("Failed to update favorite status");
     }
   };
 
@@ -53,6 +56,7 @@ const PromptItem = ({ prompt, onClick }) => {
 
 const PromptsList = ({ onPromptClick }) => {
   const { data: userPrompts, isLoading, error } = usePrompts();
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Combine all template prompts
   const templatePrompts = [
@@ -70,10 +74,15 @@ const PromptsList = ({ onPromptClick }) => {
     return <div>Error loading prompts: {error.message}</div>;
   }
 
+  const filteredPrompts = userPrompts.filter(prompt => 
+    prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    prompt.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const categorizedPrompts = {
-    recent: Array.isArray(userPrompts) ? userPrompts : [],
-    favorites: Array.isArray(userPrompts) ? userPrompts.filter(p => p.starred) : [],
-    owned: Array.isArray(userPrompts) ? userPrompts : [],
+    recent: filteredPrompts.slice(0, 10),
+    favorites: filteredPrompts.filter(p => p.starred),
+    owned: filteredPrompts,
     templates: templatePrompts
   };
 
@@ -87,6 +96,8 @@ const PromptsList = ({ onPromptClick }) => {
             type="search" 
             placeholder="Search prompts..." 
             className="pl-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
