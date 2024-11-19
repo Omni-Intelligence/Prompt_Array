@@ -71,7 +71,7 @@ const CreateGroupSheet = ({ trigger }) => {
       <SheetTrigger asChild>
         {trigger}
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px]">
+      <SheetContent className="w-[95vw] max-w-[800px] sm:w-[800px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Create New Group</SheetTitle>
           <SheetDescription>

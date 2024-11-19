@@ -73,7 +73,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         {trigger}
       </SheetTrigger>
       <SheetContent 
-        className="w-[95vw] max-w-[850px] sm:w-[850px] overflow-y-auto"
+        className="w-[95vw] max-w-[1200px] sm:w-[1200px] overflow-y-auto"
         side="right"
       >
         <SheetHeader>
