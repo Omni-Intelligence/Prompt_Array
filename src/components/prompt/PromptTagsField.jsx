@@ -42,14 +42,14 @@ const PromptTagsField = ({ newPrompt, setNewPrompt }) => {
           </Badge>
         ))}
       </div>
-      <form onSubmit={handleAddTag} className="flex gap-2">
+      <div className="flex gap-2">
         <Input
           value={currentTag}
           onChange={(e) => setCurrentTag(e.target.value)}
           placeholder="Add a tag"
         />
-        <Button type="submit" variant="secondary">Add</Button>
-      </form>
+        <Button type="button" variant="secondary" onClick={handleAddTag}>Add</Button>
+      </div>
     </div>
   );
 };

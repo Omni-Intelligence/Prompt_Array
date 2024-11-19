@@ -19,6 +19,18 @@ export const createPrompt = async (promptData) => {
       throw new Error('Authentication required');
     }
 
+    // Test the connection first
+    const { error: connectionError } = await supabase
+      .from('prompts')
+      .select('count')
+      .limit(1);
+
+    if (connectionError) {
+      console.error('Connection error:', connectionError);
+      toast.error(`Database connection failed: ${connectionError.message}`);
+      throw new Error('Database connection failed');
+    }
+
     // Prepare the prompt data according to the database schema
     const promptInsertData = {
       title: promptData.title,
@@ -32,6 +44,8 @@ export const createPrompt = async (promptData) => {
       group_id: promptData.groupId || null,
       change_description: promptData.changeDescription || null
     };
+
+    console.log('Attempting to insert prompt with data:', promptInsertData);
 
     const { data, error } = await supabase
       .from('prompts')
@@ -59,4 +73,4 @@ export const createPrompt = async (promptData) => {
     toast.error(`Failed to create prompt: ${error.message}`);
     throw error;
   }
-}
+};
