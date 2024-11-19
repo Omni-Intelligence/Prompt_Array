@@ -6,35 +6,49 @@ import { ArrowLeft, Copy, Star, History } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PromptVersionHistory from "@/components/prompt/PromptVersionHistory";
 import { useState } from "react";
+import { toggleFavorite } from "@/services/favorites";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const PromptDetail = () => {
   const { promptId } = useParams();
   const navigate = useNavigate();
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const queryClient = useQueryClient();
 
-  // Mock data - would come from API in real app
-  const prompt = {
-    id: promptId,
-    title: "Blog Post Generator",
-    description: "Creates engaging blog post content with proper structure and SEO optimization",
-    content: "Write a comprehensive blog post about [topic] that includes:\n\n1. An attention-grabbing introduction\n2. [number] main sections with detailed explanations\n3. Relevant examples and case studies\n4. A strong conclusion\n5. Meta description and SEO keywords",
-    author: "Sarah Chen",
-    tags: ["writing", "blogging", "content"],
-    likes: 234,
-    isFavorited: false,
-    lastUsed: "2 days ago",
-    currentVersion: 3
-  };
+  const { data: prompt, isLoading } = useQuery({
+    queryKey: ['prompt', promptId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('prompts')
+        .select(`
+          *,
+          favorites(user_id)
+        `)
+        .eq('id', promptId)
+        .single();
 
-  // Mock version history data
+      if (error) throw error;
+      
+      // Get current user to check if prompt is favorited
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      return {
+        ...data,
+        isFavorited: data.favorites?.some(fav => fav.user_id === user.id) || false
+      };
+    }
+  });
+
+  // Mock version history data for now
   const versions = [
     {
       id: "v3",
       version: 3,
-      content: prompt.content,
-      title: prompt.title,
-      description: prompt.description,
-      tags: prompt.tags,
+      content: prompt?.content,
+      title: prompt?.title,
+      description: prompt?.description,
+      tags: prompt?.tags || [],
       isPublic: true,
       teamId: "team1",
       groupId: "group1",
@@ -46,7 +60,7 @@ const PromptDetail = () => {
       id: "v2",
       version: 2,
       content: "Write a blog post about [topic] that includes:\n\n1. An introduction\n2. [number] main sections\n3. Examples\n4. Conclusion",
-      title: prompt.title,
+      title: prompt?.title,
       description: "Creates blog post content with proper structure",
       tags: ["writing", "blogging"],
       isPublic: true,
@@ -73,18 +87,36 @@ const PromptDetail = () => {
   ];
 
   const handleCopyPrompt = () => {
+    if (!prompt?.content) return;
     navigator.clipboard.writeText(prompt.content);
     toast.success("Prompt copied to clipboard!");
   };
 
-  const handleToggleFavorite = () => {
-    toast.success("Added to favorites!");
+  const handleToggleFavorite = async () => {
+    if (!prompt) return;
+    try {
+      await toggleFavorite(prompt.id);
+      queryClient.invalidateQueries({ queryKey: ['prompt', promptId] });
+      queryClient.invalidateQueries({ queryKey: ['prompts'] });
+      toast.success(prompt.isFavorited ? "Removed from favorites!" : "Added to favorites!");
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast.error("Failed to update favorite status");
+    }
   };
 
   const handleRestoreVersion = (version) => {
     toast.success(`Restored version ${version.version}`);
     setShowVersionHistory(false);
   };
+
+  if (isLoading) {
+    return <div className="p-8 max-w-4xl mx-auto">Loading prompt...</div>;
+  }
+
+  if (!prompt) {
+    return <div className="p-8 max-w-4xl mx-auto">Prompt not found</div>;
+  }
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -95,7 +127,7 @@ const PromptDetail = () => {
           </Button>
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-bold">{prompt.title}</h1>
-            <p className="text-muted-foreground">by {prompt.author}</p>
+            <p className="text-muted-foreground">Created {new Date(prompt.created_at).toLocaleDateString()}</p>
           </div>
           <Button
             variant="outline"
@@ -135,7 +167,7 @@ const PromptDetail = () => {
                 <pre className="whitespace-pre-wrap text-sm">{prompt.content}</pre>
               </div>
               <div className="flex flex-wrap gap-2">
-                {prompt.tags.map((tag) => (
+                {prompt.tags?.map((tag) => (
                   <Badge key={tag} variant="secondary">
                     {tag}
                   </Badge>

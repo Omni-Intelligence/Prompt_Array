@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const QuickAccessGroup = ({ group }) => (
   <Link 
-    to={`/groups/${group.id}`}
+    to={`/app/groups/${group.id}`}
     className="group"
   >
     <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 card-hover">

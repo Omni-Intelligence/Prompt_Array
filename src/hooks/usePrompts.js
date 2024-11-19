@@ -11,24 +11,15 @@ export const usePrompts = () => {
         throw new Error('User not authenticated');
       }
 
-      console.log('Fetching prompts for user:', user.id);
-
-      // First, let's verify the prompts table structure
-      const { data: tableInfo } = await supabase
-        .from('prompts')
-        .select('*')
-        .limit(1);
-      
-      console.log('Table structure:', tableInfo);
-
-      // Get all prompts without any filters first
+      // Get all prompts with a LEFT JOIN on favorites to include prompts without favorites
       const { data: prompts, error } = await supabase
         .from('prompts')
-        .select('*, favorites!inner(*)')
+        .select(`
+          *,
+          favorites:favorites(user_id)
+        `)
+        .eq('user_id', user.id) // Only get prompts for the current user
         .order('created_at', { ascending: false });
-      
-      console.log('Fetched prompts:', prompts);
-      console.log('Query error if any:', error);
 
       if (error) {
         console.error('Supabase query error:', error);
@@ -36,7 +27,6 @@ export const usePrompts = () => {
       }
 
       if (!prompts) {
-        console.log('No prompts found');
         return [];
       }
 
@@ -46,11 +36,10 @@ export const usePrompts = () => {
         starred: prompt.favorites?.some(fav => fav.user_id === user.id) || false
       }));
 
-      console.log('Processed prompts:', promptsWithFavorites);
-
       return promptsWithFavorites;
     },
-    retry: 1,
-    refetchOnWindowFocus: true
+    staleTime: 0, // Consider the data stale immediately
+    refetchOnMount: true, // Refetch when the component mounts
+    refetchOnWindowFocus: true, // Refetch when the window regains focus
   });
 };

@@ -60,7 +60,9 @@ export const navItems = [
     icon: <LayoutTemplateIcon className="h-4 w-4" />,
     component: Templates,
     color: "from-cyan-500 to-blue-500"
-  },
+  }
+  // Temporarily hidden features
+  /*
   {
     title: "Batches",
     to: "batches",
@@ -75,4 +77,5 @@ export const navItems = [
     component: Chains,
     color: "from-violet-500 to-purple-500"
   }
+  */
 ];

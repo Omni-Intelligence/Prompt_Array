@@ -22,32 +22,29 @@ const Groups = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      <div className="flex items-center gap-4 mb-8">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => navigate('/')}
-          className="hover:bg-primary/10 hover:text-primary transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Groups
-          </h1>
-          <p className="text-muted-foreground">Organize and manage your prompt collections</p>
+    <div className="space-y-8 p-8">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="rounded-full"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <h1 className="text-3xl font-bold">Groups</h1>
         </div>
-      </div>
-
-      <div className="flex justify-between items-center">
-        <Button
-          onClick={() => setIsCreateGroupOpen(true)}
-          className="bg-primary hover:bg-primary/90 transition-colors"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          New Group
-        </Button>
+        <CreateGroupSheet
+          trigger={
+            <Button
+              className="bg-primary hover:bg-primary/90 transition-colors"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Group
+            </Button>
+          }
+        />
       </div>
 
       {groups.length === 0 ? (
@@ -64,11 +61,6 @@ const Groups = () => {
           ))}
         </div>
       )}
-
-      <CreateGroupSheet
-        isOpen={isCreateGroupOpen}
-        onOpenChange={setIsCreateGroupOpen}
-      />
     </div>
   );
 };

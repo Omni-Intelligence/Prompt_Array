@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import QuickAccessGroups from '@/components/dashboard/QuickAccessGroups';
 import PromptsList from '@/components/dashboard/PromptsList';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
-import { getGroups } from '@/services/groups';
+import { useGroups } from '@/hooks/useGroups';
 
 const Dashboard = () => {
   const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState(null);
-
-  const { data: groups = [], isLoading: isLoadingGroups } = useQuery({
-    queryKey: ['groups'],
-    queryFn: getGroups
-  });
+  const navigate = useNavigate();
+  const { groups, isLoading: isLoadingGroups } = useGroups();
 
   return (
     <div className="container mx-auto p-6 space-y-8">
@@ -55,7 +52,10 @@ const Dashboard = () => {
         )}
       </section>
 
-      <PromptsList onPromptClick={setSelectedPrompt} />
+      <PromptsList onPromptClick={(prompt) => {
+        setSelectedPrompt(prompt);
+        navigate(`/app/prompts/${prompt.id}`);
+      }} />
 
       <CreatePromptSheet
         isOpen={isCreatePromptOpen}

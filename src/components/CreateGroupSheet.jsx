@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
+import { createGroup } from "@/services/groups";
 import {
   Sheet,
   SheetContent,
@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { useQueryClient } from '@tanstack/react-query';
 
-const CreateGroupSheet = ({ trigger }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+const CreateGroupSheet = ({ isOpen, onOpenChange, trigger }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const queryClient = useQueryClient();
   const [newGroup, setNewGroup] = React.useState({
@@ -32,42 +31,21 @@ const CreateGroupSheet = ({ trigger }) => {
     
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast.error("You must be logged in to create a group");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('groups')
-        .insert([{
-          name: newGroup.title, // Changed from title to name to match DB schema
-          description: newGroup.description,
-          user_id: user.id
-        }])
-        .select();
-
-      if (error) {
-        console.error('Error creating group:', error);
-        toast.error(`Failed to create group: ${error.message}`);
-        return;
-      }
-
+      await createGroup(newGroup);
       toast.success("Group created successfully!");
       queryClient.invalidateQueries({ queryKey: ['groups'] });
-      setIsOpen(false);
+      onOpenChange(false);
       setNewGroup({ title: '', description: '' });
     } catch (error) {
       console.error('Error in handleCreateGroup:', error);
-      toast.error("Failed to create group. Please try again.");
+      toast.error(error.message || "Failed to create group. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         {trigger}
       </SheetTrigger>
@@ -88,6 +66,7 @@ const CreateGroupSheet = ({ trigger }) => {
               value={newGroup.title}
               onChange={(e) => setNewGroup(prev => ({ ...prev, title: e.target.value }))}
               placeholder="Enter group title"
+              disabled={isLoading}
             />
           </div>
           <div className="space-y-2">
@@ -99,14 +78,11 @@ const CreateGroupSheet = ({ trigger }) => {
               value={newGroup.description}
               onChange={(e) => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Enter group description"
+              disabled={isLoading}
             />
           </div>
-          <Button 
-            type="submit" 
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? "Creating..." : "Create Group"}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Creating...' : 'Create Group'}
           </Button>
         </form>
       </SheetContent>

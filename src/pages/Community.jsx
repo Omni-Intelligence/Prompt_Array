@@ -140,7 +140,7 @@ const Community = () => {
                     prompt={prompt}
                     onFork={handleForkPrompt}
                     onShare={handleShare}
-                    onClick={() => navigate(`/prompts/${prompt.id}`)}
+                    onClick={() => navigate(`/app/prompts/${prompt.id}`)}
                   />
                 ))}
               </div>

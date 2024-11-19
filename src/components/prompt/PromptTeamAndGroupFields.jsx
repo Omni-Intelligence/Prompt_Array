@@ -5,13 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getGroups } from '@/services/groups';
 
 const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
-  // Mock teams data for now
-  const teams = [
-    { id: '123e4567-e89b-12d3-a456-426614174000', name: 'Marketing Team' },
-    { id: '123e4567-e89b-12d3-a456-426614174001', name: 'Content Team' },
-    { id: '123e4567-e89b-12d3-a456-426614174002', name: 'Development Team' }
-  ];
-
   // Fetch real groups from the database
   const { data: groups = [] } = useQuery({
     queryKey: ['groups'],
@@ -29,27 +22,6 @@ const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
           checked={newPrompt.isPublic}
           onCheckedChange={(checked) => setNewPrompt(prev => ({ ...prev, isPublic: checked }))}
         />
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="team" className="text-sm font-medium">
-          Add to Team
-        </label>
-        <Select
-          value={newPrompt.teamId}
-          onValueChange={(value) => setNewPrompt(prev => ({ ...prev, teamId: value }))}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a team" />
-          </SelectTrigger>
-          <SelectContent>
-            {teams.map((team) => (
-              <SelectItem key={team.id} value={team.id}>
-                {team.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="space-y-2">

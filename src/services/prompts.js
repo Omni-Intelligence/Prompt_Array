@@ -74,3 +74,56 @@ export const createPrompt = async (promptData) => {
     throw error;
   }
 };
+
+export const getPrompt = async (promptId) => {
+  if (!promptId) {
+    toast.error('Prompt ID is required');
+    throw new Error('Prompt ID is required');
+  }
+
+  try {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      console.error('Authentication error:', userError);
+      toast.error('Please sign in to view prompts');
+      throw new Error('Authentication required');
+    }
+
+    const { data, error } = await supabase
+      .from('prompts')
+      .select(`
+        *,
+        favorites!left(*),
+        groups:group_id(
+          id,
+          name,
+          description
+        )
+      `)
+      .eq('id', promptId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching prompt:', error);
+      toast.error(`Failed to fetch prompt: ${error.message}`);
+      throw error;
+    }
+
+    if (!data) {
+      toast.error('Prompt not found');
+      throw new Error('Prompt not found');
+    }
+
+    // Transform the data to include the starred status
+    const promptWithFavorites = {
+      ...data,
+      starred: data.favorites?.some(fav => fav.user_id === user.id) || false
+    };
+
+    return promptWithFavorites;
+  } catch (error) {
+    console.error('Error in getPrompt:', error);
+    throw error;
+  }
+};
