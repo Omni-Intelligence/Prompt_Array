@@ -44,15 +44,15 @@ const PromptItem = ({ prompt, onClick }) => {
   return (
     <li 
       onClick={() => onClick(prompt)}
-      className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-primary/20 transition-all duration-300 flex items-center justify-between cursor-pointer"
+      className="group bg-gradient-card hover:bg-gradient-card-hover backdrop-blur-sm p-4 rounded-lg border-none shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-between cursor-pointer"
     >
       <div className="flex items-center gap-4">
         <span className="text-2xl group-hover:scale-110 transition-transform">{prompt.icon || '📝'}</span>
         <div>
-          <h3 className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors">
+          <h3 className="font-medium text-white dark:text-white group-hover:text-white/90 transition-colors">
             {prompt.title}
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/80 dark:text-white/80">
             {prompt.lastUsed ? `Last used ${prompt.lastUsed}` : prompt.updated_at ? `Last updated ${new Date(prompt.updated_at).toLocaleDateString()}` : 'Recently added'}
           </p>
         </div>
@@ -62,7 +62,7 @@ const PromptItem = ({ prompt, onClick }) => {
           variant="ghost"
           size="icon"
           onClick={handleFavorite}
-          className={`${prompt.starred ? 'text-yellow-500' : 'text-gray-400'} hover:text-yellow-500 transition-colors`}
+          className={`${prompt.starred ? 'text-yellow-300' : 'text-white/70'} hover:text-yellow-300 transition-colors`}
         >
           <Star className={`h-5 w-5 ${prompt.starred ? 'fill-current' : ''}`} />
         </Button>
@@ -70,7 +70,7 @@ const PromptItem = ({ prompt, onClick }) => {
           variant="ghost"
           size="icon"
           onClick={handleDelete}
-          className="text-gray-400 hover:text-destructive transition-colors"
+          className="text-white/70 hover:text-red-300 transition-colors"
         >
           <Trash2 className="h-5 w-5" />
         </Button>
@@ -92,11 +92,11 @@ const PromptsList = ({ onPromptClick }) => {
   ];
 
   if (isLoading) {
-    return <div>Loading prompts...</div>;
+    return <div className="text-white/80">Loading prompts...</div>;
   }
 
   if (error) {
-    return <div>Error loading prompts: {error.message}</div>;
+    return <div className="text-red-300">Error loading prompts: {error.message}</div>;
   }
 
   const filteredPrompts = userPrompts.filter(prompt => 
@@ -114,13 +114,13 @@ const PromptsList = ({ onPromptClick }) => {
   return (
     <section>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All Prompts</h2>
+        <h2 className="text-xl font-semibold text-white dark:text-white">All Prompts</h2>
         <div className="w-full sm:w-64 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
           <Input 
             type="search" 
             placeholder="Search prompts..." 
-            className="pl-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50"
+            className="pl-10 bg-white/10 dark:bg-gray-800/10 backdrop-blur-sm border-white/20 dark:border-gray-700/20 text-white placeholder:text-white/60"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -128,18 +128,18 @@ const PromptsList = ({ onPromptClick }) => {
       </div>
       
       <Tabs defaultValue="recent" className="w-full">
-        <TabsList className="w-full justify-start bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50">
-          <TabsTrigger value="recent">Recent</TabsTrigger>
-          <TabsTrigger value="favorites">Favorites</TabsTrigger>
-          <TabsTrigger value="owned">My Prompts</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
+        <TabsList className="w-full justify-start bg-white/10 dark:bg-gray-800/10 backdrop-blur-sm border-white/20 dark:border-gray-700/20">
+          <TabsTrigger value="recent" className="text-white/80 data-[state=active]:text-white">Recent</TabsTrigger>
+          <TabsTrigger value="favorites" className="text-white/80 data-[state=active]:text-white">Favorites</TabsTrigger>
+          <TabsTrigger value="owned" className="text-white/80 data-[state=active]:text-white">My Prompts</TabsTrigger>
+          <TabsTrigger value="templates" className="text-white/80 data-[state=active]:text-white">Templates</TabsTrigger>
         </TabsList>
 
         {Object.entries(categorizedPrompts).map(([category, categoryPrompts]) => (
           <TabsContent key={category} value={category}>
             <ScrollArea className="h-[600px]">
               {categoryPrompts.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
+                <p className="text-center text-white/60 py-8">
                   {category === 'templates' ? 'No template prompts available.' : 'No prompts found. Create your first prompt by clicking the "New Prompt" button above.'}
                 </p>
               ) : (

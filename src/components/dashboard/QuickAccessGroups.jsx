@@ -7,10 +7,10 @@ const QuickAccessGroup = ({ group }) => (
     to={`/app/groups/${group.id}`}
     className="group"
   >
-    <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 card-hover">
+    <Card className="bg-gradient-card hover:bg-gradient-card-hover backdrop-blur-sm border-none shadow-lg hover:shadow-xl transition-all duration-300">
       <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">{group.name}</h3>
-        <p className="text-sm text-muted-foreground">{group.count} prompts</p>
+        <h3 className="text-lg font-semibold mb-1 text-white dark:text-white">{group.name}</h3>
+        <p className="text-sm text-white/80 dark:text-white/80">{group.count} prompts</p>
       </CardContent>
     </Card>
   </Link>

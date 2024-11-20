@@ -35,7 +35,6 @@ const GroupCard = ({ group }) => {
   const [showEditSheet, setShowEditSheet] = useState(false);
   
   const handleCardClick = (e) => {
-    // Prevent navigation when clicking on the menu or its children
     if (e.target.closest('[data-menu]') || e.target.closest('[role="menuitem"]')) {
       e.stopPropagation();
       return;
@@ -55,24 +54,24 @@ const GroupCard = ({ group }) => {
   return (
     <>
       <Card
-        className="relative hover:bg-accent cursor-pointer transition-colors"
+        className="relative bg-gradient-card hover:bg-gradient-card-hover cursor-pointer transition-all duration-300 border-none shadow-lg hover:shadow-xl"
         onClick={handleCardClick}
       >
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-xl font-semibold">{group.name}</CardTitle>
+          <CardTitle className="text-xl font-semibold text-white">{group.name}</CardTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild data-menu>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="ghost" className="h-8 w-8 p-0 text-white/80 hover:text-white">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setShowEditSheet(true)}>
+            <DropdownMenuContent align="end" className="bg-white/10 backdrop-blur-sm border-white/20">
+              <DropdownMenuItem onClick={() => setShowEditSheet(true)} className="text-white/80 hover:text-white">
                 <Edit className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-destructive"
+                className="text-red-300 hover:text-red-400"
                 onClick={() => setShowDeleteDialog(true)}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -82,9 +81,9 @@ const GroupCard = ({ group }) => {
           </DropdownMenu>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">{group.description}</p>
+          <p className="text-sm text-white/80">{group.description}</p>
           <div className="mt-4">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-white/60">
               {prompts.length} {prompts.length === 1 ? 'prompt' : 'prompts'}
             </p>
           </div>
