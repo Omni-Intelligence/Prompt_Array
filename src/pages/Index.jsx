@@ -34,27 +34,31 @@ const Index = () => {
         <div className="p-4">
           <img src="/logo.svg" alt="Logo" className="h-8 mb-6" />
           <nav className="space-y-2">
-            {navItems.map((item) => (
-              <Link 
-                key={item.to}
-                to={`/app/${item.to}`}
-                className="group w-full"
-              >
-                <Button 
-                  variant="ghost" 
-                  className={`w-full justify-start group relative overflow-hidden transition-all duration-300
-                    hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 dark:hover:from-primary/20 dark:hover:to-purple-500/20
-                    ${location.pathname === `/app/${item.to}` ? 'bg-primary/5 text-primary dark:bg-primary/10' : ''}`}
+            {navItems.map((item) => {
+              const isActive = location.pathname === `/app/${item.to}`;
+              return (
+                <Link 
+                  key={item.to}
+                  to={`/app/${item.to}`}
+                  className="group w-full"
                 >
-                  <span className="relative z-10 flex items-center">
-                    <span className={`mr-3 ${location.pathname === `/app/${item.to}` ? 'text-primary' : ''}`}>
-                      {item.icon}
+                  <Button 
+                    variant="ghost" 
+                    className={`w-full justify-start group relative overflow-hidden transition-all duration-300
+                      ${isActive 
+                        ? 'bg-primary/10 text-primary hover:bg-primary/15 dark:bg-primary/20 dark:hover:bg-primary/25' 
+                        : 'hover:bg-primary/5 dark:hover:bg-primary/10'}`}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      <span className={`mr-3 ${isActive ? 'text-primary' : ''}`}>
+                        {item.icon}
+                      </span>
+                      <span className="font-medium">{item.title}</span>
                     </span>
-                    <span className="font-medium">{item.title}</span>
-                  </span>
-                </Button>
-              </Link>
-            ))}
+                  </Button>
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </aside>
