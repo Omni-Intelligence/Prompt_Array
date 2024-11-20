@@ -53,8 +53,8 @@ module.exports = {
         },
       },
       backgroundImage: {
-        'gradient-card': 'linear-gradient(135deg, rgba(155, 135, 245, 0.9) 0%, rgba(214, 188, 250, 0.9) 100%)',
-        'gradient-card-hover': 'linear-gradient(135deg, rgba(214, 188, 250, 0.95) 0%, rgba(229, 222, 255, 0.95) 100%)',
+        'gradient-card': 'linear-gradient(135deg, rgba(125, 95, 255, 0.95) 0%, rgba(185, 145, 255, 0.95) 100%)',
+        'gradient-card-hover': 'linear-gradient(135deg, rgba(185, 145, 255, 0.98) 0%, rgba(200, 175, 255, 0.98) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",
