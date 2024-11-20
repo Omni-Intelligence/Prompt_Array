@@ -41,7 +41,6 @@ export const createPrompt = async (promptData) => {
       version: 1,
       user_id: user.id,
       team_id: promptData.teamId || null,
-      group_id: promptData.groupId || null,
       change_description: promptData.changeDescription || null
     };
 
@@ -96,17 +95,10 @@ export const getPrompt = async (promptId) => {
       throw new Error('Authentication required');
     }
 
+    // Use the materialized view for fast retrieval
     const { data, error } = await supabase
-      .from('prompts')
-      .select(`
-        *,
-        favorites!left(*),
-        groups:group_id(
-          id,
-          name,
-          description
-        )
-      `)
+      .from('prompt_details_mv')
+      .select('*')
       .eq('id', promptId)
       .single();
 
@@ -121,68 +113,56 @@ export const getPrompt = async (promptId) => {
       throw new Error('Prompt not found');
     }
 
-    // Transform the data to include the starred status
-    const promptWithFavorites = {
-      ...data,
-      starred: data.favorites?.some(fav => fav.user_id === user.id) || false
-    };
+    // Check if user has favorited this prompt
+    const { data: favoriteData } = await supabase
+      .from('favorites')
+      .select('id')
+      .eq('prompt_id', promptId)
+      .eq('user_id', user.id)
+      .single();
 
-    return promptWithFavorites;
+    return {
+      ...data,
+      starred: !!favoriteData
+    };
   } catch (error) {
     console.error('Error in getPrompt:', error);
     throw error;
   }
 };
 
-export const getPromptVersions = async (promptId) => {
-  try {
-    const { data, error } = await supabase
-      .from('prompt_versions')
-      .select(`
-        id,
-        version_number,
-        title,
-        content,
-        prompt_description,
-        tags,
-        is_public,
-        team_id,
-        group_id,
-        version_description,
-        created_at,
-        created_by,
-        profiles:created_by (
-          full_name,
-          avatar_url
-        )
-      `)
-      .eq('prompt_id', promptId)
-      .order('version_number', { ascending: false });
+export const getPromptVersions = async (promptId, { limit = 5, offset = 0 } = {}) => {
+  const { data: versions, error } = await supabase
+    .from('prompt_versions_summary_mv')  // Using a materialized view
+    .select('*')
+    .eq('prompt_id', promptId)
+    .order('version_number', { ascending: false })
+    .range(offset, offset + limit - 1);
 
-    if (error) {
-      console.error('Error fetching prompt versions:', error);
-      throw error;
-    }
-
-    // Transform the data to match the expected format
-    return data.map(version => ({
-      id: version.id,
-      version: version.version_number,
-      title: version.title,
-      content: version.content,
-      description: version.prompt_description,
-      tags: version.tags || [],
-      isPublic: version.is_public,
-      teamId: version.team_id,
-      groupId: version.group_id,
-      changeDescription: version.version_description,
-      createdAt: version.created_at,
-      createdBy: version.profiles?.full_name || 'Unknown'
-    }));
-  } catch (error) {
-    console.error('Error in getPromptVersions:', error);
+  if (error) {
+    console.error('Error fetching versions:', error);
     throw error;
   }
+
+  return {
+    versions,
+    hasMore: versions.length === limit
+  };
+};
+
+export const getPromptVersionDetails = async (versionId) => {
+  const { data, error } = await supabase
+    .from('prompt_version_details_mv')  // Using a materialized view
+    .select('*')
+    .eq('id', versionId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching version details:', error);
+    throw error;
+  }
+
+  return data;
 };
 
 export const createPromptVersion = async (promptId, versionData) => {
@@ -193,16 +173,30 @@ export const createPromptVersion = async (promptId, versionData) => {
       throw new Error('Authentication required');
     }
 
+    // Get the latest version number for this prompt
+    const { data: versions, error: versionsError } = await supabase
+      .from('prompt_versions')
+      .select('version_number')
+      .eq('prompt_id', promptId)
+      .order('version_number', { ascending: false })
+      .limit(1);
+
+    if (versionsError) {
+      console.error('Error getting latest version:', versionsError);
+      throw versionsError;
+    }
+
+    // Calculate next version number
+    const nextVersionNumber = versions && versions.length > 0 ? versions[0].version_number + 1 : 1;
+
     const versionInsertData = {
       prompt_id: promptId,
+      version_number: nextVersionNumber,
       title: versionData.title,
       content: versionData.content,
-      prompt_description: versionData.description || null,
       tags: versionData.tags || [],
       is_public: versionData.isPublic || false,
-      team_id: versionData.teamId || null,
-      group_id: versionData.groupId || null,
-      version_description: versionData.changeDescription || null,
+      change_description: versionData.changeDescription || null,
       created_by: user.id
     };
 
@@ -232,41 +226,97 @@ export const updatePrompt = async (promptId, promptData) => {
       throw new Error('Authentication required');
     }
 
-    // First create a new version entry
-    const versionResult = await createPromptVersion(promptId, {
-      ...promptData,
-      changeDescription: promptData.changeDescription || 'Updated prompt'
-    });
+    // First, get the current prompt data
+    const { data: currentPrompt, error: promptError } = await supabase
+      .from('prompts')
+      .select('*')
+      .eq('id', promptId)
+      .single();
 
-    // Then update the prompt with the latest data
+    if (promptError) {
+      console.error('Error fetching current prompt:', promptError);
+      throw promptError;
+    }
+
+    // Get the latest version number
+    const { data: versions, error: versionsError } = await supabase
+      .from('prompt_versions')
+      .select('version_number')
+      .eq('prompt_id', promptId)
+      .order('version_number', { ascending: false })
+      .limit(1);
+
+    if (versionsError) {
+      console.error('Error getting latest version:', versionsError);
+      throw versionsError;
+    }
+
+    const nextVersionNumber = versions && versions.length > 0 ? versions[0].version_number + 1 : 1;
+
+    // Create a version of the current prompt before updating
+    const versionData = {
+      prompt_id: promptId,
+      version_number: nextVersionNumber,
+      title: currentPrompt.title,
+      content: currentPrompt.content,
+      tags: currentPrompt.tags || [],
+      is_public: currentPrompt.is_public,
+      change_description: promptData.changeDescription || 'Updated prompt',
+      created_by: user.id
+    };
+
+    // Create the version entry
+    const { error: versionError } = await supabase
+      .from('prompt_versions')
+      .insert(versionData);
+
+    if (versionError) {
+      console.error('Error creating version:', versionError);
+      throw versionError;
+    }
+
+    // First, delete the old prompt
+    const { error: deleteError } = await supabase
+      .from('prompts')
+      .delete()
+      .eq('id', promptId);
+
+    if (deleteError) {
+      console.error('Error deleting old prompt:', deleteError);
+      throw deleteError;
+    }
+
+    // Now create a new prompt with the updated data
     const promptUpdateData = {
+      id: promptId, // Keep the same ID
       title: promptData.title,
       content: promptData.content,
       description: promptData.description || null,
       tags: promptData.tags || [],
       is_public: promptData.isPublic || false,
       team_id: promptData.teamId || null,
-      group_id: promptData.groupId || null,
-      last_version_number: versionResult.version_number // Keep track of latest version
+      created_by: user.id,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabase
+    // Insert the new prompt with the same ID
+    const { data: updatedPrompt, error: insertError } = await supabase
       .from('prompts')
-      .update(promptUpdateData)
-      .eq('id', promptId)
+      .insert(promptUpdateData)
       .select()
       .single();
 
-    if (error) {
-      console.error('Error updating prompt:', error);
-      throw error;
+    if (insertError) {
+      console.error('Error creating new prompt:', insertError);
+      throw insertError;
     }
 
     // Invalidate queries to refresh the UI
     queryClient.invalidateQueries({ queryKey: ['prompts'] });
     queryClient.invalidateQueries({ queryKey: ['promptVersions', promptId] });
 
-    return data;
+    return updatedPrompt;
   } catch (error) {
     console.error('Error in updatePrompt:', error);
     throw error;

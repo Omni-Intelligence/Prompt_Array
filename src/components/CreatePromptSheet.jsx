@@ -1,7 +1,7 @@
 import React from 'react';
 import PromptForm from './prompt/PromptForm';
 import { toast } from "sonner";
-import { createPrompt } from '@/services/prompts';
+import { createPrompt, updatePrompt } from '@/services/prompts';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Sheet,
@@ -59,8 +59,13 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
     }
     
     try {
-      const createdPrompt = await createPrompt(newPrompt);
-      toast.success(initialData ? "Prompt updated successfully!" : "Prompt created successfully!");
+      if (mode === 'edit' && initialData?.id) {
+        await updatePrompt(initialData.id, newPrompt);
+        toast.success("Prompt updated successfully!");
+      } else {
+        await createPrompt(newPrompt);
+        toast.success(initialData ? "Prompt forked successfully!" : "Prompt created successfully!");
+      }
       
       // Invalidate both prompts and group-prompts queries
       queryClient.invalidateQueries({ queryKey: ['prompts'] });
@@ -80,8 +85,8 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
         changeDescription: ''
       });
     } catch (error) {
-      console.error('Error creating prompt:', error);
-      toast.error("Failed to create prompt. Please try again.");
+      console.error('Error with prompt:', error);
+      toast.error(mode === 'edit' ? "Failed to update prompt. Please try again." : "Failed to create prompt. Please try again.");
     }
   };
 
