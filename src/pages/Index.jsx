@@ -13,9 +13,9 @@ const Index = () => {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-screen bg-gradient-to-br from-purple-100 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Sidebar Navigation */}
-      <aside className="w-64 border-r border-gray-200 dark:border-gray-800">
+      <aside className="w-64 border-r border-gray-200/50 dark:border-gray-800/50 backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
         <div className="p-4">
           <img src="/logo.svg" alt="Logo" className="h-8 mb-6" />
           <nav className="space-y-2">
