@@ -44,10 +44,12 @@ const Index = () => {
                   variant="ghost" 
                   className={`w-full justify-start group relative overflow-hidden transition-all duration-300
                     hover:bg-gradient-to-r hover:from-primary/10 hover:to-purple-500/10 dark:hover:from-primary/20 dark:hover:to-purple-500/20
-                    ${location.pathname === `/app/${item.to}` ? 'bg-primary/10' : ''}`}
+                    ${location.pathname === `/app/${item.to}` ? 'bg-primary/5 text-primary dark:bg-primary/10' : ''}`}
                 >
                   <span className="relative z-10 flex items-center">
-                    <span className="mr-3 text-primary">{item.icon}</span>
+                    <span className={`mr-3 ${location.pathname === `/app/${item.to}` ? 'text-primary' : ''}`}>
+                      {item.icon}
+                    </span>
                     <span className="font-medium">{item.title}</span>
                   </span>
                 </Button>
