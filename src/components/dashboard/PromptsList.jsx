@@ -113,7 +113,7 @@ const PromptsList = ({ onPromptClick }) => {
   return (
     <section>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-white dark:text-white">All Prompts</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All Prompts</h2>
         <div className="w-full sm:w-64 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
           <Input 
@@ -130,25 +130,25 @@ const PromptsList = ({ onPromptClick }) => {
         <TabsList className="w-full justify-start bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm border-white/20 dark:border-gray-700/20">
           <TabsTrigger 
             value="recent" 
-            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+            className="text-gray-800 dark:text-gray-200 data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
           >
             Recent
           </TabsTrigger>
           <TabsTrigger 
             value="favorites" 
-            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+            className="text-gray-800 dark:text-gray-200 data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
           >
             Favorites
           </TabsTrigger>
           <TabsTrigger 
             value="owned" 
-            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+            className="text-gray-800 dark:text-gray-200 data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
           >
             My Prompts
           </TabsTrigger>
           <TabsTrigger 
             value="templates" 
-            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+            className="text-gray-800 dark:text-gray-200 data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
           >
             Templates
           </TabsTrigger>
@@ -158,7 +158,7 @@ const PromptsList = ({ onPromptClick }) => {
           <TabsContent key={category} value={category}>
             <ScrollArea className="h-[600px]">
               {categoryPrompts.length === 0 ? (
-                <p className="text-center text-white/60 py-8">
+                <p className="text-center text-gray-600 dark:text-gray-400 py-8">
                   {category === 'templates' ? 'No template prompts available.' : 'No prompts found. Create your first prompt by clicking the "New Prompt" button above.'}
                 </p>
               ) : (
