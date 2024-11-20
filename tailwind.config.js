@@ -52,6 +52,10 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      backgroundImage: {
+        'gradient-card': 'linear-gradient(135deg, rgba(214, 188, 250, 0.9) 0%, rgba(155, 135, 245, 0.9) 100%)',
+        'gradient-card-hover': 'linear-gradient(135deg, rgba(229, 222, 255, 0.95) 0%, rgba(214, 188, 250, 0.95) 100%)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -71,10 +75,6 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      backgroundImage: {
-        'gradient-card': 'linear-gradient(135deg, #D6BCFA 0%, #9b87f5 100%)',
-        'gradient-card-hover': 'linear-gradient(135deg, #E5DEFF 0%, #D6BCFA 100%)',
-      }
     },
   },
   plugins: [require("tailwindcss-animate")],
