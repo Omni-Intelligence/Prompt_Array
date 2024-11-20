@@ -2,13 +2,12 @@ import { supabase } from '@/lib/supabase';
 
 export const getCommunityPrompts = async ({ filter = 'latest', searchQuery = '' }) => {
   try {
-    // Base query without upvotes
+    console.log('Fetching community prompts with:', { filter, searchQuery });
+    
+    // Get public prompts
     let query = supabase
       .from('prompts')
-      .select(`
-        *,
-        author:users(id, full_name, avatar_url)
-      `)
+      .select('*')
       .eq('is_public', true);
 
     // Apply filter
@@ -23,33 +22,31 @@ export const getCommunityPrompts = async ({ filter = 'latest', searchQuery = '' 
         query = query.order('created_at', { ascending: false });
     }
 
-    const { data, error } = await query;
+    const { data: prompts, error } = await query;
 
     if (error) {
       console.error('Error fetching community prompts:', error);
       throw error;
     }
 
-    // Process the data
-    let processedData = (data || []).map(prompt => ({
-      ...prompt,
-      author: {
-        ...prompt.author,
-        full_name: prompt.author?.full_name || 'Anonymous'
-      }
-    }));
-
     // Filter by search query if provided
+    let filteredPrompts = prompts;
     if (searchQuery) {
       const searchLower = searchQuery.toLowerCase();
-      processedData = processedData.filter(prompt => 
+      filteredPrompts = prompts.filter(prompt => 
         prompt.title?.toLowerCase().includes(searchLower) ||
-        prompt.description?.toLowerCase().includes(searchLower) ||
-        prompt.author?.full_name?.toLowerCase().includes(searchLower)
+        prompt.description?.toLowerCase().includes(searchLower)
       );
     }
 
-    return processedData;
+    return filteredPrompts.map(prompt => ({
+      ...prompt,
+      author: {
+        id: null,
+        full_name: 'Anonymous',
+        avatar_url: null
+      }
+    }));
   } catch (error) {
     console.error('Error in getCommunityPrompts:', error);
     throw error;
@@ -57,38 +54,40 @@ export const getCommunityPrompts = async ({ filter = 'latest', searchQuery = '' 
 };
 
 export const forkPrompt = async (promptId) => {
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    // First, get the prompt data
+    const { data: promptData, error: promptError } = await supabase
+      .from('prompts')
+      .select('*')
+      .eq('id', promptId)
+      .single();
 
-  if (!user) {
-    throw new Error('User not authenticated');
+    if (promptError) throw promptError;
+
+    // Get the current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError) throw userError;
+
+    // Create a new prompt as a fork
+    const { data, error } = await supabase
+      .from('prompts')
+      .insert([
+        {
+          title: promptData.title,
+          description: promptData.description,
+          content: promptData.content,
+          user_id: user.id,
+          is_public: false, // Set to private by default
+          forked_from: promptId
+        }
+      ])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error in forkPrompt:', error);
+    throw error;
   }
-
-  // Get the prompt to fork
-  const { data: promptToFork, error: promptError } = await supabase
-    .from('prompts')
-    .select('*')
-    .eq('id', promptId)
-    .single();
-
-  if (promptError) throw promptError;
-
-  // Create the forked prompt
-  const { data: forkedPrompt, error: forkError } = await supabase
-    .from('prompts')
-    .insert([
-      {
-        title: `${promptToFork.title} (Forked)`,
-        description: promptToFork.description,
-        content: promptToFork.content,
-        is_public: false,
-        user_id: user.id,
-        forked_from: promptId
-      }
-    ])
-    .select()
-    .single();
-
-  if (forkError) throw forkError;
-
-  return forkedPrompt;
 };

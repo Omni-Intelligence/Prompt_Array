@@ -14,13 +14,24 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { useForkPrompt } from '@/hooks/useCommunity';
 
-const CommunityPromptCard = ({ prompt, onShare, onClick }) => {
+const CommunityPromptCard = ({ prompt, onShare, onFork, onClick }) => {
   const { mutate: forkPrompt, isLoading: isForking } = useForkPrompt();
 
-  const handleShare = () => {
-    const url = `${window.location.origin}/community/prompt/${prompt.id}`;
+  const handleShare = (e) => {
+    e.stopPropagation();
+    const url = `${window.location.origin}/app/prompts/${prompt.id}`;
     navigator.clipboard.writeText(url);
     onShare?.(prompt.id);
+  };
+
+  const handleFork = async (e) => {
+    e.stopPropagation();
+    try {
+      await forkPrompt(prompt.id);
+      onFork?.(prompt);
+    } catch (error) {
+      console.error('Error forking prompt:', error);
+    }
   };
 
   // Ensure we have valid data
@@ -31,7 +42,7 @@ const CommunityPromptCard = ({ prompt, onShare, onClick }) => {
 
   return (
     <Card 
-      className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
+      className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
       onClick={onClick}
     >
       <CardHeader className="pb-4">
@@ -52,42 +63,30 @@ const CommunityPromptCard = ({ prompt, onShare, onClick }) => {
       </CardHeader>
 
       <CardContent className="pb-4">
-        <CardTitle className="mb-2 line-clamp-1">{prompt.title}</CardTitle>
-        <CardDescription className="line-clamp-2">{prompt.description}</CardDescription>
+        <CardTitle className="mb-2 line-clamp-2">{prompt.title}</CardTitle>
+        <CardDescription className="line-clamp-3">
+          {prompt.description || 'No description provided'}
+        </CardDescription>
       </CardContent>
 
-      <CardFooter className="flex justify-between pt-4 border-t">
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              forkPrompt(prompt.id);
-            }}
-            disabled={isForking}
-          >
-            <Copy className="h-4 w-4 mr-2" />
-            Fork
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleShare();
-            }}
-          >
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
-            {prompt.comments_count || 0}
-          </span>
-        </div>
+      <CardFooter className="flex justify-end gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleShare}
+          className="hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          <Share2 className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleFork}
+          disabled={isForking}
+          className="hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
       </CardFooter>
     </Card>
   );

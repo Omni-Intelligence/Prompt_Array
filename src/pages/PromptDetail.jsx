@@ -19,6 +19,10 @@ const PromptDetail = () => {
   const { data: prompt, isLoading } = useQuery({
     queryKey: ['prompt', promptId],
     queryFn: async () => {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Query for either a public prompt OR a prompt owned by the current user
       const { data, error } = await supabase
         .from('prompts')
         .select(`
@@ -26,12 +30,13 @@ const PromptDetail = () => {
           favorites(user_id)
         `)
         .eq('id', promptId)
+        .or(`is_public.eq.true,user_id.eq.${user.id}`)
         .single();
 
-      if (error) throw error;
-      
-      // Get current user to check if prompt is favorited
-      const { data: { user } } = await supabase.auth.getUser();
+      if (error) {
+        console.error('Error fetching prompt:', error);
+        throw error;
+      }
       
       return {
         ...data,

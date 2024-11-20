@@ -8,11 +8,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCommunityPrompts } from "@/hooks/useCommunity";
 import CommunityPromptCard from "@/components/prompt/CommunityPromptCard";
+import CreatePromptSheet from "@/components/CreatePromptSheet";
 
 const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("latest");
   const [viewMode, setViewMode] = useState("grid");
+  const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
+  const [selectedPrompt, setSelectedPrompt] = useState(null);
   const navigate = useNavigate();
 
   const { data: prompts, isLoading, error } = useCommunityPrompts({
@@ -22,7 +25,7 @@ const Community = () => {
 
   useEffect(() => {
     if (error) {
-      console.error('Detailed error:', {
+      console.error('Community page error:', {
         message: error.message,
         details: error.details,
         hint: error.hint,
@@ -33,9 +36,18 @@ const Community = () => {
   }, [error]);
 
   const handleShare = (promptId) => {
-    const url = `${window.location.origin}/community/prompt/${promptId}`;
+    const url = `${window.location.origin}/app/prompts/${promptId}`;
     navigator.clipboard.writeText(url);
     toast.success("Sharing link copied to clipboard!");
+  };
+
+  const handleFork = (prompt) => {
+    setSelectedPrompt({
+      ...prompt,
+      title: `${prompt.title} (Fork)`,
+      is_public: false
+    });
+    setIsCreatePromptOpen(true);
   };
 
   if (error) {
@@ -48,105 +60,100 @@ const Community = () => {
             {error.hint && (
               <p className="text-sm mt-1 text-gray-600">{error.hint}</p>
             )}
+            <Button
+              variant="outline"
+              onClick={() => window.location.reload()}
+              className="mt-4"
+            >
+              Try Again
+            </Button>
           </div>
-          <Button variant="outline" onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Community Prompts</h1>
-          <p className="text-muted-foreground mt-1">
-            Discover and share prompts with the community
-          </p>
+    <div className="min-h-screen p-8 space-y-8">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="rounded-full"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <h1 className="text-3xl font-bold">Community</h1>
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-            <Input
-              className="pl-10"
-              placeholder="Search prompts..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Input
+            type="search"
+            placeholder="Search prompts..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Tabs value={filter} onValueChange={setFilter} className="w-[400px]">
-            <TabsList>
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="latest">Latest</TabsTrigger>
               <TabsTrigger value="oldest">Oldest</TabsTrigger>
             </TabsList>
           </Tabs>
-          <div className="flex border rounded-md">
-            <Button
-              variant={viewMode === "grid" ? "secondary" : "ghost"}
-              size="icon"
-              onClick={() => setViewMode("grid")}
-            >
-              <Grid3X3 size={20} />
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "secondary" : "ghost"}
-              size="icon"
-              onClick={() => setViewMode("list")}
-            >
-              <Users size={20} />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+            className="rounded-full"
+          >
+            {viewMode === "grid" ? (
+              <Users className="h-4 w-4" />
+            ) : (
+              <Grid3X3 className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </div>
 
-      {/* Content */}
-      <ScrollArea className="h-[calc(100vh-16rem)]">
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="border rounded-lg p-4 h-48 animate-pulse bg-gray-100"
-              />
-            ))}
-          </div>
-        ) : prompts?.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg text-gray-500">No prompts found</p>
-            {searchQuery && (
-              <p className="text-sm text-gray-400 mt-2">
-                Try adjusting your search terms
-              </p>
-            )}
-          </div>
-        ) : (
-          <div
-            className={
-              viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                : "flex flex-col gap-4"
-            }
-          >
+      {isLoading ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      ) : prompts?.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500">No prompts found</p>
+        </div>
+      ) : (
+        <ScrollArea className="h-[calc(100vh-16rem)]">
+          <div className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
             {prompts?.map((prompt) => (
               <CommunityPromptCard
                 key={prompt.id}
                 prompt={prompt}
-                viewMode={viewMode}
-                onShare={() => handleShare(prompt.id)}
+                onShare={handleShare}
+                onFork={() => handleFork(prompt)}
+                onClick={() => navigate(`/app/prompts/${prompt.id}`)}
               />
             ))}
           </div>
-        )}
-      </ScrollArea>
+        </ScrollArea>
+      )}
+
+      <CreatePromptSheet
+        isOpen={isCreatePromptOpen}
+        onOpenChange={(open) => {
+          setIsCreatePromptOpen(open);
+          if (!open) setSelectedPrompt(null);
+        }}
+        initialData={selectedPrompt}
+      />
     </div>
   );
 };

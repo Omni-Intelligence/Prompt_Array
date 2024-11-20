@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
+const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null }) => {
   const queryClient = useQueryClient();
   const [newPrompt, setNewPrompt] = React.useState({
     title: initialData?.title || '',
@@ -37,8 +37,19 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         groupId: initialData.groupId || '',
         changeDescription: ''
       });
+    } else {
+      setNewPrompt({
+        title: '',
+        content: '',
+        description: '',
+        tags: [],
+        isPublic: false,
+        teamId: '',
+        groupId: '',
+        changeDescription: ''
+      });
     }
-  }, [initialData]);
+  }, [initialData, isOpen]);
 
   const handleCreatePrompt = async (e) => {
     e.preventDefault();
@@ -84,9 +95,9 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData }) => {
         side="right"
       >
         <SheetHeader>
-          <SheetTitle>{initialData ? 'Edit Prompt' : 'Create New Prompt'}</SheetTitle>
+          <SheetTitle>{initialData ? 'Fork Prompt' : 'Create New Prompt'}</SheetTitle>
           <SheetDescription>
-            {initialData ? 'Edit your prompt details' : 'Add a new prompt to your library'}
+            {initialData ? 'Fork your prompt details' : 'Add a new prompt to your library'}
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">
