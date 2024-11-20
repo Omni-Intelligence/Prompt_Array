@@ -83,7 +83,6 @@ const PromptsList = ({ onPromptClick }) => {
   const { data: userPrompts, isLoading, error } = usePrompts();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Combine all template prompts
   const templatePrompts = [
     ...seoPrompts,
     ...technicalPrompts,
@@ -128,11 +127,31 @@ const PromptsList = ({ onPromptClick }) => {
       </div>
       
       <Tabs defaultValue="recent" className="w-full">
-        <TabsList className="w-full justify-start bg-white/10 dark:bg-gray-800/10 backdrop-blur-sm border-white/20 dark:border-gray-700/20">
-          <TabsTrigger value="recent" className="text-white/80 data-[state=active]:text-white">Recent</TabsTrigger>
-          <TabsTrigger value="favorites" className="text-white/80 data-[state=active]:text-white">Favorites</TabsTrigger>
-          <TabsTrigger value="owned" className="text-white/80 data-[state=active]:text-white">My Prompts</TabsTrigger>
-          <TabsTrigger value="templates" className="text-white/80 data-[state=active]:text-white">Templates</TabsTrigger>
+        <TabsList className="w-full justify-start bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm border-white/20 dark:border-gray-700/20">
+          <TabsTrigger 
+            value="recent" 
+            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+          >
+            Recent
+          </TabsTrigger>
+          <TabsTrigger 
+            value="favorites" 
+            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+          >
+            Favorites
+          </TabsTrigger>
+          <TabsTrigger 
+            value="owned" 
+            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+          >
+            My Prompts
+          </TabsTrigger>
+          <TabsTrigger 
+            value="templates" 
+            className="text-primary-foreground data-[state=active]:bg-primary/20 data-[state=active]:text-primary-foreground"
+          >
+            Templates
+          </TabsTrigger>
         </TabsList>
 
         {Object.entries(categorizedPrompts).map(([category, categoryPrompts]) => (
