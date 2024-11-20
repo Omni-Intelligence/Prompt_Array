@@ -75,15 +75,15 @@
     background: linear-gradient(to bottom right, #9b87f5, #7E69AB);
   }
 
-  /* Animated background shapes */
+  /* Primary background shapes */
   body::before,
   body::after {
-    @apply content-[''] fixed pointer-events-none opacity-30;
+    @apply content-[''] fixed pointer-events-none opacity-20;
     background: linear-gradient(45deg, #6E59A5, #9b87f5);
     border-radius: 50%;
     width: 600px;
     height: 600px;
-    animation: move 20s linear infinite;
+    animation: move 25s linear infinite;
     z-index: -1;
   }
 
@@ -95,7 +95,7 @@
   body::after {
     bottom: -300px;
     right: -300px;
-    animation-delay: -10s;
+    animation-delay: -12s;
   }
 }
 
@@ -105,44 +105,33 @@
   }
 }
 
+/* Animation keyframes */
 @keyframes move {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  25% {
-    transform: translate(10%, 10%) rotate(90deg) scale(1.1);
-  }
-  50% {
-    transform: translate(0, 20%) rotate(180deg) scale(1);
-  }
-  75% {
-    transform: translate(-10%, 10%) rotate(270deg) scale(0.9);
-  }
-  100% {
-    transform: translate(0, 0) rotate(360deg) scale(1);
-  }
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  25% { transform: translate(10%, 10%) rotate(90deg) scale(1.1); }
+  50% { transform: translate(0, 20%) rotate(180deg) scale(1); }
+  75% { transform: translate(-10%, 10%) rotate(270deg) scale(0.9); }
+  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
 }
 
-/* Additional floating shapes */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(5%, -5%) rotate(5deg); }
+  50% { transform: translate(10%, 5%) rotate(-5deg); }
+  75% { transform: translate(-5%, 10%) rotate(5deg); }
+}
+
+/* Enhanced floating shapes */
 .floating-shape {
-  @apply fixed pointer-events-none opacity-20;
+  @apply fixed pointer-events-none;
   background: linear-gradient(45deg, #D6BCFA, #9b87f5);
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   animation: float 15s ease-in-out infinite;
   z-index: -1;
+  opacity: 0.15;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  25% {
-    transform: translate(5%, -5%) rotate(5deg);
-  }
-  50% {
-    transform: translate(10%, 5%) rotate(-5deg);
-  }
-  75% {
-    transform: translate(-5%, 10%) rotate(5deg);
-  }
+.floating-shape-alt {
+  background: linear-gradient(135deg, #9b87f5, #6E59A5);
+  border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
 }

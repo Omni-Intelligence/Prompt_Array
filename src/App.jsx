@@ -18,12 +18,23 @@ const LoadingSpinner = () => (
 
 const FloatingShapes = () => (
   <>
+    {/* Large shapes */}
     <div className="floating-shape w-64 h-64 top-1/4 left-1/4" 
          style={{ animationDelay: "0s" }} />
-    <div className="floating-shape w-48 h-48 top-3/4 right-1/4" 
+    <div className="floating-shape floating-shape-alt w-56 h-56 top-3/4 right-1/4" 
          style={{ animationDelay: "-5s" }} />
-    <div className="floating-shape w-32 h-32 top-1/2 left-1/2" 
+    
+    {/* Medium shapes */}
+    <div className="floating-shape w-48 h-48 top-1/2 left-1/2" 
          style={{ animationDelay: "-10s" }} />
+    <div className="floating-shape floating-shape-alt w-40 h-40 bottom-1/4 right-1/3" 
+         style={{ animationDelay: "-7s" }} />
+    
+    {/* Small shapes */}
+    <div className="floating-shape w-32 h-32 top-1/3 right-1/4" 
+         style={{ animationDelay: "-3s" }} />
+    <div className="floating-shape floating-shape-alt w-24 h-24 bottom-1/3 left-1/3" 
+         style={{ animationDelay: "-8s" }} />
   </>
 );
 
