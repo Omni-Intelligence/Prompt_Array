@@ -54,7 +54,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground relative min-h-screen;
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+    position: relative;
+    margin: 0;
+    padding: 0;
   }
 }
 
