@@ -16,6 +16,17 @@ const LoadingSpinner = () => (
   </div>
 );
 
+const FloatingShapes = () => (
+  <>
+    <div className="floating-shape w-64 h-64 top-1/4 left-1/4" 
+         style={{ animationDelay: "0s" }} />
+    <div className="floating-shape w-48 h-48 top-3/4 right-1/4" 
+         style={{ animationDelay: "-5s" }} />
+    <div className="floating-shape w-32 h-32 top-1/2 left-1/2" 
+         style={{ animationDelay: "-10s" }} />
+  </>
+);
+
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   
@@ -80,6 +91,7 @@ const App = () => {
   return (
     <AuthProvider>
       <div className="min-h-screen bg-background">
+        <FloatingShapes />
         <Toaster />
         <BrowserRouter>
           <AppRoutes />
