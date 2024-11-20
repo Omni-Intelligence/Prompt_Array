@@ -10,6 +10,10 @@ const Library = () => {
   const [isCreatePromptOpen, setIsCreatePromptOpen] = React.useState(false);
   const [selectedPrompt, setSelectedPrompt] = React.useState(null);
 
+  const handlePromptClick = (prompt) => {
+    navigate(`/app/prompts/${prompt.id}`);
+  };
+
   return (
     <div className="min-h-screen p-8 space-y-8">
       <div className="flex items-center justify-between">
@@ -34,7 +38,7 @@ const Library = () => {
         </Button>
       </div>
 
-      <PromptsList />
+      <PromptsList onPromptClick={handlePromptClick} />
 
       <CreatePromptSheet
         isOpen={isCreatePromptOpen}

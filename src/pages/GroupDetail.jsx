@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, ArrowLeft, Plus } from 'lucide-react';
+import { Search, ArrowLeft, Plus, MoreVertical, Edit, Trash2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import CreatePromptSheet from '@/components/CreatePromptSheet';
-import { useState } from 'react';
 import { getGroupPrompts } from '@/services/groups';
 import { useGroupDetails } from '@/hooks/useGroupDetails';
+import { useGroups } from '@/hooks/useGroups';
+import EditGroupSheet from '@/components/EditGroupSheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const GroupDetail = () => {
   const { groupId } = useParams();
@@ -22,6 +39,15 @@ const GroupDetail = () => {
   });
   const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { deleteGroup } = useGroups();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEditSheet, setShowEditSheet] = useState(false);
+
+  const handleDelete = () => {
+    deleteGroup(group.id);
+    setShowDeleteDialog(false);
+    navigate('/app/groups');
+  };
 
   if (isLoadingGroup || isLoadingPrompts) {
     return (
@@ -43,21 +69,47 @@ const GroupDetail = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      <div className="flex items-center gap-4 mb-8">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => navigate('/app/groups')}
-          className="hover:bg-primary/10 hover:text-primary transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            {group.name}
-          </h1>
-          <p className="text-muted-foreground">{group.description}</p>
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate('/app/groups')}
+            className="hover:bg-primary/10 hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              {group.name}
+            </h1>
+            <p className="text-muted-foreground">{group.description}</p>
+          </div>
         </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+            >
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setShowEditSheet(true)}>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Group
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-destructive focus:text-destructive"
+              onClick={() => setShowDeleteDialog(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete Group
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="flex justify-between items-center gap-4 mb-6">
@@ -116,6 +168,33 @@ const GroupDetail = () => {
         isOpen={isCreatePromptOpen}
         onOpenChange={setIsCreatePromptOpen}
         initialData={{ groupId }}
+      />
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the group "{group.name}" and all its prompts.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <EditGroupSheet
+        group={group}
+        onOpenChange={setShowEditSheet}
+        trigger={<></>}
       />
     </div>
   );

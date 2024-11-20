@@ -11,20 +11,51 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log('AuthProvider: Initializing');
+    let mounted = true;
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          throw sessionError;
+        }
+
+        console.log('AuthProvider: Got initial session:', session);
+        if (mounted) {
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('AuthProvider: Error getting session:', error);
+        if (mounted) {
+          setError(error.message);
+          setLoading(false);
+          toast.error('Authentication Error: ' + error.message);
+        }
+      }
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log('AuthProvider: Auth state changed:', { event: _event, session });
+      if (mounted) {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription?.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email, password) => {
@@ -35,11 +66,10 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (error) throw error;
-      
-      toast.success("Successfully signed in!");
       return data;
     } catch (error) {
-      toast.error(error.message);
+      console.error('Sign in error:', error);
+      toast.error('Sign in failed: ' + error.message);
       throw error;
     }
   };
@@ -52,11 +82,11 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (error) throw error;
-      
-      toast.success("Check your email to confirm your account!");
+      toast.success('Sign up successful! Please check your email for verification.');
       return data;
     } catch (error) {
-      toast.error(error.message);
+      console.error('Sign up error:', error);
+      toast.error('Sign up failed: ' + error.message);
       throw error;
     }
   };
@@ -65,9 +95,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      toast.success("Successfully signed out!");
+      setUser(null);
     } catch (error) {
-      toast.error(error.message);
+      console.error('Sign out error:', error);
+      toast.error('Sign out failed: ' + error.message);
       throw error;
     }
   };
@@ -75,6 +106,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    error,
     signIn,
     signUp,
     signOut,
@@ -82,7 +114,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {error ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="p-4 text-red-500">
+            Authentication Error: {error}
+          </div>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

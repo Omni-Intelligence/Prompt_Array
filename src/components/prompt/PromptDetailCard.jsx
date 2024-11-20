@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import UpvoteButton from './UpvoteButton';
 
 const PromptDetailCard = ({ prompt, onCopy, onEdit, onDelete }) => {
   return (
@@ -23,7 +22,6 @@ const PromptDetailCard = ({ prompt, onCopy, onEdit, onDelete }) => {
             <CardDescription>{prompt.description}</CardDescription>
           </div>
           <div className="flex gap-2">
-            <UpvoteButton initialCount={prompt.upvotes || 0} promptId={prompt.id} />
             <Button 
               variant="ghost" 
               size="icon"
@@ -56,7 +54,7 @@ const PromptDetailCard = ({ prompt, onCopy, onEdit, onDelete }) => {
           <pre className="whitespace-pre-wrap text-sm font-mono">{prompt.content}</pre>
         </div>
         <div className="flex flex-wrap gap-2 mb-4">
-          {prompt.tags.map((tag) => (
+          {prompt.tags?.map((tag) => (
             <Badge 
               key={tag} 
               variant="secondary"

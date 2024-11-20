@@ -60,3 +60,42 @@ export const createGroup = async ({ title, description }) => {
   if (error) throw error;
   return data[0];
 };
+
+export const updateGroup = async (groupId, { name, description }) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  const { data, error } = await supabase
+    .from('groups')
+    .update({
+      name,
+      description,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', groupId)
+    .eq('user_id', user.id)
+    .select();
+
+  if (error) throw error;
+  return data[0];
+};
+
+export const deleteGroup = async (groupId) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  const { error } = await supabase
+    .from('groups')
+    .delete()
+    .eq('id', groupId)
+    .eq('user_id', user.id);
+
+  if (error) throw error;
+  return true;
+};
