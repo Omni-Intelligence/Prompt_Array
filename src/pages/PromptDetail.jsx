@@ -2,18 +2,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ArrowLeft, Copy, Star, History } from "lucide-react";
+import { ArrowLeft, Copy, Star, History, Edit } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PromptVersionHistory from "@/components/prompt/PromptVersionHistory";
 import { useState } from "react";
 import { toggleFavorite } from "@/services/favorites";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import CreatePromptSheet from "@/components/CreatePromptSheet";
+import { getPromptVersions, updatePrompt } from '@/services/prompts';
 
 const PromptDetail = () => {
   const { promptId } = useParams();
   const navigate = useNavigate();
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: prompt, isLoading } = useQuery({
@@ -45,51 +48,11 @@ const PromptDetail = () => {
     }
   });
 
-  // Mock version history data for now
-  const versions = [
-    {
-      id: "v3",
-      version: 3,
-      content: prompt?.content,
-      title: prompt?.title,
-      description: prompt?.description,
-      tags: prompt?.tags || [],
-      isPublic: true,
-      teamId: "team1",
-      groupId: "group1",
-      createdAt: new Date(),
-      createdBy: "Sarah Chen",
-      changeDescription: "Added SEO keywords section"
-    },
-    {
-      id: "v2",
-      version: 2,
-      content: "Write a blog post about [topic] that includes:\n\n1. An introduction\n2. [number] main sections\n3. Examples\n4. Conclusion",
-      title: prompt?.title,
-      description: "Creates blog post content with proper structure",
-      tags: ["writing", "blogging"],
-      isPublic: true,
-      teamId: "team1",
-      groupId: "group1",
-      createdAt: new Date(Date.now() - 86400000),
-      createdBy: "Sarah Chen",
-      changeDescription: "Simplified structure"
-    },
-    {
-      id: "v1",
-      version: 1,
-      content: "Write a detailed blog post about [topic]",
-      title: "Simple Blog Generator",
-      description: "Creates blog post content",
-      tags: ["writing"],
-      isPublic: true,
-      teamId: "team1",
-      groupId: "group1",
-      createdAt: new Date(Date.now() - 172800000),
-      createdBy: "Sarah Chen",
-      changeDescription: "Initial version"
-    }
-  ];
+  const { data: versions, isLoading: isLoadingVersions } = useQuery({
+    queryKey: ['prompt-versions', promptId],
+    queryFn: () => getPromptVersions(promptId),
+    enabled: !!promptId
+  });
 
   const handleCopyPrompt = () => {
     if (!prompt?.content) return;
@@ -110,12 +73,23 @@ const PromptDetail = () => {
     }
   };
 
-  const handleRestoreVersion = (version) => {
-    toast.success(`Restored version ${version.version}`);
-    setShowVersionHistory(false);
+  const handleRestoreVersion = async (version) => {
+    try {
+      await updatePrompt(promptId, {
+        ...version,
+        changeDescription: `Restored from version ${version.version}`
+      });
+      toast.success('Version restored successfully!');
+      queryClient.invalidateQueries({ queryKey: ['prompt', promptId] });
+      queryClient.invalidateQueries({ queryKey: ['prompt-versions', promptId] });
+      setShowVersionHistory(false);
+    } catch (error) {
+      console.error('Error restoring version:', error);
+      toast.error('Failed to restore version');
+    }
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingVersions) {
     return <div className="p-8 max-w-4xl mx-auto">Loading prompt...</div>;
   }
 
@@ -146,8 +120,8 @@ const PromptDetail = () => {
 
         {showVersionHistory ? (
           <PromptVersionHistory
-            versions={versions}
-            currentVersion={prompt.currentVersion}
+            versions={versions || []}
+            currentVersion={prompt.version}
             onRestoreVersion={handleRestoreVersion}
           />
         ) : (
@@ -158,13 +132,22 @@ const PromptDetail = () => {
                   <CardTitle>Prompt Content</CardTitle>
                   <CardDescription>{prompt.description}</CardDescription>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleToggleFavorite}
-                >
-                  <Star className={`h-4 w-4 ${prompt.isFavorited ? "fill-yellow-400 text-yellow-400" : ""}`} />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsEditSheetOpen(true)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleToggleFavorite}
+                  >
+                    <Star className={`h-4 w-4 ${prompt.isFavorited ? "fill-yellow-400 text-yellow-400" : ""}`} />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -186,6 +169,18 @@ const PromptDetail = () => {
           </Card>
         )}
       </div>
+
+      <CreatePromptSheet
+        isOpen={isEditSheetOpen}
+        onOpenChange={setIsEditSheetOpen}
+        mode="edit"
+        initialData={{
+          ...prompt,
+          isPublic: prompt.is_public,
+          teamId: prompt.team_id,
+          groupId: prompt.group_id,
+        }}
+      />
     </div>
   );
 };

@@ -51,24 +51,18 @@ const GroupCard = ({ group }) => {
       console.error('Failed to delete group:', error);
     }
   };
-  
+
   return (
     <>
-      <Card 
-        className="card-hover backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 cursor-pointer relative group"
+      <Card
+        className="relative hover:bg-accent cursor-pointer transition-colors"
         onClick={handleCardClick}
       >
-        <div 
-          className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
-          data-menu
-        >
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-xl font-semibold">{group.name}</CardTitle>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-              >
+            <DropdownMenuTrigger asChild data-menu>
+              <Button variant="ghost" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -77,8 +71,8 @@ const GroupCard = ({ group }) => {
                 <Edit className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="text-destructive focus:text-destructive"
+              <DropdownMenuItem
+                className="text-destructive"
                 onClick={() => setShowDeleteDialog(true)}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -86,27 +80,29 @@ const GroupCard = ({ group }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            {group.name}
-          </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{prompts.length} prompts</span>
-            <span>Updated {new Date(group.updated_at).toLocaleDateString()}</span>
+          <p className="text-sm text-muted-foreground">{group.description}</p>
+          <div className="mt-4">
+            <p className="text-sm text-muted-foreground">
+              {prompts.length} {prompts.length === 1 ? 'prompt' : 'prompts'}
+            </p>
           </div>
         </CardContent>
       </Card>
+
+      <EditGroupSheet
+        isOpen={showEditSheet}
+        onOpenChange={setShowEditSheet}
+        group={group}
+      />
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the group "{group.name}" and all its prompts.
+              This will permanently delete the group and remove all prompts from it.
               This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -121,12 +117,6 @@ const GroupCard = ({ group }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <EditGroupSheet
-        group={group}
-        onOpenChange={setShowEditSheet}
-        trigger={<></>}
-      />
     </>
   );
 };

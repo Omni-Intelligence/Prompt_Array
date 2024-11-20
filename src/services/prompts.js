@@ -65,6 +65,12 @@ export const createPrompt = async (promptData) => {
       throw new Error(noDataError);
     }
 
+    // Create initial version
+    await createPromptVersion(data[0].id, {
+      ...promptData,
+      changeDescription: 'Initial version'
+    });
+
     queryClient.invalidateQueries({ queryKey: ['prompts'] });
     toast.success('Prompt created successfully!');
     return data[0];
@@ -124,6 +130,175 @@ export const getPrompt = async (promptId) => {
     return promptWithFavorites;
   } catch (error) {
     console.error('Error in getPrompt:', error);
+    throw error;
+  }
+};
+
+export const getPromptVersions = async (promptId) => {
+  try {
+    const { data, error } = await supabase
+      .from('prompt_versions')
+      .select(`
+        id,
+        version_number,
+        title,
+        content,
+        prompt_description,
+        tags,
+        is_public,
+        team_id,
+        group_id,
+        version_description,
+        created_at,
+        created_by,
+        profiles:created_by (
+          full_name,
+          avatar_url
+        )
+      `)
+      .eq('prompt_id', promptId)
+      .order('version_number', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching prompt versions:', error);
+      throw error;
+    }
+
+    // Transform the data to match the expected format
+    return data.map(version => ({
+      id: version.id,
+      version: version.version_number,
+      title: version.title,
+      content: version.content,
+      description: version.prompt_description,
+      tags: version.tags || [],
+      isPublic: version.is_public,
+      teamId: version.team_id,
+      groupId: version.group_id,
+      changeDescription: version.version_description,
+      createdAt: version.created_at,
+      createdBy: version.profiles?.full_name || 'Unknown'
+    }));
+  } catch (error) {
+    console.error('Error in getPromptVersions:', error);
+    throw error;
+  }
+};
+
+export const createPromptVersion = async (promptId, versionData) => {
+  try {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      throw new Error('Authentication required');
+    }
+
+    const versionInsertData = {
+      prompt_id: promptId,
+      title: versionData.title,
+      content: versionData.content,
+      prompt_description: versionData.description || null,
+      tags: versionData.tags || [],
+      is_public: versionData.isPublic || false,
+      team_id: versionData.teamId || null,
+      group_id: versionData.groupId || null,
+      version_description: versionData.changeDescription || null,
+      created_by: user.id
+    };
+
+    const { data, error } = await supabase
+      .from('prompt_versions')
+      .insert(versionInsertData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating prompt version:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in createPromptVersion:', error);
+    throw error;
+  }
+};
+
+export const updatePrompt = async (promptId, promptData) => {
+  try {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      throw new Error('Authentication required');
+    }
+
+    // First create a new version entry
+    const versionResult = await createPromptVersion(promptId, {
+      ...promptData,
+      changeDescription: promptData.changeDescription || 'Updated prompt'
+    });
+
+    // Then update the prompt with the latest data
+    const promptUpdateData = {
+      title: promptData.title,
+      content: promptData.content,
+      description: promptData.description || null,
+      tags: promptData.tags || [],
+      is_public: promptData.isPublic || false,
+      team_id: promptData.teamId || null,
+      group_id: promptData.groupId || null,
+      last_version_number: versionResult.version_number // Keep track of latest version
+    };
+
+    const { data, error } = await supabase
+      .from('prompts')
+      .update(promptUpdateData)
+      .eq('id', promptId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating prompt:', error);
+      throw error;
+    }
+
+    // Invalidate queries to refresh the UI
+    queryClient.invalidateQueries({ queryKey: ['prompts'] });
+    queryClient.invalidateQueries({ queryKey: ['promptVersions', promptId] });
+
+    return data;
+  } catch (error) {
+    console.error('Error in updatePrompt:', error);
+    throw error;
+  }
+};
+
+export const deletePrompt = async (promptId) => {
+  try {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      throw new Error('Authentication required');
+    }
+
+    // Delete the prompt and its versions (cascade delete should handle versions)
+    const { error } = await supabase
+      .from('prompts')
+      .delete()
+      .eq('id', promptId);
+
+    if (error) {
+      console.error('Error deleting prompt:', error);
+      throw error;
+    }
+
+    // Invalidate queries to refresh the UI
+    queryClient.invalidateQueries({ queryKey: ['prompts'] });
+    toast.success('Prompt deleted successfully');
+
+  } catch (error) {
+    console.error('Error in deletePrompt:', error);
+    toast.error(`Failed to delete prompt: ${error.message}`);
     throw error;
   }
 };

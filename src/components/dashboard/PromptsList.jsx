@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, Search } from 'lucide-react';
+import { Star, Search, Trash2 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,6 +12,7 @@ import { creativeStoryPrompts } from '@/data/groups/creativeStoryPrompts';
 import { Button } from "@/components/ui/button";
 import { queryClient } from '@/lib/react-query';
 import { toast } from "sonner";
+import { deletePrompt } from '@/services/prompts';
 
 const PromptItem = ({ prompt, onClick }) => {
   const handleFavorite = async (e) => {
@@ -23,6 +24,20 @@ const PromptItem = ({ prompt, onClick }) => {
     } catch (error) {
       console.error('Error toggling favorite:', error);
       toast.error("Failed to update favorite status");
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this prompt? This action cannot be undone.')) {
+      try {
+        await deletePrompt(prompt.id);
+        queryClient.invalidateQueries({ queryKey: ['prompts'] });
+        toast.success("Prompt deleted successfully");
+      } catch (error) {
+        console.error('Error deleting prompt:', error);
+        toast.error("Failed to delete prompt");
+      }
     }
   };
 
@@ -42,14 +57,24 @@ const PromptItem = ({ prompt, onClick }) => {
           </p>
         </div>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleFavorite}
-        className={`${prompt.starred ? 'text-yellow-500' : 'text-gray-400'} hover:text-yellow-500 transition-colors`}
-      >
-        <Star className={`h-5 w-5 ${prompt.starred ? 'fill-current' : ''}`} />
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleFavorite}
+          className={`${prompt.starred ? 'text-yellow-500' : 'text-gray-400'} hover:text-yellow-500 transition-colors`}
+        >
+          <Star className={`h-5 w-5 ${prompt.starred ? 'fill-current' : ''}`} />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleDelete}
+          className="text-gray-400 hover:text-destructive transition-colors"
+        >
+          <Trash2 className="h-5 w-5" />
+        </Button>
+      </div>
     </li>
   );
 };

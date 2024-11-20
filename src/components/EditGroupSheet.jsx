@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { updateGroup } from "@/services/groups";
 import {
   Sheet,
   SheetContent,
@@ -10,28 +12,52 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useGroups } from '@/hooks/useGroups';
+import { useQueryClient } from '@tanstack/react-query';
 
-const EditGroupSheet = ({ group, trigger, onOpenChange }) => {
-  const [title, setTitle] = useState(group?.name || '');
-  const [description, setDescription] = useState(group?.description || '');
-  const { updateGroup, isUpdating } = useGroups();
+const EditGroupSheet = ({ isOpen, onOpenChange, group }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const queryClient = useQueryClient();
+  const [editedGroup, setEditedGroup] = React.useState({
+    title: group?.name || '',
+    description: group?.description || ''
+  });
 
-  const handleSubmit = (e) => {
+  // Update form when group prop changes
+  React.useEffect(() => {
+    if (group) {
+      setEditedGroup({
+        title: group.name || '',
+        description: group.description || ''
+      });
+    }
+  }, [group]);
+
+  const handleUpdateGroup = async (e) => {
     e.preventDefault();
-    updateGroup({
-      id: group.id,
-      name: title,
-      description
-    });
-    onOpenChange?.(false);
+    if (!editedGroup.title || !editedGroup.description) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      await updateGroup(group.id, {
+        name: editedGroup.title,
+        description: editedGroup.description
+      });
+      toast.success("Group updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error in handleUpdateGroup:', error);
+      toast.error(error.message || "Failed to update group. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Sheet onOpenChange={onOpenChange}>
-      <SheetTrigger asChild>
-        {trigger}
-      </SheetTrigger>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Edit Group</SheetTitle>
@@ -39,17 +65,18 @@ const EditGroupSheet = ({ group, trigger, onOpenChange }) => {
             Make changes to your group here. Click save when you're done.
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+        <form onSubmit={handleUpdateGroup} className="space-y-4 mt-4">
           <div className="space-y-2">
             <label htmlFor="title" className="text-sm font-medium">
               Title
             </label>
             <Input
               id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={editedGroup.title}
+              onChange={(e) =>
+                setEditedGroup((prev) => ({ ...prev, title: e.target.value }))
+              }
               placeholder="Enter group title"
-              required
             />
           </div>
           <div className="space-y-2">
@@ -58,26 +85,24 @@ const EditGroupSheet = ({ group, trigger, onOpenChange }) => {
             </label>
             <Textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={editedGroup.description}
+              onChange={(e) =>
+                setEditedGroup((prev) => ({ ...prev, description: e.target.value }))
+              }
               placeholder="Enter group description"
-              required
             />
           </div>
-          <div className="flex justify-end gap-4 pt-4">
+          <div className="flex justify-end space-x-2 pt-4">
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange?.(false)}
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isUpdating}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {isUpdating ? "Saving..." : "Save Changes"}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>
