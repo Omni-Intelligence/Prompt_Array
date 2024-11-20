@@ -74,17 +74,17 @@
 
   .gradient-circle {
     @apply rounded-full;
-    background: linear-gradient(45deg, #9b87f5, #7E69AB);
+    background: linear-gradient(45deg, #7E69AB, #9b87f5);
   }
 
   .gradient-blob {
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-    background: linear-gradient(135deg, #D6BCFA, #9b87f5);
+    background: linear-gradient(135deg, #9b87f5, #D6BCFA);
   }
 
   .gradient-wave {
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    background: linear-gradient(225deg, #7E69AB, #6E59A5);
+    background: linear-gradient(225deg, #6E59A5, #7E69AB);
   }
 
   /* Card styles with improved text contrast */
