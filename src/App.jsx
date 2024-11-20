@@ -8,6 +8,7 @@ import PromptDetail from "./pages/PromptDetail";
 import ChainDetail from "./pages/ChainDetail";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import HomePage from "./pages/Home";
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -18,14 +19,11 @@ const LoadingSpinner = () => (
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   
-  console.log('PrivateRoute state:', { user, loading });
-  
   if (loading) {
     return <LoadingSpinner />;
   }
   
   if (!user) {
-    console.log('No user found, redirecting to signin');
     return <Navigate to="/signin" />;
   }
   
@@ -41,10 +39,8 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Redirect root to dashboard */}
-      <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
-      
       {/* Public routes */}
+      <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
 
       {/* Protected routes */}
