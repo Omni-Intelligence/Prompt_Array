@@ -6,14 +6,29 @@ import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 
+const DecorativeShapes = () => (
+  <>
+    {/* Large gradient circle in top-right */}
+    <div className="gradient-shape gradient-circle w-96 h-96 -top-48 -right-48" />
+    
+    {/* Blob shape in bottom-left */}
+    <div className="gradient-shape gradient-blob w-80 h-80 -bottom-40 -left-40" />
+    
+    {/* Wave shape in middle-right */}
+    <div className="gradient-shape gradient-wave w-64 h-64 top-1/2 -right-32 transform -translate-y-1/2" />
+  </>
+);
+
 const Index = () => {
   const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [selectedPrompt, setSelectedPrompt] = useState(null);
   const location = useLocation();
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-100 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="flex h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Decorative background shapes */}
+      <DecorativeShapes />
+
       {/* Sidebar Navigation */}
       <aside className="w-64 border-r border-gray-200/50 dark:border-gray-800/50 backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
         <div className="p-4">
@@ -50,7 +65,6 @@ const Index = () => {
       <CreatePromptSheet
         isOpen={isCreatePromptOpen}
         onOpenChange={setIsCreatePromptOpen}
-        initialData={selectedPrompt}
       />
 
       <CreateGroupSheet
