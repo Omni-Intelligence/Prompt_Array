@@ -85,40 +85,9 @@ const Community = () => {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-3xl font-bold">Community</h1>
-        </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-          <Input
-            type="search"
-            placeholder="Search prompts..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Tabs value={filter} onValueChange={setFilter} className="w-[400px]">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="latest">Latest</TabsTrigger>
-              <TabsTrigger value="oldest">Oldest</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-            className="rounded-full"
-          >
-            {viewMode === "grid" ? (
-              <Users className="h-4 w-4" />
-            ) : (
-              <Grid3X3 className="h-4 w-4" />
-            )}
-          </Button>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            Community
+          </h1>
         </div>
       </div>
 

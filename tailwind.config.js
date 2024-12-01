@@ -52,6 +52,10 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      backgroundImage: {
+        'gradient-card': 'linear-gradient(135deg, rgba(125, 95, 255, 0.95) 0%, rgba(185, 145, 255, 0.95) 100%)',
+        'gradient-card-hover': 'linear-gradient(135deg, rgba(185, 145, 255, 0.98) 0%, rgba(200, 175, 255, 0.98) 100%)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

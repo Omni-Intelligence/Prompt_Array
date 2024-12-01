@@ -33,7 +33,9 @@ const Groups = () => {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-3xl font-bold">Groups</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            Groups
+          </h1>
         </div>
         <CreateGroupSheet
           trigger={
