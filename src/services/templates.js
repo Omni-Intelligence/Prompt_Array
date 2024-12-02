@@ -4,9 +4,10 @@ import { toast } from "sonner";
 export const getTemplates = async () => {
   try {
     const { data, error } = await supabase
-      .from('templates')
+      .from('prompts')
       .select('*')
-      .order('created_at', { ascending: false });
+      .eq('is_template', true)
+      .order('template_category', { ascending: true });
 
     if (error) {
       console.error('Error fetching templates:', error);

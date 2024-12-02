@@ -404,16 +404,34 @@ export const deletePrompt = async (promptId) => {
 
 export const getTemplates = async () => {
   try {
+    console.log('Fetching templates...');
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      console.error('Authentication error:', userError);
+      throw new Error('Authentication required');
+    }
+
+    console.log('User authenticated, querying templates...');
     const { data, error } = await supabase
       .from('prompts')
       .select('*')
       .eq('is_template', true)
       .order('template_category', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching templates:', error);
+      throw error;
+    }
+
+    console.log(`Successfully fetched ${data?.length || 0} templates`);
+    if (data?.length > 0) {
+      console.log('Template categories:', [...new Set(data.map(t => t.template_category || 'Uncategorized'))]);
+    }
+
     return data || [];
   } catch (error) {
-    console.error('Error fetching templates:', error);
+    console.error('Error in getTemplates:', error);
     toast.error('Failed to fetch templates');
     throw error;
   }
