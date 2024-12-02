@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import CreatePromptSheet from "@/components/CreatePromptSheet";
 import { useState } from "react";
+import { getPrompt } from "@/services/prompts";
 
 const CommunityPromptDetail = () => {
   const { id } = useParams();
@@ -16,17 +17,7 @@ const CommunityPromptDetail = () => {
 
   const { data: prompt, isLoading, error } = useQuery({
     queryKey: ["communityPrompt", id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("prompts")
-        .select("*")
-        .eq("id", id)
-        .eq("is_public", true)
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => getPrompt(id),
   });
 
   const handleShare = () => {

@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Star, Search, Trash2 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePrompts } from '@/hooks/usePrompts';
 import { toggleFavorite } from '@/services/favorites';
-import { seoPrompts } from '@/data/groups/seoPrompts';
-import { technicalPrompts } from '@/data/groups/technicalPrompts';
-import { emailPrompts } from '@/data/groups/emailPrompts';
-import { creativeStoryPrompts } from '@/data/groups/creativeStoryPrompts';
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { getTemplates } from '@/services/templates';
 import { queryClient } from '@/lib/react-query';
 import { toast } from "sonner";
 import { deletePrompt } from '@/services/prompts';
@@ -80,22 +78,19 @@ const PromptItem = ({ prompt, onClick }) => {
 };
 
 const PromptsList = ({ onPromptClick }) => {
-  const { data: userPrompts, isLoading, error } = usePrompts();
+  const { data: userPrompts, isLoading: isLoadingPrompts, error: promptsError } = usePrompts();
+  const { data: templates, isLoading: isLoadingTemplates, error: templatesError } = useQuery({
+    queryKey: ['templates'],
+    queryFn: getTemplates
+  });
   const [searchTerm, setSearchTerm] = useState('');
 
-  const templatePrompts = [
-    ...seoPrompts,
-    ...technicalPrompts,
-    ...emailPrompts,
-    ...creativeStoryPrompts
-  ];
-
-  if (isLoading) {
+  if (isLoadingPrompts || isLoadingTemplates) {
     return <div className="text-white/80">Loading prompts...</div>;
   }
 
-  if (error) {
-    return <div className="text-red-300">Error loading prompts: {error.message}</div>;
+  if (promptsError || templatesError) {
+    return <div className="text-red-300">Error loading prompts: {(promptsError || templatesError).message}</div>;
   }
 
   const filteredPrompts = userPrompts.filter(prompt => 
@@ -107,7 +102,7 @@ const PromptsList = ({ onPromptClick }) => {
     recent: filteredPrompts.slice(0, 10),
     favorites: filteredPrompts.filter(p => p.starred),
     owned: filteredPrompts,
-    templates: templatePrompts
+    templates: templates || []
   };
 
   return (

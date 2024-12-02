@@ -16,9 +16,18 @@ const Templates = () => {
     queryKey: ['templates'],
     queryFn: async () => {
       console.log('Fetching templates in Templates component...');
-      const data = await getTemplates();
-      console.log('Templates fetched in component:', data);
-      return data;
+      try {
+        const data = await getTemplates();
+        console.log('Templates fetched successfully:', {
+          count: data?.length,
+          templates: data,
+          firstTemplate: data?.[0]
+        });
+        return data;
+      } catch (err) {
+        console.error('Error fetching templates:', err);
+        throw err;
+      }
     },
     staleTime: 0, // Consider the data stale immediately
     refetchOnMount: true, // Refetch when the component mounts

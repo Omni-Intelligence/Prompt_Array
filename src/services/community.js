@@ -1,12 +1,15 @@
 import { supabase } from '@/lib/supabase';
 
+// Prompt Central user ID from migration
+const PROMPT_CENTRAL_USER_ID = 'e52e5b4a-00a3-4385-b315-00f0a8d3e000';
+
 export const getCommunityPrompts = async ({ filter = 'latest', searchQuery = '' }) => {
   try {
     console.log('Fetching community prompts with:', { filter, searchQuery });
     
-    // Get public prompts
+    // Get public prompts from the prompt_details_v view
     let query = supabase
-      .from('prompts')
+      .from('prompt_details_v')
       .select('*')
       .eq('is_public', true);
 
@@ -42,9 +45,9 @@ export const getCommunityPrompts = async ({ filter = 'latest', searchQuery = '' 
     return filteredPrompts.map(prompt => ({
       ...prompt,
       author: {
-        id: null,
-        full_name: 'Anonymous',
-        avatar_url: null
+        id: prompt.user_id,
+        full_name: prompt.user_id === PROMPT_CENTRAL_USER_ID ? 'Prompt Central' : (prompt.author_name || 'Anonymous'),
+        avatar_url: prompt.user_id === PROMPT_CENTRAL_USER_ID ? 'https://promptcentral.pro/logo.png' : prompt.author_avatar
       }
     }));
   } catch (error) {

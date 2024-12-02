@@ -83,36 +83,21 @@ export const getPrompt = async (promptId) => {
   try {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     
-    if (userError || !user) {
-      console.error('Authentication error:', userError);
-      toast.error('Please sign in to view prompts');
-      throw new Error('Authentication required');
+    // Start building the query
+    let query = supabase
+      .from('prompts')
+      .select('id, title, content, description, tags, is_public, version, user_id, group_id, created_at, updated_at')
+      .eq('id', promptId);
+
+    // If user is authenticated, include their private prompts
+    if (user) {
+      query = query.or(`is_public.eq.true,user_id.eq.${user.id}`);
+    } else {
+      // If user is not authenticated, only show public prompts
+      query = query.eq('is_public', true);
     }
 
-    // Fetch prompt and latest version in a single query
-    const { data, error } = await supabase
-      .from('prompts')
-      .select(`
-        id,
-        title,
-        content,
-        description,
-        tags,
-        is_public,
-        version,
-        user_id,
-        group_id,
-        created_at,
-        updated_at,
-        (
-          SELECT COUNT(*)
-          FROM prompt_versions
-          WHERE prompt_id = prompts.id
-        ) as version_count
-      `)
-      .eq('id', promptId)
-      .eq('user_id', user.id)
-      .single();
+    const { data, error } = await query.single();
 
     if (error) {
       console.error('Error fetching prompt:', error);
@@ -121,13 +106,23 @@ export const getPrompt = async (promptId) => {
     }
 
     if (!data) {
-      toast.error('Prompt not found or you do not have access');
-      throw new Error('Prompt not found or access denied');
+      toast.error('Prompt not found');
+      throw new Error('Prompt not found');
+    }
+
+    // Get version count in a separate query
+    const { count: versionCount, error: countError } = await supabase
+      .from('prompt_versions')
+      .select('*', { count: 'exact', head: true})
+      .eq('prompt_id', promptId);
+
+    if (countError) {
+      console.error('Error fetching version count:', countError);
     }
 
     return {
       ...data,
-      versionCount: parseInt(data.version_count) || 0
+      versionCount: versionCount || 0
     };
 
   } catch (error) {
@@ -303,20 +298,8 @@ export const updatePrompt = async (promptId, promptData) => {
       throw versionError;
     }
 
-    // First, delete the old prompt
-    const { error: deleteError } = await supabase
-      .from('prompts')
-      .delete()
-      .eq('id', promptId);
-
-    if (deleteError) {
-      console.error('Error deleting old prompt:', deleteError);
-      throw deleteError;
-    }
-
-    // Now create a new prompt with the updated data
+    // Update the prompt with the new data
     const promptUpdateData = {
-      id: promptId, // Keep the same ID
       title: promptData.title,
       content: promptData.content,
       description: promptData.description || null,
@@ -324,30 +307,27 @@ export const updatePrompt = async (promptId, promptData) => {
       is_public: promptData.isPublic || false,
       team_id: promptData.teamId || null,
       group_id: promptData.groupId || null,
-      created_by: user.id,
-      created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
 
-    // Insert the new prompt with the same ID
-    const { data: updatedPrompt, error: insertError } = await supabase
+    // Update the prompt
+    const { data: updatedPrompt, error: updateError } = await supabase
       .from('prompts')
-      .insert(promptUpdateData)
+      .update(promptUpdateData)
+      .eq('id', promptId)
       .select()
       .single();
 
-    if (insertError) {
-      console.error('Error creating new prompt:', insertError);
-      throw insertError;
+    if (updateError) {
+      console.error('Error updating prompt:', updateError);
+      throw updateError;
     }
 
-    // Invalidate both prompts and group-prompts queries
+    // Invalidate queries to refresh the UI
     queryClient.invalidateQueries({ queryKey: ['prompts'] });
     if (promptData.groupId) {
       queryClient.invalidateQueries({ queryKey: ['group-prompts', promptData.groupId] });
     }
-
-    // Invalidate queries to refresh the UI
     queryClient.invalidateQueries({ queryKey: ['promptVersions', promptId] });
 
     return updatedPrompt;
@@ -405,14 +385,6 @@ export const deletePrompt = async (promptId) => {
 export const getTemplates = async () => {
   try {
     console.log('Fetching templates...');
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
-    if (userError || !user) {
-      console.error('Authentication error:', userError);
-      throw new Error('Authentication required');
-    }
-
-    console.log('User authenticated, querying templates...');
     const { data, error } = await supabase
       .from('prompts')
       .select('*')
@@ -424,10 +396,11 @@ export const getTemplates = async () => {
       throw error;
     }
 
-    console.log(`Successfully fetched ${data?.length || 0} templates`);
-    if (data?.length > 0) {
-      console.log('Template categories:', [...new Set(data.map(t => t.template_category || 'Uncategorized'))]);
-    }
+    console.log('Raw template data from database:', {
+      count: data?.length,
+      templates: data,
+      categories: data ? [...new Set(data.map(t => t.template_category || 'Uncategorized'))] : []
+    });
 
     return data || [];
   } catch (error) {

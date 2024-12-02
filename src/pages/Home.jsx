@@ -29,9 +29,9 @@ const HomePage = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link to="/community">
+              <Link to="/app/dashboard">
                 <Button size="lg" variant="outline" className="border-primary/20">
-                  Explore Community
+                  Go to Dashboard
                 </Button>
               </Link>
             </div>

@@ -38,18 +38,22 @@ const Index = () => {
             <nav className="space-y-2">
               {navItems.map((item) => {
                 const isActive = location.pathname === `/app/${item.to}`;
+                const Component = item.disabled ? 'div' : Link;
+
                 return (
-                  <Link 
+                  <Component 
                     key={item.to}
                     to={`/app/${item.to}`}
-                    className="group w-full"
+                    className={`group w-full ${item.disabled ? 'cursor-not-allowed' : ''}`}
                   >
                     <Button 
                       variant="ghost" 
                       className={`w-full justify-start group relative overflow-hidden transition-all duration-300
                         ${isActive 
                           ? 'bg-primary/10 text-primary hover:bg-primary/15 dark:bg-primary/20 dark:hover:bg-primary/25' 
-                          : 'hover:bg-primary/5 dark:hover:bg-primary/10'}`}
+                          : 'hover:bg-primary/5 dark:hover:bg-primary/10'}
+                        ${item.disabled ? 'opacity-80' : ''}`}
+                      disabled={item.disabled}
                     >
                       <span className="relative z-10 flex items-center">
                         <span className={`mr-3 ${isActive ? 'text-primary' : ''}`}>
@@ -58,7 +62,7 @@ const Index = () => {
                         <span className="font-medium">{item.title}</span>
                       </span>
                     </Button>
-                  </Link>
+                  </Component>
                 );
               })}
             </nav>

@@ -101,12 +101,12 @@ const Community = () => {
         </div>
       ) : (
         <ScrollArea className="h-[calc(100vh-16rem)]">
-          <div className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
+          <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-4 p-4`}>
             {prompts?.map((prompt) => (
               <CommunityPromptCard
                 key={prompt.id}
                 prompt={prompt}
-                onShare={handleShare}
+                onShare={() => handleShare(prompt.id)}
                 onFork={() => handleFork(prompt)}
                 onClick={() => navigate(`/app/prompts/${prompt.id}`)}
               />

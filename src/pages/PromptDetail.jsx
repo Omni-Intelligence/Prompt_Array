@@ -10,7 +10,7 @@ import { toggleFavorite } from "@/services/favorites";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import CreatePromptSheet from "@/components/CreatePromptSheet";
-import { getPromptVersions, updatePrompt } from '@/services/prompts';
+import { getPrompt, getPromptVersions, updatePrompt } from '@/services/prompts';
 
 const PromptDetail = () => {
   const { promptId } = useParams();
@@ -26,20 +26,9 @@ const PromptDetail = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
       
-      const { data, error } = await supabase
-        .from('prompts')
-        .select('id, title, content, description, tags, version, created_at, updated_at, user_id')
-        .eq('id', promptId)
-        .single();
-
-      if (error) throw error;
+      const data = await getPrompt(promptId);
       if (!data) throw new Error('Prompt not found');
       
-      // Only allow access to own prompts
-      if (data.user_id !== user.id) {
-        throw new Error('Access denied');
-      }
-
       return data;
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
@@ -96,14 +85,19 @@ const PromptDetail = () => {
             <h1 className="text-3xl font-bold">{prompt.title}</h1>
             <p className="text-muted-foreground">Created {new Date(prompt.created_at).toLocaleDateString()}</p>
           </div>
-          <Button
-            variant="outline"
-            className="ml-auto"
-            onClick={() => setShowVersionHistory(!showVersionHistory)}
-          >
-            <History className="mr-2 h-4 w-4" />
-            Version History
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="ml-auto relative"
+              onClick={() => setShowVersionHistory(!showVersionHistory)}
+            >
+              <History className="mr-2 h-4 w-4" />
+              Version History
+              <Badge variant="secondary" className="absolute -top-2 -right-2 text-xs bg-primary/10 text-primary">
+                Coming Soon
+              </Badge>
+            </Button>
+          </div>
         </div>
 
         {showVersionHistory ? (

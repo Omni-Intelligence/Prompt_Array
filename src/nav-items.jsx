@@ -6,8 +6,10 @@ import {
   StarIcon,
   LayoutTemplateIcon,
   Globe2Icon,
-  GitBranchIcon
+  GitBranchIcon,
+  Link2Icon
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import Library from "./pages/Library";
 import Groups from "./pages/Groups";
 import Favourites from "./pages/Favourites";
@@ -60,22 +62,18 @@ export const navItems = [
     icon: <LayoutTemplateIcon className="h-4 w-4" />,
     component: Templates,
     color: "from-cyan-500 to-blue-500"
-  }
-  // Temporarily hidden features
-  /*
-  {
-    title: "Batches",
-    to: "batches",
-    icon: <LayersIcon className="h-4 w-4" />,
-    component: Batches,
-    color: "from-teal-500 to-green-500"
   },
   {
-    title: "Chains",
     to: "chains",
-    icon: <GitBranchIcon className="h-4 w-4" />,
+    title: (
+      <div className="flex items-center gap-2">
+        Chains
+        <Badge variant="outline" className="bg-primary/10 text-primary">Coming Soon</Badge>
+      </div>
+    ),
+    icon: <Link2Icon className="w-4 h-4" />,
     component: Chains,
-    color: "from-violet-500 to-purple-500"
+    color: "from-violet-500 to-purple-500",
+    disabled: true
   }
-  */
 ];
