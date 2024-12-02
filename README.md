@@ -1,155 +1,180 @@
-# Prompt Engineering Platform
+# Prompt Central
 
-A scalable platform for creating, managing, and sharing AI prompts with Supabase backend integration.
+<img src="public/logo.svg" alt="Prompt Central Logo" width="200"/>
 
-## Backend Setup with Supabase
+A modern, collaborative platform for managing and sharing AI prompts. Built with React, Vite, and Supabase.
 
-### 1. Create Supabase Project
-1. Go to [Supabase Dashboard](https://app.supabase.com)
-2. Click "New Project" and fill in your project details
-3. Save your project URL and anon key for later use
+## Features
 
-### 2. Database Setup
-Run these SQL commands in your Supabase SQL editor:
+### 🎯 Core Features
+- **Prompt Management**: Create, edit, and organize AI prompts with rich text support
+- **Version Control**: Track changes with built-in version history for each prompt
+- **Collaboration**: Share prompts with team members and the community
+- **Groups & Tags**: Organize prompts into groups and add tags for easy discovery
+- **Templates**: Access a curated library of prompt templates for various use cases
 
-```sql
--- Users table is automatically created by Supabase Auth
+### 💫 Advanced Features
+- **Real-time Updates**: Changes sync instantly across all users
+- **Version History**: Track and restore previous versions of prompts
+- **Smart Search**: Find prompts quickly with full-text search
+- **Access Control**: Fine-grained permissions for teams and groups
+- **Dark Mode**: Beautiful dark theme support
 
--- Create prompts table
-CREATE TABLE prompts (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  title TEXT NOT NULL,
-  content TEXT NOT NULL,
-  user_id UUID REFERENCES auth.users(id) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
-);
+## Tech Stack
 
--- Create chains table
-CREATE TABLE chains (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT,
-  user_id UUID REFERENCES auth.users(id) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
-);
+- **Frontend**:
+  - React 18
+  - Vite
+  - TailwindCSS
+  - Shadcn/ui
+  - React Query
+  - React Router
 
--- Create chain_prompts table for managing prompts within chains
-CREATE TABLE chain_prompts (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  chain_id UUID REFERENCES chains(id) ON DELETE CASCADE,
-  prompt_id UUID REFERENCES prompts(id) ON DELETE CASCADE,
-  order_index INTEGER NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
-);
+- **Backend**:
+  - Supabase (PostgreSQL)
+  - Row Level Security
+  - Real-time subscriptions
+  - Edge Functions
 
--- Create groups table
-CREATE TABLE groups (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT,
-  user_id UUID REFERENCES auth.users(id) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
-);
+## Getting Started
 
--- Create group_prompts junction table
-CREATE TABLE group_prompts (
-  group_id UUID REFERENCES groups(id) ON DELETE CASCADE,
-  prompt_id UUID REFERENCES prompts(id) ON DELETE CASCADE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
-  PRIMARY KEY (group_id, prompt_id)
-);
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Supabase CLI
 
--- Create favorites table
-CREATE TABLE favorites (
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  prompt_id UUID REFERENCES prompts(id) ON DELETE CASCADE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
-  PRIMARY KEY (user_id, prompt_id)
-);
-```
+### Installation
 
-### 3. Row Level Security (RLS)
-Enable RLS and set up policies for each table:
-
-```sql
--- Enable RLS
-ALTER TABLE prompts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE chains ENABLE ROW LEVEL SECURITY;
-ALTER TABLE chain_prompts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
-ALTER TABLE group_prompts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE favorites ENABLE ROW LEVEL SECURITY;
-
--- Prompts policies
-CREATE POLICY "Users can view their own prompts"
-  ON prompts FOR SELECT
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can create their own prompts"
-  ON prompts FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update their own prompts"
-  ON prompts FOR UPDATE
-  USING (auth.uid() = user_id);
-
--- Similar policies for other tables...
-```
-
-### 4. Environment Setup
-Create a `.env` file in your project root:
-
-```env
-VITE_SUPABASE_URL=your-project-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
-```
-
-### 5. Authentication Setup
-1. Go to Authentication > Settings in Supabase Dashboard
-2. Configure Site URL (your frontend URL)
-3. Enable the authentication providers you want to use
-4. Set up email templates if using email authentication
-
-## Frontend Setup
-
-1. Clone the repository
+1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd prompt-engineering-platform
+git clone https://github.com/EDNAHQ/Prompt_Central.git
+cd Prompt_Central
 ```
 
-2. Install dependencies
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Start development server
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
+
+4. Update `.env` with your Supabase credentials:
+```
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+5. Start the development server:
 ```bash
 npm run dev
 ```
 
-## Production Deployment
+### Database Setup
 
-1. Build the frontend
+1. Install Supabase CLI:
+```bash
+npm install -g supabase
+```
+
+2. Initialize Supabase:
+```bash
+supabase init
+```
+
+3. Apply migrations:
+```bash
+supabase db push
+```
+
+## Project Structure
+
+```
+prompt-central/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── hooks/         # Custom React hooks
+│   ├── lib/           # Utility functions and configurations
+│   ├── pages/         # Page components
+│   ├── services/      # API and service functions
+│   └── styles/        # Global styles and Tailwind config
+├── supabase/
+│   └── migrations/    # Database migrations
+├── public/           # Static assets
+└── tests/           # Test files
+```
+
+## Key Components
+
+### Prompt Management
+- `CreatePromptSheet`: Modal for creating/editing prompts
+- `PromptForm`: Form component for prompt details
+- `PromptVersionHistory`: Version tracking interface
+
+### Groups & Organization
+- `GroupsList`: Display and manage prompt groups
+- `GroupDetail`: Group details and member management
+- `PromptTagsField`: Tag management interface
+
+### Templates & Community
+- `TemplatesList`: Browse template prompts
+- `CommunityPrompts`: Discover shared prompts
+- `PromptDetailCard`: Display prompt details
+
+## Database Schema
+
+### Core Tables
+- `prompts`: Store prompt data and metadata
+- `prompt_versions`: Version history for prompts
+- `groups`: Organize prompts into collections
+- `teams`: Team management and permissions
+
+### Junction Tables
+- `group_members`: Group membership
+- `team_members`: Team membership
+- `favorites`: User prompt favorites
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## Development Guidelines
+
+### Code Style
+- Use TypeScript for type safety
+- Follow ESLint configuration
+- Use Prettier for formatting
+- Write meaningful commit messages
+
+### Testing
+- Write unit tests for utilities
+- Add integration tests for key flows
+- Test across different themes/modes
+
+## Deployment
+
+### Production Build
 ```bash
 npm run build
 ```
 
-2. Deploy the built files to your hosting service (Vercel, Netlify, etc.)
-3. Set up environment variables in your hosting platform
-4. Update Supabase authentication settings with production URLs
-
-## Additional Documentation
-- [Backend Architecture](./docs/backend/ARCHITECTURE.md)
-- [API Documentation](./docs/backend/API.md)
-- [Database Schema](./docs/backend/DATABASE.md)
-- [Deployment Guide](./docs/backend/DEPLOYMENT.md)
-
-## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+### Supabase Deployment
+```bash
+supabase db push
+```
 
 ## License
-MIT License - see [LICENSE.md](LICENSE.md)
+
+This project is proprietary and confidential. All rights reserved by EnterpriseDNA.
+
+## Support
+
+For support, please contact:
+- Email: support@promptcentral.pro
+- GitHub Issues: [Create an issue](https://github.com/EDNAHQ/Prompt_Central/issues)

@@ -15,18 +15,18 @@ import {
 const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, mode = 'create' }) => {
   const queryClient = useQueryClient();
   const [newPrompt, setNewPrompt] = React.useState({
-    title: initialData?.title || '',
-    content: initialData?.content || '',
-    description: initialData?.description || '',
-    tags: initialData?.tags || [],
-    isPublic: initialData?.isPublic || false,
+    title: mode === 'create' && !initialData?.title ? '' : (initialData?.title || ''),
+    content: mode === 'create' && !initialData?.title ? '' : (initialData?.content || ''),
+    description: mode === 'create' && !initialData?.title ? '' : (initialData?.description || ''),
+    tags: mode === 'create' && !initialData?.title ? [] : (initialData?.tags || []),
+    isPublic: mode === 'create' && !initialData?.title ? false : (initialData?.isPublic || false),
     teamId: initialData?.teamId || '',
     groupId: initialData?.groupId || '',
     changeDescription: ''
   });
 
   React.useEffect(() => {
-    if (initialData) {
+    if (initialData?.title) {
       setNewPrompt({
         title: initialData.title || '',
         content: initialData.content || '',
@@ -44,8 +44,8 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
         description: '',
         tags: [],
         isPublic: false,
-        teamId: '',
-        groupId: '',
+        teamId: initialData?.teamId || '',
+        groupId: initialData?.groupId || '',
         changeDescription: ''
       });
     }
@@ -98,10 +98,10 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
       <SheetContent className="sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>
-            {mode === 'edit' ? 'Edit Prompt' : initialData ? 'Fork Prompt' : 'Create New Prompt'}
+            {mode === 'edit' ? 'Edit Prompt' : (initialData?.title ? 'Fork Prompt' : 'Create New Prompt')}
           </SheetTitle>
           <SheetDescription>
-            {mode === 'edit' ? 'Update your prompt details' : initialData ? 'Fork your prompt details' : 'Add a new prompt to your library'}
+            {mode === 'edit' ? 'Update your prompt details' : (initialData?.title ? 'Fork your prompt details' : 'Add a new prompt to your library')}
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">

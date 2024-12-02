@@ -122,13 +122,21 @@ const GroupDetail = () => {
             className="pl-10"
           />
         </div>
-        <Button
-          onClick={() => setIsCreatePromptOpen(true)}
-          className="bg-primary hover:bg-primary/90 transition-colors"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          New Prompt
-        </Button>
+        <CreatePromptSheet
+          isOpen={isCreatePromptOpen}
+          onOpenChange={setIsCreatePromptOpen}
+          initialData={{ groupId: groupId }}
+          mode="create"
+          trigger={
+            <Button
+              onClick={() => setIsCreatePromptOpen(true)}
+              className="bg-primary hover:bg-primary/90 transition-colors"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Prompt
+            </Button>
+          }
+        />
       </div>
 
       <div className="grid gap-4">
@@ -163,12 +171,6 @@ const GroupDetail = () => {
           ))
         )}
       </div>
-
-      <CreatePromptSheet
-        isOpen={isCreatePromptOpen}
-        onOpenChange={setIsCreatePromptOpen}
-        initialData={{ groupId }}
-      />
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
