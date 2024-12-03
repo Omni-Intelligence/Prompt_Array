@@ -21,7 +21,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
     tags: mode === 'create' && !initialData?.title ? [] : (initialData?.tags || []),
     isPublic: mode === 'create' && !initialData?.title ? false : (initialData?.isPublic || false),
     teamId: initialData?.teamId || '',
-    groupId: initialData?.groupId || '',
+    groupId: initialData?.groupId || 'none',
     changeDescription: ''
   });
 
@@ -34,7 +34,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
         tags: initialData.tags || [],
         isPublic: initialData.is_public !== undefined ? initialData.is_public : false,
         teamId: initialData.team_id || '',
-        groupId: initialData.group_id || '',
+        groupId: initialData.group_id || 'none',
         changeDescription: ''
       });
     } else {
@@ -45,7 +45,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
         tags: [],
         isPublic: false,
         teamId: '',
-        groupId: '',
+        groupId: 'none',
         changeDescription: ''
       });
     }
@@ -87,7 +87,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
           tags: [],
           isPublic: false,
           teamId: '',
-          groupId: '',
+          groupId: 'none',
           changeDescription: ''
         });
       }

@@ -42,7 +42,7 @@ const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">No Group</SelectItem>
+            <SelectItem value="none">No Group</SelectItem>
             {groups.map((group) => (
               <SelectItem key={group.id} value={group.id}>
                 {group.name}

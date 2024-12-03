@@ -29,7 +29,7 @@ export const createPrompt = async (promptData) => {
       version: 1,
       user_id: user.id,
       team_id: promptData.teamId || null,
-      group_id: promptData.groupId || null,
+      group_id: promptData.groupId === 'none' ? null : promptData.groupId,
       change_description: promptData.changeDescription || null
     };
 
