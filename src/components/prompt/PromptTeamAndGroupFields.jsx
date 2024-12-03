@@ -11,6 +11,9 @@ const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
     queryFn: getGroups
   });
 
+  // Find the current group if one is set
+  const currentGroup = groups.find(group => group.id === newPrompt.groupId);
+
   return (
     <>
       <div className="flex items-center justify-between space-x-2">
@@ -29,13 +32,17 @@ const PromptTeamAndGroupFields = ({ newPrompt, setNewPrompt }) => {
           Add to Group
         </label>
         <Select
-          value={newPrompt.groupId || ''}
+          value={newPrompt.groupId}
           onValueChange={(value) => setNewPrompt(prev => ({ ...prev, groupId: value }))}
+          defaultValue={newPrompt.groupId}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select a group" />
+            <SelectValue placeholder="Select a group">
+              {currentGroup?.name || "Select a group"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="">No Group</SelectItem>
             {groups.map((group) => (
               <SelectItem key={group.id} value={group.id}>
                 {group.name}

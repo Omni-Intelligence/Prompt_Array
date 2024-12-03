@@ -26,15 +26,15 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
   });
 
   React.useEffect(() => {
-    if (initialData?.title) {
+    if (initialData) {
       setNewPrompt({
         title: initialData.title || '',
         content: initialData.content || '',
         description: initialData.description || '',
         tags: initialData.tags || [],
-        isPublic: initialData.isPublic || false,
-        teamId: initialData.teamId || '',
-        groupId: initialData.groupId || '',
+        isPublic: initialData.is_public !== undefined ? initialData.is_public : false,
+        teamId: initialData.team_id || '',
+        groupId: initialData.group_id || '',
         changeDescription: ''
       });
     } else {
@@ -44,12 +44,12 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
         description: '',
         tags: [],
         isPublic: false,
-        teamId: initialData?.teamId || '',
-        groupId: initialData?.groupId || '',
+        teamId: '',
+        groupId: '',
         changeDescription: ''
       });
     }
-  }, [initialData, isOpen]);
+  }, [initialData]);
 
   const handleCreatePrompt = async (e) => {
     e.preventDefault();
@@ -60,30 +60,37 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
     
     try {
       if (mode === 'edit' && initialData?.id) {
-        await updatePrompt(initialData.id, newPrompt);
+        const updatedPrompt = await updatePrompt(initialData.id, newPrompt);
+        // Update the cache with the new data
+        queryClient.setQueryData(['prompt', initialData.id], updatedPrompt);
         toast.success("Prompt updated successfully!");
       } else {
         await createPrompt(newPrompt);
         toast.success(initialData ? "Prompt forked successfully!" : "Prompt created successfully!");
       }
       
-      // Invalidate both prompts and group-prompts queries
+      // Invalidate queries to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['prompts'] });
+      queryClient.invalidateQueries({ queryKey: ['prompt', initialData?.id] });
       if (newPrompt.groupId) {
         queryClient.invalidateQueries({ queryKey: ['group-prompts', newPrompt.groupId] });
       }
       
       onOpenChange?.(false);
-      setNewPrompt({ 
-        title: '', 
-        content: '', 
-        description: '', 
-        tags: [],
-        isPublic: false,
-        teamId: '',
-        groupId: '',
-        changeDescription: ''
-      });
+      
+      // Only reset the form if we're not in edit mode
+      if (mode !== 'edit') {
+        setNewPrompt({ 
+          title: '', 
+          content: '', 
+          description: '', 
+          tags: [],
+          isPublic: false,
+          teamId: '',
+          groupId: '',
+          changeDescription: ''
+        });
+      }
     } catch (error) {
       console.error('Error with prompt:', error);
       toast.error(mode === 'edit' ? "Failed to update prompt. Please try again." : "Failed to create prompt. Please try again.");

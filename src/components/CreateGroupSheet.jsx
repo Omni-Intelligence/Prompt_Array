@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { useQueryClient } from '@tanstack/react-query';
 
-const CreateGroupSheet = ({ isOpen, onOpenChange, trigger }) => {
+const CreateGroupSheet = ({ isOpen, onOpenChange = () => {}, trigger }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const queryClient = useQueryClient();
   const [newGroup, setNewGroup] = React.useState({

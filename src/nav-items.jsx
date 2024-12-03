@@ -7,8 +7,7 @@ import {
   LayoutTemplateIcon,
   Globe2Icon,
   GitBranchIcon,
-  Link2Icon,
-  WandIcon
+  Link2Icon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Library from "./pages/Library";
@@ -75,19 +74,6 @@ export const navItems = [
     icon: <Link2Icon className="w-4 h-4" />,
     component: Chains,
     color: "from-violet-500 to-purple-500",
-    disabled: true
-  },
-  {
-    to: "prompt-assess",
-    title: (
-      <div className="flex items-center gap-2">
-        Prompt Assess
-        <Badge variant="outline" className="bg-primary/10 text-primary">Coming Soon</Badge>
-      </div>
-    ),
-    icon: <WandIcon className="w-4 h-4" />,
-    component: null,
-    color: "from-pink-500 to-rose-500",
     disabled: true
   }
 ];

@@ -25,7 +25,7 @@ export const createPrompt = async (promptData) => {
       content: promptData.content,
       description: promptData.description || null,
       tags: promptData.tags || [],
-      is_public: promptData.isPublic || false,
+      is_public: promptData.isPublic !== undefined ? promptData.isPublic : false,
       version: 1,
       user_id: user.id,
       team_id: promptData.teamId || null,
@@ -218,7 +218,7 @@ export const createPromptVersion = async (promptId, versionData) => {
       title: versionData.title,
       content: versionData.content,
       tags: versionData.tags || [],
-      is_public: versionData.isPublic || false,
+      is_public: versionData.isPublic !== undefined ? versionData.isPublic : false,
       change_description: versionData.changeDescription || null,
       created_by: user.id
     };
@@ -302,9 +302,9 @@ export const updatePrompt = async (promptId, promptData) => {
     const promptUpdateData = {
       title: promptData.title,
       content: promptData.content,
-      description: promptData.description || null,
+      description: promptData.description,
       tags: promptData.tags || [],
-      is_public: promptData.isPublic || false,
+      is_public: promptData.isPublic,
       team_id: promptData.teamId || null,
       group_id: promptData.groupId || null,
       updated_at: new Date().toISOString()
@@ -322,13 +322,6 @@ export const updatePrompt = async (promptId, promptData) => {
       console.error('Error updating prompt:', updateError);
       throw updateError;
     }
-
-    // Invalidate queries to refresh the UI
-    queryClient.invalidateQueries({ queryKey: ['prompts'] });
-    if (promptData.groupId) {
-      queryClient.invalidateQueries({ queryKey: ['group-prompts', promptData.groupId] });
-    }
-    queryClient.invalidateQueries({ queryKey: ['promptVersions', promptId] });
 
     return updatedPrompt;
   } catch (error) {

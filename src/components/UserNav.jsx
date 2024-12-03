@@ -57,9 +57,6 @@ const UserNav = () => {
           <DropdownMenuItem onClick={() => navigate("/app/account")}>
             Account Settings
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/app/team-settings")}>
-            Team Settings
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
