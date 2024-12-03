@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { AvatarSelector } from "@/components/AvatarSelector";
+import { BillingSection } from '@/components/account/BillingSection';
 
 const Account = () => {
   const navigate = useNavigate();
@@ -290,6 +291,16 @@ const Account = () => {
                 {loading ? "Updating..." : "Update Password"}
               </Button>
             </form>
+          </CardContent>
+        </Card>
+
+        {/* Billing Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Billing</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BillingSection subscription={null} />
           </CardContent>
         </Card>
 

@@ -10,6 +10,8 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/Home";
 import Account from "./pages/Account";
+import PricingPage from "./pages/Pricing";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -65,6 +67,8 @@ const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/pricing" element={<PricingPage />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
 
       {/* Protected routes */}
       <Route path="/app" element={<PrivateRoute><Index /></PrivateRoute>}>

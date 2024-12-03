@@ -9,7 +9,14 @@ const HomePage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="py-6 flex justify-between items-center">
           <img src="/logo.svg" alt="Prompt Central Logo" className="h-10" />
-          <UserNav />
+          <div className="flex items-center gap-4">
+            <Link to="/pricing">
+              <Button variant="ghost" className="hover:text-primary transition-colors">
+                Pricing
+              </Button>
+            </Link>
+            <UserNav />
+          </div>
         </header>
         
         <main className="py-20 sm:py-32">
