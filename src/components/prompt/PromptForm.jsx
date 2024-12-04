@@ -6,7 +6,7 @@ import PromptTeamAndGroupFields from './PromptTeamAndGroupFields';
 import PromptTagsField from './PromptTagsField';
 import { toast } from "sonner";
 
-const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData, isEditing }) => {
+const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData, isEditing, mode }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4 mt-4">
       <div className="space-y-2">
@@ -62,7 +62,7 @@ const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData, isEditing 
       <PromptTagsField newPrompt={newPrompt} setNewPrompt={setNewPrompt} />
 
       <Button type="submit" className="w-full">
-        {initialData ? 'Update Prompt' : 'Create Prompt'}
+        {initialData && mode === 'edit' ? 'Update Prompt' : 'Create Prompt'}
       </Button>
     </form>
   );

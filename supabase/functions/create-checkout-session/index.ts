@@ -7,6 +7,11 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+)
+
 serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
@@ -35,7 +40,6 @@ serve(async (req) => {
       customerId = customer.id
     }
 
-    // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       line_items: [
@@ -49,9 +53,15 @@ serve(async (req) => {
       cancel_url: `${req.headers.get('origin')}/pricing`,
       subscription_data: {
         metadata: {
-          userId,
+          supabaseUUID: userId,
         },
       },
+      allow_promotion_codes: true,
+      payment_method_types: ['card'],
+      billing_address_collection: 'auto',
+      customer_update: {
+        address: 'auto'
+      }
     })
 
     return new Response(

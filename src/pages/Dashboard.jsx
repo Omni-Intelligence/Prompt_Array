@@ -7,6 +7,8 @@ import PromptsList from '@/components/dashboard/PromptsList';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import { useGroups } from '@/hooks/useGroups';
+import { usePromptLimits } from '@/hooks/usePromptLimits';
+import { toast } from "sonner";
 
 const DashboardShapes = () => (
   <>
@@ -22,15 +24,40 @@ const Dashboard = () => {
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const navigate = useNavigate();
   const { groups, isLoading: isLoadingGroups } = useGroups();
+  const { promptCount, promptLimit, isSubscribed, canCreatePrompt } = usePromptLimits();
+
+  const handleNewPromptClick = () => {
+    if (!canCreatePrompt) {
+      toast.error(
+        "You've reached the free prompt limit", 
+        { 
+          description: "Upgrade to Premium to create unlimited prompts",
+          action: {
+            label: "Upgrade Now",
+            onClick: () => navigate('/pricing')
+          }
+        }
+      );
+      return;
+    }
+    setIsCreatePromptOpen(true);
+  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-purple-50/50 to-purple-100/50 dark:from-gray-900/50 dark:to-gray-800/50">
       <DashboardShapes />
       <div className="container mx-auto p-6 space-y-8 relative z-10">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Dashboard
-          </h1>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              Dashboard
+            </h1>
+            {!isSubscribed && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {promptCount}/{promptLimit} prompts used in free tier
+              </p>
+            )}
+          </div>
           <div className="flex gap-2">
             <CreateGroupSheet
               trigger={
@@ -43,13 +70,23 @@ const Dashboard = () => {
                 </Button>
               }
             />
-            <Button
-              onClick={() => setIsCreatePromptOpen(true)}
-              className="bg-primary hover:bg-primary/90 transition-colors"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              New Prompt
-            </Button>
+            {!canCreatePrompt ? (
+              <Button
+                onClick={() => navigate('/pricing')}
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Upgrade to Create More
+              </Button>
+            ) : (
+              <Button
+                onClick={handleNewPromptClick}
+                className="bg-primary hover:bg-primary/90 transition-colors"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                New Prompt
+              </Button>
+            )}
           </div>
         </div>
 

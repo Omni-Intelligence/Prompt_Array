@@ -3,6 +3,7 @@ import PromptForm from './prompt/PromptForm';
 import { toast } from "sonner";
 import { createPrompt, updatePrompt } from '@/services/prompts';
 import { useQueryClient } from '@tanstack/react-query';
+import { usePromptLimits } from '@/hooks/usePromptLimits';
 import {
   Sheet,
   SheetContent,
@@ -14,6 +15,7 @@ import {
 
 const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, mode = 'create' }) => {
   const queryClient = useQueryClient();
+  const { canCreatePrompt, promptCount, promptLimit, isSubscribed } = usePromptLimits();
   const [newPrompt, setNewPrompt] = React.useState({
     title: mode === 'create' && !initialData?.title ? '' : (initialData?.title || ''),
     content: mode === 'create' && !initialData?.title ? '' : (initialData?.content || ''),
@@ -53,6 +55,22 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
 
   const handleCreatePrompt = async (e) => {
     e.preventDefault();
+    
+    // Check if user can create a prompt
+    if (!canCreatePrompt && mode === 'create') {
+      toast.error(
+        "You've reached the free prompt limit", 
+        { 
+          description: "Upgrade to Premium to create unlimited prompts",
+          action: {
+            label: "Upgrade Now",
+            onClick: () => window.location.href = '/pricing'
+          }
+        }
+      );
+      return;
+    }
+
     if (!newPrompt.title || !newPrompt.content) {
       toast.error("Please fill in all required fields");
       return;
@@ -66,7 +84,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
         toast.success("Prompt updated successfully!");
       } else {
         await createPrompt(newPrompt);
-        toast.success(initialData ? "Prompt forked successfully!" : "Prompt created successfully!");
+        toast.success("Prompt created successfully!");
       }
       
       // Invalidate queries to refresh the UI
@@ -108,7 +126,20 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
             {mode === 'edit' ? 'Edit Prompt' : (initialData?.title ? 'Fork Prompt' : 'Create New Prompt')}
           </SheetTitle>
           <SheetDescription>
-            {mode === 'edit' ? 'Update your prompt details' : (initialData?.title ? 'Fork your prompt details' : 'Add a new prompt to your library')}
+            {mode === 'edit' 
+              ? 'Update your prompt details' 
+              : (initialData?.title 
+                ? 'Fork your prompt details' 
+                : <>
+                    Add a new prompt to your library
+                    {!isSubscribed && (
+                      <div className="mt-2 text-xs text-muted-foreground">
+                        Free tier: {promptCount}/{promptLimit} prompts used
+                      </div>
+                    )}
+                  </>
+                )
+            }
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">

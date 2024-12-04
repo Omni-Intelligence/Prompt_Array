@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
@@ -7,24 +6,8 @@ import { Loader2 } from 'lucide-react';
 export function BillingSection({ subscription }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleManageBilling = async () => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await supabase.functions.invoke('create-portal-session', {
-        body: {},
-      });
-
-      if (error) throw error;
-
-      // Redirect to Stripe Customer Portal
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleManageBilling = () => {
+    window.location.href = 'https://billing.stripe.com/p/login/3cs7vN4WK6QO1l64gg';
   };
 
   return (

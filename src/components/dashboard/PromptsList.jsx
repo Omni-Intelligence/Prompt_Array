@@ -151,7 +151,7 @@ const PromptsList = ({ onPromptClick }) => {
 
         {Object.entries(categorizedPrompts).map(([category, categoryPrompts]) => (
           <TabsContent key={category} value={category}>
-            <ScrollArea className="h-[600px]">
+            <ScrollArea className="h-[800px]">
               {categoryPrompts.length === 0 ? (
                 <p className="text-center text-gray-600 dark:text-gray-400 py-8">
                   {category === 'templates' ? 'No template prompts available.' : 'No prompts found. Create your first prompt by clicking the "New Prompt" button above.'}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGroups } from '@/hooks/useGroups';
+import { usePromptLimits } from '@/hooks/usePromptLimits';
 import { Button } from "@/components/ui/button";
 import { Plus } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
@@ -11,6 +12,7 @@ import CreateGroupSheet from '@/components/CreateGroupSheet';
 const Groups = () => {
   const navigate = useNavigate();
   const { groups, isLoading } = useGroups();
+  const { promptCount, promptLimit, isSubscribed } = usePromptLimits();
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
   if (isLoading) {
@@ -33,9 +35,16 @@ const Groups = () => {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Groups
-          </h1>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              Groups
+            </h1>
+            {!isSubscribed && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {promptCount}/{promptLimit} prompts used in free tier
+              </p>
+            )}
+          </div>
         </div>
         <CreateGroupSheet
           isOpen={isCreateGroupOpen}

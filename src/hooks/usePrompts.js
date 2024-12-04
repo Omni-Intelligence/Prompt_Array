@@ -19,6 +19,7 @@ export const usePrompts = () => {
           favorites:favorites(user_id)
         `)
         .eq('user_id', user.id) // Only get prompts for the current user
+        .is('deleted_at', null) // Only get non-deleted prompts
         .order('created_at', { ascending: false });
 
       if (error) {

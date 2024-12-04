@@ -15,11 +15,13 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { toggleFavorite } from "@/services/favorites";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePromptLimits } from '@/hooks/usePromptLimits';
 
 const Favourites = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: favouritesByGroup = [], isLoading, error } = useFavorites();
+  const { promptCount, promptLimit, isSubscribed } = usePromptLimits();
 
   const handleRemoveFavorite = async (promptId) => {
     try {
@@ -71,6 +73,11 @@ const Favourites = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Favourites
             </h1>
+            {!isSubscribed && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {promptCount}/{promptLimit} prompts used in free tier
+              </p>
+            )}
             <p className="text-muted-foreground">Quick access to your favorite prompts</p>
           </div>
         </div>

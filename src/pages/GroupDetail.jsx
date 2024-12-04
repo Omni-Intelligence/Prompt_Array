@@ -139,31 +139,31 @@ const GroupDetail = () => {
         />
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredPrompts.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="col-span-2 text-center py-12">
             <p className="text-muted-foreground">No prompts in this group yet. Create your first prompt to get started!</p>
           </div>
         ) : (
           filteredPrompts.map((prompt) => (
             <Card 
               key={prompt.id} 
-              className="card-hover cursor-pointer"
+              className="card-hover cursor-pointer h-[180px] overflow-hidden backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20"
               onClick={() => navigate(`/app/prompts/${prompt.id}`)}
             >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
+              <CardContent className="p-4">
+                <div className="flex flex-col h-full">
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">{prompt.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{prompt.content}</p>
-                    <div className="flex gap-2">
-                      <Badge variant="secondary">
-                        Created {new Date(prompt.created_at).toLocaleDateString()}
-                      </Badge>
-                      <Badge variant="secondary">
-                        Updated {new Date(prompt.updated_at).toLocaleDateString()}
-                      </Badge>
-                    </div>
+                    <h3 className="text-lg font-semibold mb-1 truncate">{prompt.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-2 line-clamp-3">{prompt.content}</p>
+                  </div>
+                  <div className="flex gap-2 mt-auto">
+                    <Badge variant="secondary" className="text-xs">
+                      Created {new Date(prompt.created_at).toLocaleDateString()}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      v{prompt.version || 1}
+                    </Badge>
                   </div>
                 </div>
               </CardContent>

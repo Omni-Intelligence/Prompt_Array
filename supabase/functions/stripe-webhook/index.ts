@@ -22,9 +22,11 @@ serve(async (req) => {
     switch (event.type) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
+        console.log('Processing subscription change:', event.type, event.data.object)
         await handleSubscriptionChange(event.data.object)
         break
       case 'customer.subscription.deleted':
+        console.log('Processing subscription deletion:', event.data.object)
         await handleSubscriptionDeletion(event.data.object)
         break
     }
@@ -44,8 +46,10 @@ serve(async (req) => {
 
 async function handleSubscriptionChange(subscription) {
   const customerId = subscription.customer
+  console.log('Retrieving customer:', customerId)
   const { data: customer } = await stripe.customers.retrieve(customerId)
   const userId = customer.metadata.supabaseUUID
+  console.log('Found user ID:', userId)
 
   const subscriptionData = {
     user_id: userId,
