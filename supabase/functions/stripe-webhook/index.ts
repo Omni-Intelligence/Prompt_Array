@@ -2,81 +2,84 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { stripe } from '../_shared/stripe.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? ''
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+
 const supabase = createClient(
-  Deno.env.get('SUPABASE_URL') ?? '',
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false
+    }
+  }
 )
 
 serve(async (req) => {
-  const signature = req.headers.get('stripe-signature')
-  const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SIGNING_SECRET')
-  
-  try {
-    const body = await req.text()
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature ?? '',
-      webhookSecret ?? ''
-    )
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
 
-    switch (event.type) {
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated':
-        console.log('Processing subscription change:', event.type, event.data.object)
-        await handleSubscriptionChange(event.data.object)
-        break
-      case 'customer.subscription.deleted':
-        console.log('Processing subscription deletion:', event.data.object)
-        await handleSubscriptionDeletion(event.data.object)
-        break
+  try {
+    // Parse the webhook payload
+    const payload = await req.text()
+    const event = JSON.parse(payload)
+    
+    console.log('Received webhook event:', event.type)
+
+    // Handle subscription events
+    if (event.type.startsWith('customer.subscription.')) {
+      const subscription = event.data.object
+      const customerId = subscription.customer
+      
+      // Get the customer to find the user ID
+      const customer = await stripe.customers.retrieve(customerId)
+      const userId = customer.metadata?.supabaseUUID
+      
+      if (!userId) {
+        throw new Error('No user ID found in customer metadata')
+      }
+
+      // Update subscription in database
+      const { error } = await supabase
+        .from('subscriptions')
+        .upsert(
+          {
+            user_id: userId,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscription.id,
+            price_id: subscription.items.data[0].price.id,
+            status: subscription.status,
+          },
+          {
+            onConflict: 'stripe_subscription_id',
+            ignoreDuplicates: false
+          }
+        )
+
+      if (error) throw error
     }
 
     return new Response(JSON.stringify({ received: true }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
+
   } catch (error) {
     console.error('Error processing webhook:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 400 }
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      }
     )
   }
 })
-
-async function handleSubscriptionChange(subscription) {
-  const customerId = subscription.customer
-  console.log('Retrieving customer:', customerId)
-  const { data: customer } = await stripe.customers.retrieve(customerId)
-  const userId = customer.metadata.supabaseUUID
-  console.log('Found user ID:', userId)
-
-  const subscriptionData = {
-    user_id: userId,
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
-    status: subscription.status,
-    price_id: subscription.items.data[0].price.id,
-    quantity: subscription.items.data[0].quantity,
-    cancel_at_period_end: subscription.cancel_at_period_end,
-    cancel_at: subscription.cancel_at ? new Date(subscription.cancel_at * 1000).toISOString() : null,
-    canceled_at: subscription.canceled_at ? new Date(subscription.canceled_at * 1000).toISOString() : null,
-    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-  }
-
-  const { error } = await supabase
-    .from('subscriptions')
-    .upsert(subscriptionData, { onConflict: 'stripe_subscription_id' })
-
-  if (error) throw error
-}
-
-async function handleSubscriptionDeletion(subscription) {
-  const { error } = await supabase
-    .from('subscriptions')
-    .delete()
-    .match({ stripe_subscription_id: subscription.id })
-
-  if (error) throw error
-}

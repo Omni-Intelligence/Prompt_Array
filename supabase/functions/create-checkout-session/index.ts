@@ -38,10 +38,19 @@ serve(async (req) => {
         },
       })
       customerId = customer.id
+    } else {
+      // Update existing customer to ensure metadata is set
+      await stripe.customers.update(customerId, {
+        metadata: {
+          supabaseUUID: userId,
+        },
+      })
     }
 
+    const origin = req.headers.get('origin')
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
+      payment_method_types: ['card'],
       line_items: [
         {
           price: priceId,
@@ -49,15 +58,14 @@ serve(async (req) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${req.headers.get('origin')}/app/dashboard?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/pricing`,
+      success_url: `${origin}/app/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/pricing`,
       subscription_data: {
         metadata: {
           supabaseUUID: userId,
         },
       },
       allow_promotion_codes: true,
-      payment_method_types: ['card'],
       billing_address_collection: 'auto',
       customer_update: {
         address: 'auto'
