@@ -2,59 +2,69 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Plus, Workflow } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useChains } from "@/hooks/useChains";
 
 const Chains = () => {
   const navigate = useNavigate();
+  const { data: chains, isLoading } = useChains();
+
+  const handleCreateChain = () => {
+    navigate('/app/chains/create');
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="p-8 max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate('/')}
-            className="hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-purple-600 bg-clip-text text-transparent">
-              Prompt Chains
-            </h1>
-            <p className="text-muted-foreground">Create and manage prompt sequences</p>
-          </div>
+    <div className="container-fluid p-6">
+      <div className="flex items-center gap-4 mb-8">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate('/app')}
+          className="hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-purple-600 bg-clip-text text-transparent">
+            Prompt Chains
+          </h1>
+          <p className="text-muted-foreground">Create and manage prompt sequences</p>
         </div>
+      </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card 
-            onClick={() => navigate('/chains/new')}
-            className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.02] cursor-pointer"
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5 text-primary" />
-                Create New Chain
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                Start building a new prompt chain to automate your workflow
-              </p>
-              <Button className="w-full bg-primary hover:bg-primary/90 transition-colors">
-                Get Started
-              </Button>
-            </CardContent>
-          </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card 
+          onClick={handleCreateChain}
+          className="bg-gradient-to-br from-violet-600 to-purple-700 backdrop-blur-sm border-violet-400/20 hover:shadow-lg transition-all duration-300 hover:shadow-violet-500/20 hover:scale-[1.02] cursor-pointer"
+        >
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Plus className="h-5 w-5 text-violet-200" />
+              Create New Chain
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-violet-200 mb-4">
+              Create a sequence of prompts to streamline your workflow
+            </p>
+            <Button className="w-full bg-white hover:bg-violet-100 text-violet-700 transition-colors border-0">
+              Get Started
+            </Button>
+          </CardContent>
+        </Card>
 
-          {[
-            { id: '1', title: 'Content Creation', prompts: 3, status: 'Active' },
-            { id: '2', title: 'Customer Support', prompts: 5, status: 'Draft' },
-            { id: '3', title: 'Data Analysis', prompts: 4, status: 'Active' },
-          ].map((chain) => (
+        {isLoading ? (
+          <div className="col-span-2 lg:col-span-3 text-center py-8 text-muted-foreground">
+            Loading chains...
+          </div>
+        ) : chains?.length === 0 ? (
+          <div className="col-span-2 lg:col-span-3 text-center py-8 text-muted-foreground">
+            No chains yet. Create your first chain to get started!
+          </div>
+        ) : (
+          chains?.map((chain) => (
             <Card 
               key={chain.id}
-              onClick={() => navigate(`/chains/${chain.id}`)}
+              onClick={() => navigate(`/app/chains/${chain.id}`)}
               className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20 hover:scale-[1.02] cursor-pointer"
             >
               <CardHeader>
@@ -65,13 +75,9 @@ const Chains = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">{chain.prompts} prompts</span>
-                  <span className={`text-sm px-2 py-1 rounded-full ${
-                    chain.status === 'Active' 
-                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                      : 'bg-gray-100 text-gray-700 dark:bg-gray-700/30 dark:text-gray-400'
-                  }`}>
-                    {chain.status}
+                  <span className="text-sm text-muted-foreground">{chain.prompts?.length || 0} prompts</span>
+                  <span className="text-sm text-muted-foreground">
+                    Last updated {new Date(chain.updated_at).toLocaleDateString()}
                   </span>
                 </div>
                 <Button variant="outline" className="w-full hover:bg-primary/10 hover:text-primary transition-colors">
@@ -79,8 +85,8 @@ const Chains = () => {
                 </Button>
               </CardContent>
             </Card>
-          ))}
-        </div>
+          ))
+        )}
       </div>
     </div>
   );

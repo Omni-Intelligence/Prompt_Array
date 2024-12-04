@@ -6,12 +6,16 @@ import SignIn from "./pages/SignIn";
 import GroupDetail from "./pages/GroupDetail";
 import PromptDetail from "./pages/PromptDetail";
 import ChainDetail from "./pages/ChainDetail";
+import CreateChain from "./pages/CreateChain";
+import ViewChain from "./pages/ViewChain";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/Home";
 import Account from "./pages/Account";
 import PricingPage from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import Techniques from "./pages/Techniques";
+import Chains from "./pages/Chains"; // Assuming Chains component is defined in ./pages/Chains
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -55,6 +59,17 @@ const PrivateRoute = ({ children }) => {
   return children;
 };
 
+const getDetailComponent = (path) => {
+  switch (path) {
+    case 'groups':
+      return GroupDetail;
+    case 'prompts':
+      return PromptDetail;
+    default:
+      return null;
+  }
+};
+
 const AppRoutes = () => {
   const { loading } = useAuth();
   
@@ -80,18 +95,34 @@ const AppRoutes = () => {
         <Route path="account" element={<Account />} />
         
         {/* Dynamic routes from navItems */}
-        {navItems.filter(item => item.to !== 'dashboard').map((item) => (
-          <Route 
-            key={item.to} 
-            path={item.to} 
-            element={<item.component />} 
-          />
-        ))}
-
+        {navItems.map((item) => {
+          if (item.dynamicRoutes === false) {
+            return (
+              <Route
+                key={item.to}
+                path={item.to}
+                element={<item.component />}
+              />
+            );
+          }
+          return (
+            <Route key={item.to} path={item.to}>
+              <Route index element={<item.component />} />
+              <Route path=":id" element={getDetailComponent(item.to)} />
+            </Route>
+          );
+        })}
+        
+        {/* Chain routes */}
+        <Route path="chains">
+          <Route index element={<Chains />} />
+          <Route path="create" element={<CreateChain />} />
+          <Route path=":id" element={<ViewChain />} />
+          <Route path=":id/edit" element={<ChainDetail />} />
+        </Route>
+        
         {/* Detail pages */}
-        <Route path="groups/:groupId" element={<GroupDetail />} />
-        <Route path="prompts/:promptId" element={<PromptDetail />} />
-        <Route path="chains/:chainId" element={<ChainDetail />} />
+        <Route path="techniques" element={<Techniques />} />
       </Route>
     </Routes>
   );
