@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useQueryClient } from '@tanstack/react-query';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [countdown, setCountdown] = useState(5);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
+    // Invalidate subscription cache to force a refresh
+    queryClient.invalidateQueries(['subscription']);
+
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           if (user) {
-            navigate('/dashboard');
+            navigate('/app/dashboard');
           } else {
             navigate('/signin', { 
               state: { 
@@ -30,7 +35,7 @@ const PaymentSuccess = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [navigate, user]);
+  }, [navigate, user, queryClient]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -67,7 +72,7 @@ const PaymentSuccess = () => {
           {/* Manual Navigation Button */}
           {user ? (
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/app/dashboard')}
               className="mt-8 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
             >
               Go to Dashboard Now
