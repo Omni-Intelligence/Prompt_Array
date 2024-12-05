@@ -13,6 +13,11 @@ import { toast } from "sonner";
 import { deletePrompt } from '@/services/prompts';
 
 const PromptItem = ({ prompt, onClick }) => {
+  const handleClick = () => {
+    console.log('PromptItem - Clicked prompt:', prompt);
+    onClick(prompt);
+  };
+
   const handleFavorite = async (e) => {
     e.stopPropagation();
     try {
@@ -41,7 +46,7 @@ const PromptItem = ({ prompt, onClick }) => {
 
   return (
     <li 
-      onClick={() => onClick(prompt)}
+      onClick={handleClick}
       className="group bg-gradient-card hover:bg-gradient-card-hover backdrop-blur-sm p-4 rounded-lg border-none shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-between cursor-pointer"
     >
       <div className="flex items-center gap-4">

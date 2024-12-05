@@ -330,10 +330,10 @@ const Favourites = () => {
             <div className="space-y-8">
               {filteredGroups.map((group) => (
                 <div key={group.groupId} className="space-y-4">
-                  <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg backdrop-blur-sm">
-                    <FolderOpen className="h-5 w-5 text-primary" />
-                    <h2 className="text-xl font-semibold">{group.groupName}</h2>
-                    <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">
+                  <div className="flex items-center gap-2 bg-primary p-3 rounded-lg backdrop-blur-sm">
+                    <FolderOpen className="h-5 w-5 text-white" />
+                    <h2 className="text-xl font-semibold text-white">{group.groupName}</h2>
+                    <Badge variant="secondary" className="ml-2 bg-white/20 text-white">
                       {group.prompts.length} prompts
                     </Badge>
                   </div>

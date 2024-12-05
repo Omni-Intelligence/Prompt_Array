@@ -35,14 +35,16 @@ export const navItems = [
     to: "library",
     icon: <BookOpenIcon className="h-4 w-4" />,
     component: Library,
-    color: "from-green-500 to-emerald-500"
+    color: "from-green-500 to-emerald-500",
+    dynamicRoutes: true
   },
   {
     title: "Groups",
     to: "groups",
     icon: <UsersIcon className="h-4 w-4" />,
     component: Groups,
-    color: "from-orange-500 to-red-500"
+    color: "from-orange-500 to-red-500",
+    dynamicRoutes: true
   },
   {
     title: "Community",

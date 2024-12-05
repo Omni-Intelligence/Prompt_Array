@@ -34,7 +34,7 @@ const Dashboard = () => {
           description: "Upgrade to Premium to create unlimited prompts",
           action: {
             label: "Upgrade Now",
-            onClick: () => navigate('/pricing')
+            onClick: () => navigate('/app/pricing')
           }
         }
       );
@@ -72,7 +72,7 @@ const Dashboard = () => {
             />
             {!canCreatePrompt ? (
               <Button
-                onClick={() => navigate('/pricing')}
+                onClick={() => navigate('/app/pricing')}
                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white"
               >
                 <Plus className="mr-2 h-4 w-4" />

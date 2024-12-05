@@ -121,7 +121,7 @@ const CommunityPromptDetail = () => {
               <p className="text-gray-600 mb-8">{prompt.description}</p>
             )}
             <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
-              <pre className="whitespace-pre-wrap font-mono text-sm">
+              <pre className="whitespace-pre-wrap text-sm">
                 {prompt.content}
               </pre>
             </div>

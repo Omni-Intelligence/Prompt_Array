@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Copy, Star, History, Edit } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PromptVersionHistory from "@/components/prompt/PromptVersionHistory";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { toggleFavorite } from "@/services/favorites";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -13,65 +13,112 @@ import CreatePromptSheet from "@/components/CreatePromptSheet";
 import { getPrompt, getPromptVersions, updatePrompt } from '@/services/prompts';
 
 const PromptDetail = () => {
-  const { promptId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
-  const queryClient = useQueryClient();
 
-  // Only fetch basic prompt data initially
-  const { data: prompt, isLoading } = useQuery({
-    queryKey: ['prompt', promptId],
+  // Main prompt query
+  const { data: prompt, isLoading, error } = useQuery({
+    queryKey: ['prompt', id],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-      
-      const data = await getPrompt(promptId);
-      if (!data) throw new Error('Prompt not found');
-      
-      return data;
+      try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) throw new Error('Authentication error');
+        if (!user) {
+          navigate('/signin', { state: { from: `/app/prompts/${id}` } });
+          throw new Error('Authentication required');
+        }
+        
+        const data = await getPrompt(id);
+        if (!data) throw new Error('Prompt not found');
+        return data;
+      } catch (error) {
+        console.error('Error in prompt query:', error);
+        throw error;
+      }
     },
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 30,
+    retry: false
   });
 
-  // Lazy load versions only when needed
-  const { data: versions, isLoading: isLoadingVersions } = useQuery({
-    queryKey: ['prompt-versions', promptId],
-    queryFn: () => getPromptVersions(promptId),
-    enabled: !!promptId && showVersionHistory, // Only fetch when versions are shown
+  // Version history query
+  const { data: versions } = useQuery({
+    queryKey: ['prompt-versions', id],
+    queryFn: () => getPromptVersions(id),
+    enabled: !!id && showVersionHistory,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 30,
   });
 
-  const handleCopyPrompt = () => {
+  const handleCopyPrompt = useCallback(() => {
     if (!prompt?.content) return;
     navigator.clipboard.writeText(prompt.content);
     toast.success("Prompt copied to clipboard!");
-  };
+  }, [prompt?.content]);
 
-  const handleRestoreVersion = async (version) => {
+  const handleRestoreVersion = useCallback(async (version) => {
     try {
-      await updatePrompt(promptId, {
+      await updatePrompt(id, {
         ...version,
         changeDescription: `Restored from version ${version.version}`
       });
       toast.success('Version restored successfully!');
-      queryClient.invalidateQueries({ queryKey: ['prompt', promptId] });
-      queryClient.invalidateQueries({ queryKey: ['prompt-versions', promptId] });
+      queryClient.invalidateQueries({ queryKey: ['prompt', id] });
+      queryClient.invalidateQueries({ queryKey: ['prompt-versions', id] });
       setShowVersionHistory(false);
     } catch (error) {
       console.error('Error restoring version:', error);
       toast.error('Failed to restore version');
     }
-  };
+  }, [id, queryClient]);
 
   if (isLoading) {
     return <div className="p-8 max-w-4xl mx-auto">Loading prompt...</div>;
   }
 
+  if (error) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="text-center text-red-500">
+            <p className="font-semibold">Error loading prompt</p>
+            <p className="text-sm mt-2">{error.message}</p>
+            <Button
+              variant="outline"
+              onClick={() => navigate(-1)}
+              className="mt-4"
+            >
+              Go Back
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!prompt) {
-    return <div className="p-8 max-w-4xl mx-auto">Prompt not found</div>;
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="text-center">
+            <p className="font-semibold">Prompt not found</p>
+            <p className="text-sm mt-2 text-muted-foreground">
+              The prompt you're looking for might have been deleted or you may not have permission to view it.
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => navigate(-1)}
+              className="mt-4"
+            >
+              Go Back
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -83,7 +130,9 @@ const PromptDetail = () => {
           </Button>
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-bold">{prompt.title}</h1>
-            <p className="text-muted-foreground">Created {new Date(prompt.created_at).toLocaleDateString()}</p>
+            <p className="text-muted-foreground">
+              Created {new Date(prompt.created_at).toLocaleDateString()}
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <Button

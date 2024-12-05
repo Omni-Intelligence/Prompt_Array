@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { navItems } from "./nav-items";
@@ -15,7 +16,7 @@ import Account from "./pages/Account";
 import PricingPage from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Techniques from "./pages/Techniques";
-import Chains from "./pages/Chains"; // Assuming Chains component is defined in ./pages/Chains
+import Chains from "./pages/Chains";
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -52,22 +53,7 @@ const PrivateRoute = ({ children }) => {
     return <LoadingSpinner />;
   }
   
-  if (!user) {
-    return <Navigate to="/signin" />;
-  }
-  
-  return children;
-};
-
-const getDetailComponent = (path) => {
-  switch (path) {
-    case 'groups':
-      return GroupDetail;
-    case 'prompts':
-      return PromptDetail;
-    default:
-      return null;
-  }
+  return user ? children : <Navigate to="/signin" />;
 };
 
 const AppRoutes = () => {
@@ -94,6 +80,9 @@ const AppRoutes = () => {
         {/* Account Settings */}
         <Route path="account" element={<Account />} />
         
+        {/* Prompt Detail Route */}
+        <Route path="prompts/:id" element={<PromptDetail />} />
+
         {/* Dynamic routes from navItems */}
         {navItems.map((item) => {
           if (item.dynamicRoutes === false) {
@@ -108,7 +97,8 @@ const AppRoutes = () => {
           return (
             <Route key={item.to} path={item.to}>
               <Route index element={<item.component />} />
-              <Route path=":id" element={getDetailComponent(item.to)} />
+              {item.to === 'groups' && <Route path=":id" element={<GroupDetail />} />}
+              {item.to === 'library' && <Route path="prompt/:id" element={<PromptDetail />} />}
             </Route>
           );
         })}

@@ -29,13 +29,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const GroupDetail = () => {
-  const { groupId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { group, isLoading: isLoadingGroup, error: groupError } = useGroupDetails(groupId);
+  const { group, isLoading: isLoadingGroup, error: groupError } = useGroupDetails(id);
   const { data: prompts = [], isLoading: isLoadingPrompts } = useQuery({
-    queryKey: ['group-prompts', groupId],
-    queryFn: () => getGroupPrompts(groupId),
-    enabled: !!groupId
+    queryKey: ['group-prompts', id],
+    queryFn: () => getGroupPrompts(id),
+    enabled: !!id
   });
   const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -125,7 +125,7 @@ const GroupDetail = () => {
         <CreatePromptSheet
           isOpen={isCreatePromptOpen}
           onOpenChange={setIsCreatePromptOpen}
-          initialData={{ groupId: groupId }}
+          initialData={{ groupId: id }}
           mode="create"
           trigger={
             <Button
@@ -149,7 +149,7 @@ const GroupDetail = () => {
             <Card 
               key={prompt.id} 
               className="card-hover cursor-pointer h-[180px] overflow-hidden backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300 hover:border-primary/20"
-              onClick={() => navigate(`/app/prompts/${prompt.id}`)}
+              onClick={() => navigate(`/app/library/prompt/${prompt.id}`)}
             >
               <CardContent className="p-4">
                 <div className="flex flex-col h-full">

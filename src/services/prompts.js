@@ -83,46 +83,51 @@ export const getPrompt = async (promptId) => {
   try {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     
-    // Start building the query
-    let query = supabase
-      .from('prompts')
-      .select('id, title, content, description, tags, is_public, version, user_id, group_id, created_at, updated_at')
-      .eq('id', promptId);
-
-    // If user is authenticated, include their private prompts
-    if (user) {
-      query = query.or(`is_public.eq.true,user_id.eq.${user.id}`);
-    } else {
-      // If user is not authenticated, only show public prompts
-      query = query.eq('is_public', true);
+    if (userError) {
+      console.error('Authentication error:', userError);
+      throw new Error('Authentication required');
+    }
+    
+    if (!user) {
+      throw new Error('Authentication required');
     }
 
-    const { data, error } = await query.single();
+    // Start building the query
+    const { data, error } = await supabase
+      .from('prompts')
+      .select(`
+        id,
+        title,
+        content,
+        description,
+        tags,
+        is_public,
+        version,
+        user_id,
+        group_id,
+        created_at,
+        updated_at,
+        prompt_versions(count)
+      `)
+      .eq('id', promptId)
+      .or(`is_public.eq.true,user_id.eq.${user.id}`)
+      .single();
 
     if (error) {
       console.error('Error fetching prompt:', error);
-      toast.error(`Failed to fetch prompt: ${error.message}`);
+      if (error.code === 'PGRST116') {
+        throw new Error('Prompt not found');
+      }
       throw error;
     }
 
     if (!data) {
-      toast.error('Prompt not found');
       throw new Error('Prompt not found');
-    }
-
-    // Get version count in a separate query
-    const { count: versionCount, error: countError } = await supabase
-      .from('prompt_versions')
-      .select('*', { count: 'exact', head: true})
-      .eq('prompt_id', promptId);
-
-    if (countError) {
-      console.error('Error fetching version count:', countError);
     }
 
     return {
       ...data,
-      versionCount: versionCount || 0
+      versionCount: data.prompt_versions?.[0]?.count || 0
     };
 
   } catch (error) {

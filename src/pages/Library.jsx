@@ -13,7 +13,12 @@ const Library = () => {
   const { promptCount, promptLimit, isSubscribed } = usePromptLimits();
 
   const handlePromptClick = (prompt) => {
-    navigate(`/app/prompts/${prompt.id}`);
+    console.log('Library - Navigating to prompt:', prompt);
+    if (!prompt || !prompt.id) {
+      console.error('Library - Invalid prompt data:', prompt);
+      return;
+    }
+    navigate(`/app/library/prompt/${prompt.id}`);
   };
 
   return (

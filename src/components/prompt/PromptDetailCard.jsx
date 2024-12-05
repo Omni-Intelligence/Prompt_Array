@@ -51,7 +51,7 @@ const PromptDetailCard = ({ prompt, onCopy, onEdit, onDelete }) => {
       </CardHeader>
       <CardContent>
         <div className="bg-muted/50 p-4 rounded-md backdrop-blur-sm mb-4">
-          <pre className="whitespace-pre-wrap text-sm font-mono">{prompt.content}</pre>
+          <pre className="whitespace-pre-wrap text-sm">{prompt.content}</pre>
         </div>
         <div className="flex flex-wrap gap-2 mb-4">
           {prompt.tags?.map((tag) => (
