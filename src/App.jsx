@@ -17,6 +17,7 @@ import PricingPage from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Techniques from "./pages/Techniques";
 import Chains from "./pages/Chains";
+import RegisterSuccess from "./pages/RegisterSuccess";
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -70,6 +71,7 @@ const AppRoutes = () => {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/register-success" element={<RegisterSuccess />} />
 
       {/* Protected routes */}
       <Route path="/app" element={<PrivateRoute><Index /></PrivateRoute>}>

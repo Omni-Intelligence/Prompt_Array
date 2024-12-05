@@ -11,8 +11,8 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success("Registration successful! Please check your email to verify your account.");
-    navigate('/');
+    toast.success("Registration successful!");
+    navigate('/register-success');
   };
 
   return (

@@ -6,6 +6,7 @@ import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import UserNav from '@/components/UserNav';
+import { MessageSquareIcon } from 'lucide-react';
 
 const DecorativeShapes = () => (
   <>
@@ -36,14 +37,27 @@ const Index = () => {
           <div className="p-4 flex-1">
             <img src="/logo.svg" alt="Logo" className="h-8 mb-6" />
             <nav className="space-y-2">
-              {navItems.map((item) => {
+              {navItems.filter(item => !item.to.includes('feedback')).map((item) => {
                 const isActive = location.pathname === `/app/${item.to}`;
-                const Component = item.disabled ? 'div' : Link;
+                let Component;
+                let componentProps = {};
+                
+                if (item.external) {
+                  Component = 'a';
+                  componentProps = {
+                    href: item.to,
+                    target: '_blank',
+                    rel: 'noopener noreferrer'
+                  };
+                } else {
+                  Component = item.disabled ? 'div' : Link;
+                  componentProps = item.disabled ? {} : { to: `/app/${item.to}` };
+                }
 
                 return (
                   <Component 
                     key={item.to}
-                    to={`/app/${item.to}`}
+                    {...componentProps}
                     className={`group w-full ${item.disabled ? 'cursor-not-allowed' : ''}`}
                   >
                     <Button 
@@ -68,6 +82,20 @@ const Index = () => {
             </nav>
           </div>
           <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
+            <a
+              href="https://airtable.com/appa0Z1i2sjlaw5ZD/pagr7AN73UNC8NQjR/form"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mb-3"
+            >
+              <Button 
+                className="w-full bg-primary hover:bg-primary/90 text-white flex items-center gap-2"
+                size="sm"
+              >
+                <MessageSquareIcon className="h-4 w-4" />
+                Send Feedback
+              </Button>
+            </a>
             <UserNav />
           </div>
         </div>

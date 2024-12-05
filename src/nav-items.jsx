@@ -8,7 +8,8 @@ import {
   Globe2Icon,
   GitBranchIcon,
   Link2Icon,
-  WandIcon
+  WandIcon,
+  MessageSquareIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Library from "./pages/Library";
