@@ -138,7 +138,7 @@ const Favourites = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 md:ml-0 ml-16">
       <div className="p-8 space-y-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">

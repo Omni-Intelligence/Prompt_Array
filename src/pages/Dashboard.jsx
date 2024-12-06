@@ -46,14 +46,14 @@ const Dashboard = () => {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-purple-50/50 to-purple-100/50 dark:from-gray-900/50 dark:to-gray-800/50">
       <DashboardShapes />
-      <div className="container mx-auto p-6 space-y-8 relative z-10">
+      <div className="p-6 md:p-6 space-y-8 relative z-10 md:ml-0 ml-16">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Dashboard
             </h1>
             {!isSubscribed && (
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-sm md:text-base text-muted-foreground">
                 {promptCount}/{promptLimit} prompts used in free tier
               </p>
             )}
@@ -91,7 +91,7 @@ const Dashboard = () => {
         </div>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+          <h2 className="text-xl md:text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
             Quick Access Groups
           </h2>
           {isLoadingGroups ? (

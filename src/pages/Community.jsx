@@ -74,7 +74,7 @@ const Community = () => {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8 bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen p-8 space-y-8 bg-gradient-to-br from-background via-background to-primary/5 md:ml-0 ml-16">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 blur-3xl -z-10" />
         <div className="flex flex-col space-y-6">

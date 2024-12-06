@@ -24,7 +24,7 @@ const Groups = () => {
   }
 
   return (
-    <div className="space-y-8 p-8">
+    <div className="space-y-8 p-4 md:p-8 md:ml-0 ml-16">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button
@@ -36,11 +36,11 @@ const Groups = () => {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Groups
             </h1>
             {!isSubscribed && (
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs md:text-sm text-muted-foreground mt-1">
                 {promptCount}/{promptLimit} prompts used in free tier
               </p>
             )}

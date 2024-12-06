@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus, ChevronLeft, ChevronRight, MessageSquareIcon } from 'lucide-react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
@@ -26,13 +26,40 @@ const Index = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
 
+  // Add mobile detection and handling
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768;
+      setIsCollapsed(isMobile);
+    };
+
+    // Initial check
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="flex h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Decorative background shapes */}
       <DecorativeShapes />
 
+      {/* Mobile Overlay */}
+      {!isCollapsed && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden z-20"
+          onClick={() => setIsCollapsed(true)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className={`${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 border-r border-gray-200/50 dark:border-gray-800/50 backdrop-blur-sm bg-white/50 dark:bg-gray-900/50`}>
+      <aside className={`${
+        isCollapsed ? 'w-16' : 'w-64'
+      } transition-all duration-300 border-r border-gray-200/50 dark:border-gray-800/50 md:backdrop-blur-sm md:bg-white/50 md:dark:bg-gray-900/50 bg-white dark:bg-gray-900 fixed md:relative z-30 h-full`}>
         <div className="flex flex-col h-full">
           <div className="p-4 flex-1">
             <div className="flex items-center justify-between mb-6">
@@ -41,7 +68,7 @@ const Index = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1"
+                className="p-1 md:hover:bg-gray-100 dark:md:hover:bg-gray-800"
               >
                 {isCollapsed ? (
                   <ChevronRight className="h-4 w-4" />

@@ -122,87 +122,89 @@ const PromptDetail = () => {
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold">{prompt.title}</h1>
-            <p className="text-muted-foreground">
-              Created {new Date(prompt.created_at).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              className="ml-auto relative"
-              onClick={() => setShowVersionHistory(!showVersionHistory)}
-            >
-              <History className="mr-2 h-4 w-4" />
-              Version History
-              <Badge variant="secondary" className="absolute -top-2 -right-2 text-xs bg-primary/10 text-primary">
-                Coming Soon
-              </Badge>
+    <div className="min-h-screen flex justify-center md:ml-0 ml-16">
+      <div className="p-8 max-w-4xl w-full">
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+              <ArrowLeft className="h-4 w-4" />
             </Button>
+            <div className="flex flex-col gap-2">
+              <h1 className="text-3xl font-bold">{prompt.title}</h1>
+              <p className="text-muted-foreground">
+                Created {new Date(prompt.created_at).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="ml-auto relative"
+                onClick={() => setShowVersionHistory(!showVersionHistory)}
+              >
+                <History className="mr-2 h-4 w-4" />
+                Version History
+                <Badge variant="secondary" className="absolute -top-2 -right-2 text-xs bg-primary/10 text-primary">
+                  Coming Soon
+                </Badge>
+              </Button>
+            </div>
           </div>
+
+          {showVersionHistory ? (
+            <PromptVersionHistory
+              versions={versions || []}
+              currentVersion={prompt.version}
+              onRestoreVersion={handleRestoreVersion}
+            />
+          ) : (
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <CardTitle>Prompt Content</CardTitle>
+                    <CardDescription>{prompt.description}</CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsEditSheetOpen(true)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCopyPrompt}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-muted p-4 rounded-md">
+                  <pre className="whitespace-pre-wrap text-sm">{prompt.content}</pre>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {prompt.tags?.map((tag) => (
+                    <Badge key={tag} variant="secondary">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
-        {showVersionHistory ? (
-          <PromptVersionHistory
-            versions={versions || []}
-            currentVersion={prompt.version}
-            onRestoreVersion={handleRestoreVersion}
-          />
-        ) : (
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div className="space-y-2">
-                  <CardTitle>Prompt Content</CardTitle>
-                  <CardDescription>{prompt.description}</CardDescription>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsEditSheetOpen(true)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleCopyPrompt}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="whitespace-pre-wrap text-sm">{prompt.content}</pre>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {prompt.tags?.map((tag) => (
-                  <Badge key={tag} variant="secondary">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <CreatePromptSheet
+          isOpen={isEditSheetOpen}
+          onOpenChange={setIsEditSheetOpen}
+          initialData={prompt}
+          mode="edit"
+        />
       </div>
-
-      <CreatePromptSheet
-        isOpen={isEditSheetOpen}
-        onOpenChange={setIsEditSheetOpen}
-        initialData={prompt}
-        mode="edit"
-      />
     </div>
   );
 };

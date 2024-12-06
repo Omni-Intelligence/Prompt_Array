@@ -99,7 +99,7 @@ const ViewChain = () => {
   };
 
   return (
-    <div className="container-fluid p-6">
+    <div className="min-h-screen p-8 space-y-8 bg-gradient-to-br from-background via-background to-primary/5 md:ml-0 ml-16">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <Button

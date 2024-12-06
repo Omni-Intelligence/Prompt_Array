@@ -47,15 +47,15 @@ const PromptItem = ({ prompt, onClick }) => {
   return (
     <li 
       onClick={handleClick}
-      className="group bg-gradient-card hover:bg-gradient-card-hover backdrop-blur-sm p-4 rounded-lg border-none shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-between cursor-pointer"
+      className="group bg-gradient-card hover:bg-gradient-card-hover backdrop-blur-sm p-2 md:p-4 rounded-lg border-none shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-between cursor-pointer"
     >
       <div className="flex items-center gap-4">
         <span className="text-2xl group-hover:scale-110 transition-transform">{prompt.icon || '📝'}</span>
-        <div>
-          <h3 className="font-medium text-white dark:text-white group-hover:text-white/90 transition-colors">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm md:text-base font-medium text-white dark:text-white group-hover:text-white/90 transition-colors truncate">
             {prompt.title}
           </h3>
-          <p className="text-sm text-white/80 dark:text-white/80">
+          <p className="text-xs md:text-sm text-white/80 dark:text-white/80 mt-1 truncate">
             {prompt.lastUsed ? `Last used ${prompt.lastUsed}` : prompt.updated_at ? `Last updated ${new Date(prompt.updated_at).toLocaleDateString()}` : 'Recently added'}
           </p>
         </div>
@@ -114,12 +114,12 @@ const PromptsList = ({ onPromptClick }) => {
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">All Prompts</h2>
-        <div className="w-full sm:w-64 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
+        <div className="w-full max-w-md relative ml-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary/70" />
           <Input 
             type="search" 
-            placeholder="Search prompts..." 
-            className="pl-10 bg-white/10 dark:bg-gray-800/10 backdrop-blur-sm border-white/20 dark:border-gray-700/20 text-white placeholder:text-white/60"
+            placeholder="Search through prompts by title or content..." 
+            className="pl-10 bg-primary/5 hover:bg-primary/10 text-gray-900 dark:text-white border-primary/20 hover:border-primary/40 placeholder:text-primary/50 focus:border-primary focus:ring-primary transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
