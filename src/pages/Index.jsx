@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Plus } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, MessageSquareIcon } from 'lucide-react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import UserNav from '@/components/UserNav';
-import { MessageSquareIcon } from 'lucide-react';
 
 const DecorativeShapes = () => (
   <>
@@ -24,6 +23,7 @@ const DecorativeShapes = () => (
 const Index = () => {
   const [isCreatePromptOpen, setIsCreatePromptOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
 
   return (
@@ -32,10 +32,24 @@ const Index = () => {
       <DecorativeShapes />
 
       {/* Sidebar Navigation */}
-      <aside className="w-64 border-r border-gray-200/50 dark:border-gray-800/50 backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
+      <aside className={`${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 border-r border-gray-200/50 dark:border-gray-800/50 backdrop-blur-sm bg-white/50 dark:bg-gray-900/50`}>
         <div className="flex flex-col h-full">
           <div className="p-4 flex-1">
-            <img src="/logo.svg" alt="Logo" className="h-8 mb-6" />
+            <div className="flex items-center justify-between mb-6">
+              <img src="/logo.svg" alt="Logo" className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="p-1"
+              >
+                {isCollapsed ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
             <nav className="space-y-2">
               {navItems.filter(item => !item.to.includes('feedback')).map((item) => {
                 const isActive = location.pathname === `/app/${item.to}`;
@@ -62,18 +76,19 @@ const Index = () => {
                   >
                     <Button 
                       variant="ghost" 
-                      className={`w-full justify-start group relative overflow-hidden transition-all duration-300
+                      className={`w-full group relative overflow-hidden transition-all duration-300
                         ${isActive 
                           ? 'bg-primary/10 text-primary hover:bg-primary/15 dark:bg-primary/20 dark:hover:bg-primary/25' 
                           : 'hover:bg-primary/5 dark:hover:bg-primary/10'}
-                        ${item.disabled ? 'opacity-80' : ''}`}
+                        ${item.disabled ? 'opacity-80' : ''}
+                        ${isCollapsed ? 'px-0 justify-center' : 'justify-start'}`}
                       disabled={item.disabled}
                     >
-                      <span className="relative z-10 flex items-center">
-                        <span className={`mr-3 ${isActive ? 'text-primary' : ''}`}>
+                      <span className={`relative z-10 flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
+                        <span className={`${isActive ? 'text-primary' : ''} ${isCollapsed ? 'mr-0' : 'mr-3'}`}>
                           {item.icon}
                         </span>
-                        <span className="font-medium">{item.title}</span>
+                        {!isCollapsed && <span className="font-medium">{item.title}</span>}
                       </span>
                     </Button>
                   </Component>
@@ -89,14 +104,14 @@ const Index = () => {
               className="block mb-3"
             >
               <Button 
-                className="w-full bg-primary hover:bg-primary/90 text-white flex items-center gap-2"
+                className="w-full bg-primary hover:bg-primary/90 text-white flex items-center gap-2 justify-center"
                 size="sm"
               >
                 <MessageSquareIcon className="h-4 w-4" />
-                Send Feedback
+                {!isCollapsed && "Send Feedback"}
               </Button>
             </a>
-            <UserNav />
+            <UserNav isCollapsed={isCollapsed} />
           </div>
         </div>
       </aside>
