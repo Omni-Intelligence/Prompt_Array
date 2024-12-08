@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectPath = searchParams.get('redirect') || '/app';
   const { signIn, signUp } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,10 +25,10 @@ const SignIn = () => {
     try {
       if (isSignUp) {
         await signUp(formData.email, formData.password);
-        navigate("/app");
+        navigate(redirectPath);
       } else {
         await signIn(formData.email, formData.password);
-        navigate("/app");
+        navigate(redirectPath);
       }
     } catch (error) {
       console.error("Authentication error:", error);

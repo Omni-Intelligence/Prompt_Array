@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { createCheckoutSession } from '@/services/stripe';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
 
 const StripeCheckout = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
       setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        navigate('/signin?redirect=/pricing');
+        return;
+      }
+
       await createCheckoutSession();
     } catch (err) {
       console.error('Error:', err);
