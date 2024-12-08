@@ -46,8 +46,8 @@ export const getCommunityPrompts = async ({ filter = 'latest', searchQuery = '' 
       ...prompt,
       author: {
         id: prompt.user_id,
-        full_name: prompt.user_id === PROMPT_CENTRAL_USER_ID ? 'Prompt Central' : (prompt.author_name || 'Anonymous'),
-        avatar_url: prompt.user_id === PROMPT_CENTRAL_USER_ID ? 'https://promptcentral.pro/logo.png' : prompt.author_avatar
+        full_name: prompt.user_id === PROMPT_CENTRAL_USER_ID ? 'Prompt Array' : (prompt.author_name || 'Anonymous'),
+        avatar_url: prompt.user_id === PROMPT_CENTRAL_USER_ID ? 'https://promptarray.com/logo.png' : prompt.author_avatar
       }
     }));
   } catch (error) {

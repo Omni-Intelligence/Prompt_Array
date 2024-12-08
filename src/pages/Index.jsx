@@ -63,7 +63,7 @@ const Index = () => {
         <div className="flex flex-col h-full">
           <div className="p-4 flex-1">
             <div className="flex items-center justify-between mb-6">
-              <img src="/logo.svg" alt="Logo" className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
+              <img src="/logo.svg" alt="Prompt Array" className={`h-10 ${isCollapsed ? 'hidden' : 'block'}`} />
               <Button
                 variant="ghost"
                 size="sm"

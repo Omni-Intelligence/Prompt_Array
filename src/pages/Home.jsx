@@ -15,7 +15,7 @@ const HomePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="py-6 flex justify-between items-center">
-          <img src="/logo.svg" alt="Prompt Central Logo" className="h-10" />
+          <img src="/logo.svg" alt="Prompt Array" className="h-12" />
           <div className="flex items-center gap-4">
             {showPricingButton && (
               <Link to="/pricing">
