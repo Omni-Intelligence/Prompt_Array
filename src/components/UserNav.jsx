@@ -35,25 +35,18 @@ const UserNav = ({ isCollapsed }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={`relative rounded-full ${isCollapsed ? 'w-8 h-8' : 'w-full flex justify-start gap-2'}`}>
+        <Button variant="ghost" className={`relative rounded-full ${isCollapsed ? 'w-8 h-8' : 'w-8 h-8'}`}>
           <Avatar className="h-8 w-8">
             <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
             <AvatarFallback>{user.email?.[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
-          {!isCollapsed && (
-            <div className="flex flex-col items-start">
-              <span className="text-sm font-medium">{user.user_metadata?.full_name || 'User'}</span>
-              <span className="text-xs text-muted-foreground">{user.email}</span>
-            </div>
-          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.email}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.user_metadata?.full_name || user.email}
+              Account Menu
             </p>
           </div>
         </DropdownMenuLabel>

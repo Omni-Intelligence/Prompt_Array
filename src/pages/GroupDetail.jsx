@@ -68,7 +68,7 @@ const GroupDetail = () => {
   );
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
+    <div className="min-h-screen p-4 md:p-8 space-y-8 bg-gradient-to-br from-background via-background to-primary/5 md:ml-0 ml-16">
       <div className="flex items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <Button 

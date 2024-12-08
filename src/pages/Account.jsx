@@ -199,18 +199,24 @@ const Account = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div>
                   <Label>Profile Picture</Label>
                   <div className="flex items-center space-x-4">
-                    <img
-                      src={profile.avatar_url || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
-                      alt="Profile"
-                      className="w-16 h-16 rounded-full"
-                    />
                     <AvatarSelector
                       currentAvatar={profile.avatar_url}
                       onAvatarChange={(url) => setProfile(prev => ({ ...prev, avatar_url: url }))}
-                    />
+                    >
+                      <Button variant="outline" type="button">
+                        Change Avatar
+                      </Button>
+                    </AvatarSelector>
+                    {profile.avatar_url && (
+                      <img 
+                        src={profile.avatar_url} 
+                        alt="Current avatar" 
+                        className="h-12 w-12 rounded-full"
+                      />
+                    )}
                   </div>
                 </div>
               </div>
