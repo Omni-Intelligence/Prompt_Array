@@ -1,11 +1,21 @@
 import React from 'react';
 import { StripeCheckout } from '@/components/StripeCheckout';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const PricingPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Navigation */}
+        <div className="mb-8">
+          <Link to="/" className="inline-flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back to Home
+          </Link>
+        </div>
+
         {/* Header Section */}
         <div className="text-center mb-16">
           <motion.h1 
@@ -63,24 +73,24 @@ const PricingPage = () => {
                       description: 'Create and save as many AI prompts as you need'
                     },
                     {
-                      title: 'Advanced Templates',
-                      description: 'Access our library of professional prompt templates'
+                      title: 'Prompt Chains',
+                      description: 'Create powerful chains of prompts for complex workflows'
                     },
                     {
                       title: 'Smart Organization',
-                      description: 'Organize prompts with folders and tags'
+                      description: 'Organize prompts with groups and favorites'
                     },
                     {
-                      title: 'Version Control',
+                      title: 'Version Control (Coming Soon)',
                       description: 'Track changes and maintain prompt history'
                     },
                     {
-                      title: 'Export & Share',
-                      description: 'Export prompts in various formats and share with team'
+                      title: 'Community Access',
+                      description: 'Share and discover prompts from the community'
                     },
                     {
-                      title: 'Priority Support',
-                      description: '24/7 priority email and chat support'
+                      title: 'Advanced Templates',
+                      description: 'Access our curated library of prompt templates'
                     }
                   ].map((feature) => (
                     <div key={feature.title} className="flex items-start space-x-3">

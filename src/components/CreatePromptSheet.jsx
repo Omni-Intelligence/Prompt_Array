@@ -123,13 +123,13 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
       <SheetContent className="sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>
-            {mode === 'edit' ? 'Edit Prompt' : (initialData?.title ? 'Fork Prompt' : 'Create New Prompt')}
+            {mode === 'edit' ? 'Edit Prompt' : (mode === 'fork' ? 'Fork Prompt' : 'Create New Prompt')}
           </SheetTitle>
           <SheetDescription>
             {mode === 'edit' 
               ? 'Update your prompt details' 
-              : (initialData?.title 
-                ? 'Fork your prompt details' 
+              : (mode === 'fork'
+                ? 'Fork this prompt to your library' 
                 : <>
                     Add a new prompt to your library
                     {!isSubscribed && (
@@ -149,6 +149,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
             onSubmit={handleCreatePrompt}
             initialData={initialData}
             isEditing={!!initialData}
+            mode={mode}
           />
         </div>
       </SheetContent>

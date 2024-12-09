@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Plus, ChevronLeft, ChevronRight, MessageSquareIcon } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, MessageSquareIcon, Sparkles } from 'lucide-react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { navItems } from '../nav-items';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import UserNav from '@/components/UserNav';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const DecorativeShapes = () => (
   <>
@@ -25,6 +26,7 @@ const Index = () => {
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { data: { isSubscribed } = { isSubscribed: false } } = useSubscription();
 
   // Add mobile detection and handling
   useEffect(() => {
@@ -63,7 +65,9 @@ const Index = () => {
         <div className="flex flex-col h-full">
           <div className="p-4 flex-1">
             <div className="flex items-center justify-between mb-6">
-              <img src="/logo.svg" alt="Prompt Array" className={`h-10 ${isCollapsed ? 'hidden' : 'block'}`} />
+              <span className={`font-mono text-xl font-semibold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent ${isCollapsed ? 'hidden' : 'block'}`}>
+                Prompt[Array]
+              </span>
               <Button
                 variant="ghost"
                 size="sm"
@@ -124,6 +128,18 @@ const Index = () => {
             </nav>
           </div>
           <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
+            {/* Upgrade Button for Free Users */}
+            {!isSubscribed && (
+              <Link to="/pricing" className="block mb-3">
+                <Button 
+                  className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white flex items-center gap-2 justify-center"
+                  size="sm"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  {!isCollapsed && "Upgrade to Premium"}
+                </Button>
+              </Link>
+            )}
             <a
               href="https://airtable.com/appa0Z1i2sjlaw5ZD/pagr7AN73UNC8NQjR/form"
               target="_blank"

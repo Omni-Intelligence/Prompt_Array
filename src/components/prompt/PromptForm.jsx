@@ -62,7 +62,7 @@ const PromptForm = ({ newPrompt, setNewPrompt, onSubmit, initialData, isEditing,
       <PromptTagsField newPrompt={newPrompt} setNewPrompt={setNewPrompt} />
 
       <Button type="submit" className="w-full">
-        {initialData && mode === 'edit' ? 'Update Prompt' : 'Create Prompt'}
+        {mode === 'edit' ? 'Update Prompt' : (mode === 'fork' ? 'Fork Prompt' : 'Create Prompt')}
       </Button>
     </form>
   );
