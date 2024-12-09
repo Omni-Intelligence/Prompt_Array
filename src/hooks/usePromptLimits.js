@@ -5,10 +5,7 @@ import { useSubscription } from './useSubscription';
 const FREE_PROMPT_LIMIT = 10;
 
 export const usePromptLimits = () => {
-  const { data: { isSubscribed } = { isSubscribed: false }, subscription } = useSubscription();
-
-  // For testing: Uncomment this line to simulate premium user
-  // const isPremium = true;
+  const { subscription } = useSubscription();
   const isPremium = subscription?.status === 'active';
 
   const { data: promptCount = 0 } = useQuery({
@@ -41,10 +38,10 @@ export const usePromptLimits = () => {
   });
 
   return {
-    canCreatePrompt: isSubscribed || promptCount < FREE_PROMPT_LIMIT,
+    canCreatePrompt: isPremium || promptCount < FREE_PROMPT_LIMIT,
     promptCount,
-    promptLimit: isSubscribed ? Infinity : FREE_PROMPT_LIMIT,
-    isSubscribed,
-    remainingPrompts: isSubscribed ? Infinity : Math.max(0, FREE_PROMPT_LIMIT - promptCount)
+    promptLimit: isPremium ? Infinity : FREE_PROMPT_LIMIT,
+    isSubscribed: isPremium,
+    remainingPrompts: isPremium ? Infinity : Math.max(0, FREE_PROMPT_LIMIT - promptCount)
   };
 };

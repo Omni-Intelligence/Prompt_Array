@@ -1,13 +1,29 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { toast } from 'sonner';
 
-export function BillingSection({ subscription }) {
+export function BillingSection() {
   const [isLoading, setIsLoading] = useState(false);
+  const { subscription, refreshSubscription } = useSubscription();
 
   const handleManageBilling = () => {
     window.location.href = 'https://billing.stripe.com/p/login/3cs7vN4WK6QO1l64gg';
+  };
+
+  const handleRefreshSubscription = async () => {
+    setIsLoading(true);
+    try {
+      await refreshSubscription();
+      toast.success('Subscription status refreshed successfully');
+    } catch (error) {
+      console.error('Error refreshing subscription:', error);
+      toast.error('Failed to refresh subscription status');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -24,12 +40,20 @@ export function BillingSection({ subscription }) {
               {subscription?.status === 'active' ? 'Premium Plan' : 'Free Plan'}
             </p>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
             {subscription?.status === 'active' && (
               <p className="text-sm text-green-600 dark:text-green-400 font-medium">
                 Active
               </p>
             )}
+            <Button
+              onClick={handleRefreshSubscription}
+              disabled={isLoading}
+              variant="ghost"
+              size="sm"
+            >
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </Button>
           </div>
         </div>
 

@@ -115,7 +115,7 @@ export function Hero() {
         {/* CTAs */}
         <div className="flex items-center gap-5">
           <Link
-            to="/get-started"
+            to="/signup"
             className="group relative overflow-hidden bg-[#9333EA] text-white px-8 py-3.5 rounded-md transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl hover:shadow-[#9333EA]/25 text-lg font-medium"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#9333EA] to-[#C084FC] opacity-0 group-hover:opacity-100 transition-all duration-300" />
@@ -128,7 +128,7 @@ export function Hero() {
             </span>
           </Link>
           <Link
-            to="/dashboard"
+            to="/app/dashboard"
             className="group relative bg-white/95 backdrop-blur-sm text-gray-700 px-8 py-3.5 rounded-md transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl hover:shadow-[#9333EA]/10 text-lg font-medium"
           >
             <span className="relative">Go to Dashboard</span>

@@ -26,7 +26,8 @@ const Index = () => {
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
-  const { data: { isSubscribed } = { isSubscribed: false } } = useSubscription();
+  const { subscription } = useSubscription();
+  const isPremium = subscription?.status === 'active';
 
   // Add mobile detection and handling
   useEffect(() => {
@@ -129,7 +130,7 @@ const Index = () => {
           </div>
           <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
             {/* Upgrade Button for Free Users */}
-            {!isSubscribed && (
+            {!isPremium && (
               <Link to="/pricing" className="block mb-3">
                 <Button 
                   className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white flex items-center gap-2 justify-center"

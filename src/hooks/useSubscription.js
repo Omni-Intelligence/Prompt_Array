@@ -1,9 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 const ACTIVE_SUBSCRIPTION_STATUSES = ['active', 'trialing'];
 
 export const useSubscription = () => {
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['subscription'],
     queryFn: async () => {
@@ -21,53 +23,65 @@ export const useSubscription = () => {
         return { isSubscribed: false };
       }
 
-      console.log(`Subscription Debug: Querying subscriptions table for user ${user.id}...`);
-      // Get ALL subscriptions for the user
-      const { data: subscriptions, error } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', user.id);
+      try {
+        console.log(`Subscription Debug: Querying subscriptions table for user ${user.id}...`);
+        // Get ALL subscriptions for the user
+        const { data: subscriptions, error } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1);
 
-      console.log('Subscription Debug: Raw subscriptions data:', subscriptions);
-      console.log('Subscription Debug: Query error:', error);
-
-      if (error) {
-        // If table doesn't exist yet or no subscription found, return not subscribed
-        if (error.code === '404' || error.code === 'PGRST116') {
-          console.log('Subscription Debug: No subscription table or no subscription found');
-          return { isSubscribed: false };
+        console.log('Subscription Debug: Raw subscriptions data:', subscriptions);
+        
+        if (error) {
+          console.error('Subscription Debug: Error fetching subscription:', error);
+          throw error;
         }
-        console.error('Subscription Debug: Error fetching subscription:', error);
-        throw error;
+
+        // Get the most recent subscription
+        const latestSubscription = subscriptions?.[0];
+        
+        const isSubscribed = latestSubscription?.status === 'active';
+        
+        console.log('Subscription Debug: Final subscription state:', {
+          isSubscribed,
+          latestSubscription,
+          status: latestSubscription?.status,
+        });
+
+        return {
+          isSubscribed,
+          subscription: latestSubscription
+        };
+      } catch (error) {
+        console.error('Subscription Debug: Unexpected error:', error);
+        // Don't throw the error, return a safe default
+        return { isSubscribed: false };
       }
-
-      // Find any active subscription
-      const activeSubscription = subscriptions?.find(sub => 
-        ACTIVE_SUBSCRIPTION_STATUSES.includes(sub.status)
-      );
-      
-      const isSubscribed = !!activeSubscription;
-      console.log('Subscription Debug: Final subscription state:', {
-        isSubscribed,
-        activeSubscription,
-        allSubscriptions: subscriptions,
-        validStatuses: ACTIVE_SUBSCRIPTION_STATUSES
-      });
-
-      return {
-        isSubscribed,
-        subscription: activeSubscription
-      };
     },
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    staleTime: 1000 * 60, // Cache for 1 minute
+    cacheTime: 1000 * 60 * 5, // Keep in cache for 5 minutes
+    retry: 2, // Retry failed requests twice
   });
 
-  // Return an object with all the necessary states
+  const refreshSubscription = async () => {
+    console.log('Subscription Debug: Manually refreshing subscription...');
+    try {
+      await queryClient.invalidateQueries(['subscription']);
+      console.log('Subscription Debug: Subscription refreshed successfully');
+    } catch (error) {
+      console.error('Subscription Debug: Refresh failed:', error);
+      throw error;
+    }
+  };
+
   return {
     isSubscribed: data?.isSubscribed ?? false,
     subscription: data?.subscription,
     isLoading,
-    error
+    error,
+    refreshSubscription
   };
 };
