@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import { navItems } from "./nav-items";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import SignIn from "./pages/SignIn";
+import Register from "./pages/Register";
 import GroupDetail from "./pages/GroupDetail";
 import PromptDetail from "./pages/PromptDetail";
 import ChainDetail from "./pages/ChainDetail";
@@ -18,32 +19,11 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Techniques from "./pages/Techniques";
 import Chains from "./pages/Chains";
 import RegisterSuccess from "./pages/RegisterSuccess";
+import ResetPassword from "./pages/ResetPassword";
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-  </div>
-);
-
-const FloatingShapes = () => (
-  <div className="fixed inset-0 pointer-events-none overflow-hidden">
-    {/* Large shapes */}
-    <div className="gradient-shape gradient-circle w-64 h-64 top-1/4 left-1/4" 
-         style={{ animationDelay: "0s" }} />
-    <div className="gradient-shape gradient-blob w-56 h-56 top-3/4 right-1/4" 
-         style={{ animationDelay: "-5s" }} />
-    
-    {/* Medium shapes */}
-    <div className="gradient-shape gradient-circle w-48 h-48 top-1/2 left-1/2" 
-         style={{ animationDelay: "-10s" }} />
-    <div className="gradient-shape gradient-blob w-40 h-40 bottom-1/4 right-1/3" 
-         style={{ animationDelay: "-7s" }} />
-    
-    {/* Small shapes */}
-    <div className="gradient-shape gradient-circle w-32 h-32 top-1/3 right-1/4" 
-         style={{ animationDelay: "-3s" }} />
-    <div className="gradient-shape gradient-blob w-24 h-24 bottom-1/3 left-1/3" 
-         style={{ animationDelay: "-8s" }} />
   </div>
 );
 
@@ -69,6 +49,8 @@ const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/" element={<HomePage />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<Register />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/register-success" element={<RegisterSuccess />} />
@@ -124,7 +106,6 @@ const App = () => {
   return (
     <AuthProvider>
       <div className="min-h-screen bg-background relative">
-        <FloatingShapes />
         <Toaster />
         <BrowserRouter>
           <AppRoutes />

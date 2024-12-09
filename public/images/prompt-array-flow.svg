@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="1200" height="800" fill="url(#paint0_linear)"/>
+  
+  <!-- Floating prompt elements -->
+  <g class="floating-prompts" opacity="0.15">
+    <!-- Prompt streams -->
+    <path d="M100,200 C300,150 400,250 600,200" stroke="#6366F1" stroke-width="2" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="0" to="8" dur="2s" repeatCount="indefinite" />
+    </path>
+    <path d="M150,300 C350,250 450,350 650,300" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="0" to="8" dur="2.5s" repeatCount="indefinite" />
+    </path>
+    <path d="M200,400 C400,350 500,450 700,400" stroke="#EC4899" stroke-width="2" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="0" to="8" dur="3s" repeatCount="indefinite" />
+    </path>
+
+    <!-- Prompt text elements -->
+    <g font-family="monospace" font-size="14" fill="#6366F1">
+      <text x="120" y="180">"Analyze data"</text>
+      <text x="320" y="280">"Generate report"</text>
+      <text x="520" y="380">"Optimize code"</text>
+    </g>
+
+    <!-- Array structure with glowing effects -->
+    <g>
+      <!-- Array container -->
+      <rect x="750" y="200" width="300" height="300" rx="15" stroke="url(#glowGradient)" stroke-width="2" fill="none">
+        <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="4s" repeatCount="indefinite" />
+      </rect>
+
+      <!-- Array cells -->
+      <g>
+        <!-- Cell 1 with prompt transformation -->
+        <rect x="770" y="220" width="260" height="60" rx="8" stroke="#6366F1" stroke-width="2" fill="none" opacity="0.8">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
+        </rect>
+        <text x="790" y="255" font-family="monospace" font-size="12" fill="#6366F1">promptArray[0] = transformPrompt()</text>
+
+        <!-- Cell 2 with AI processing -->
+        <rect x="770" y="320" width="260" height="60" rx="8" stroke="#8B5CF6" stroke-width="2" fill="none" opacity="0.8">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite" />
+        </rect>
+        <text x="790" y="355" font-family="monospace" font-size="12" fill="#8B5CF6">promptArray[1] = processAI()</text>
+
+        <!-- Cell 3 with output generation -->
+        <rect x="770" y="420" width="260" height="60" rx="8" stroke="#EC4899" stroke-width="2" fill="none" opacity="0.8">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite" />
+        </rect>
+        <text x="790" y="455" font-family="monospace" font-size="12" fill="#EC4899">promptArray[2] = generateOutput()</text>
+      </g>
+    </g>
+
+    <!-- Connecting lines with animations -->
+    <g stroke-dasharray="5,5">
+      <path d="M600,200 C650,200 700,220 770,250" stroke="#6366F1" stroke-width="2">
+        <animate attributeName="stroke-dashoffset" from="0" to="10" dur="2s" repeatCount="indefinite" />
+      </path>
+      <path d="M650,300 C700,300 730,320 770,350" stroke="#8B5CF6" stroke-width="2">
+        <animate attributeName="stroke-dashoffset" from="0" to="10" dur="2.5s" repeatCount="indefinite" />
+      </path>
+      <path d="M700,400 C750,400 760,420 770,450" stroke="#EC4899" stroke-width="2">
+        <animate attributeName="stroke-dashoffset" from="0" to="10" dur="3s" repeatCount="indefinite" />
+      </path>
+    </g>
+
+    <!-- Output streams -->
+    <g>
+      <path d="M1030,250 C1080,250 1130,270 1180,290" stroke="#6366F1" stroke-width="2" stroke-dasharray="4,4">
+        <animate attributeName="stroke-dashoffset" from="0" to="8" dur="2s" repeatCount="indefinite" />
+      </path>
+      <path d="M1030,350 C1080,350 1130,370 1180,390" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4,4">
+        <animate attributeName="stroke-dashoffset" from="0" to="8" dur="2.5s" repeatCount="indefinite" />
+      </path>
+      <path d="M1030,450 C1080,450 1130,470 1180,490" stroke="#EC4899" stroke-width="2" stroke-dasharray="4,4">
+        <animate attributeName="stroke-dashoffset" from="0" to="8" dur="3s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+
+  <!-- Gradient and glow definitions -->
+  <defs>
+    <linearGradient id="paint0_linear" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="50%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    
+    <linearGradient id="glowGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+
+    <!-- Particle system -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="glow"/>
+      <feBlend in="SourceGraphic" in2="glow" mode="normal"/>
+    </filter>
+  </defs>
+
+  <!-- Add subtle animated particles -->
+  <g filter="url(#glow)">
+    <circle cx="200" y="200" r="2" fill="#6366F1" opacity="0.5">
+      <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="200;220;200" dur="4s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="400" y="300" r="2" fill="#8B5CF6" opacity="0.5">
+      <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="300;320;300" dur="5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="600" y="400" r="2" fill="#EC4899" opacity="0.5">
+      <animate attributeName="opacity" values="0.2;0.5;0.2" dur="5s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="400;420;400" dur="6s" repeatCount="indefinite" />
+    </circle>
+  </g>
+</svg>

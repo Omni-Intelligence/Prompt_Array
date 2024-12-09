@@ -48,6 +48,14 @@ export const navItems = [
     dynamicRoutes: true
   },
   {
+    title: "Chains",
+    to: "chains",
+    icon: <GitBranchIcon className="h-4 w-4" />,
+    component: Chains,
+    color: "from-purple-500 to-pink-500",
+    dynamicRoutes: false
+  },
+  {
     title: "Community",
     to: "community",
     icon: <Globe2Icon className="h-4 w-4" />,
@@ -74,13 +82,5 @@ export const navItems = [
     icon: <WandIcon className="h-4 w-4" />,
     component: Techniques,
     color: "from-purple-500 to-pink-500"
-  },
-  {
-    to: "chains",
-    title: "Chains",
-    icon: <GitBranchIcon className="h-4 w-4" />,
-    component: Chains,
-    color: "from-purple-500 to-pink-500",
-    dynamicRoutes: false
   }
 ];

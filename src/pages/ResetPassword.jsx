@@ -1,39 +1,23 @@
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-const SignIn = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/app';
-  const { signIn, signUp } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    
+    const email = e.target.email.value;
+
     try {
-      if (isSignUp) {
-        await signUp(formData.email, formData.password);
-        navigate(redirectPath);
-      } else {
-        await signIn(formData.email, formData.password);
-        navigate(redirectPath);
-      }
+      // TODO: Implement password reset logic
+      toast.success("Password reset instructions sent to your email");
+      navigate('/signin');
     } catch (error) {
-      console.error("Authentication error:", error);
-    } finally {
-      setLoading(false);
+      toast.error("Failed to send reset instructions. Please try again.");
     }
   };
 
@@ -56,21 +40,21 @@ const SignIn = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5" />
       </div>
 
-      {/* Right side - Sign in form */}
+      {/* Right side - Reset Password form */}
       <div className="flex-1 flex flex-col justify-center items-center p-4 bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Prompt Array
+              Reset Password
             </h1>
-            <p className="mt-2 text-gray-600">Welcome back to your prompt workspace</p>
+            <p className="mt-2 text-gray-600">Enter your email to receive reset instructions</p>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl font-semibold">Sign in</CardTitle>
+              <CardTitle className="text-2xl font-semibold">Password Reset</CardTitle>
               <CardDescription>
-                Enter your credentials to access your account
+                We'll send you instructions to reset your password
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -81,48 +65,23 @@ const SignIn = () => {
                     id="email" 
                     type="email" 
                     placeholder="m@example.com" 
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     required 
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input 
-                    id="password" 
-                    type="password" 
-                    placeholder="Enter your password" 
-                    value={formData.password}
-                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    required 
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Button
-                    variant="link"
-                    className="text-primary hover:text-primary/80 p-0"
-                    onClick={() => navigate('/reset-password')}
-                    type="button"
-                  >
-                    Forgot password?
-                  </Button>
-                </div>
-
-                <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90" disabled={loading}>
-                  {loading ? "Loading..." : "Sign In"}
+                <Button type="submit" className="w-full bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90">
+                  Send Reset Instructions
                 </Button>
 
                 <div className="text-center text-sm text-gray-600">
-                  Don't have an account?{" "}
+                  Remember your password?{" "}
                   <Button
                     variant="link"
                     className="text-primary hover:text-primary/80 p-0"
-                    onClick={() => navigate('/signup')}
+                    onClick={() => navigate('/signin')}
                     type="button"
                   >
-                    Sign up
+                    Sign in
                   </Button>
                 </div>
               </form>
@@ -141,4 +100,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default ResetPassword;

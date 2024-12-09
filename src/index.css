@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -25,7 +25,7 @@
     --ring: 262 83.3% 57.8%;
     --radius: 0.75rem;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -48,7 +48,7 @@
     --ring: 262 83.3% 57.8%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
@@ -59,6 +59,24 @@
     position: relative;
     margin: 0;
     padding: 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(var(--tw-rotate, 0));
+  }
+  50% {
+    transform: translateY(-20px) rotate(var(--tw-rotate, 0));
+  }
+}
+
+@keyframes gradientSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
 
@@ -121,5 +139,29 @@
 
   .form-text {
     @apply text-white;
+  }
+
+  /* Hero Section Styles */
+  .hero-gradient {
+    background: linear-gradient(135deg, #9333EA 0%, #C084FC 100%);
+  }
+
+  .hero-button {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .hero-button:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Custom Background Blur */
+  .hero-blur {
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+  }
+
+  /* Custom Shadow for Step Buttons */
+  .step-button-shadow {
+    box-shadow: 0 2px 4px rgba(147, 51, 234, 0.1);
   }
 }
