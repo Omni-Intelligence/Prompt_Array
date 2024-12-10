@@ -29,7 +29,7 @@ export function HomeLayout({ children }) {
       <BackgroundDecorator />
       
       {/* Navigation */}
-      <header className="bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm pt-4 sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm pt-4">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 justify-between items-center">
             <div className="flex items-center">

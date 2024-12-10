@@ -16,8 +16,20 @@ export function HowItWorks() {
       </div>
 
       <div className="relative">
-        {/* Connection Line */}
-        <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-primary/20 via-purple-500/20 to-pink-500/20 transform -translate-y-1/2" />
+        {/* Connection Arrows */}
+        <div className="hidden md:block absolute top-1/2 left-0 w-full transform -translate-y-1/2 z-10">
+          <div className="flex justify-around w-full px-8">
+            <div className="translate-x-12">
+              <ArrowRight className="w-8 h-8 text-primary/60" />
+            </div>
+            <div>
+              <ArrowRight className="w-8 h-8 text-primary/60" />
+            </div>
+            <div className="-translate-x-12">
+              <ArrowRight className="w-8 h-8 text-primary/60" />
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
           {/* Step 1 */}
