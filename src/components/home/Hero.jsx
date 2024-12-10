@@ -83,7 +83,7 @@ export function Hero() {
   }));
 
   return (
-    <div className="relative py-24">
+    <div className="relative py-28">
       <div className="relative flex flex-col items-center max-w-5xl mx-auto px-4">
         {/* Main Content */}
         <div className="text-center space-y-8 mb-14">

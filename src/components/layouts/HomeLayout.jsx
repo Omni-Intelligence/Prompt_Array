@@ -4,12 +4,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
 
 const BackgroundDecorator = () => (
-  <div className="fixed inset-0 pointer-events-none overflow-hidden">
-    {/* Code matrix rain effect */}
-    <div className="absolute inset-0 opacity-[0.015]" style={{
-      backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='20' fill='%239333EA'%3E%5B%5D%3C/text%3E%3C/svg%3E")`,
-      backgroundSize: '40px 40px'
-    }} />
+  <div className="fixed inset-0 pointer-events-none">
+    <div className="absolute inset-0 opacity-[0.02] bg-repeat"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239333EA' fill-opacity='0.4'%3E%3Cpath d='M20 0v40M0 20h40'/%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundSize: '40px 40px'
+      }}
+    />
   </div>
 );
 
