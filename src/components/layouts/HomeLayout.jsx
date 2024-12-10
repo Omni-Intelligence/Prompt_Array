@@ -2,17 +2,7 @@ import { Link } from "react-router-dom";
 import UserNav from "@/components/UserNav";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
-
-const BackgroundDecorator = () => (
-  <div className="fixed inset-0 pointer-events-none">
-    <div className="absolute inset-0 opacity-[0.02] bg-repeat"
-      style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239333EA' fill-opacity='0.4'%3E%3Cpath d='M20 0v40M0 20h40'/%3E%3C/g%3E%3C/svg%3E")`,
-        backgroundSize: '40px 40px'
-      }}
-    />
-  </div>
-);
+import { BackgroundElements } from "./BackgroundElements";
 
 export function HomeLayout({ children }) {
   const { user } = useAuth();
@@ -26,11 +16,15 @@ export function HomeLayout({ children }) {
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      <BackgroundDecorator />
+    <div className="relative min-h-screen bg-white dark:bg-gray-950">
       
+      {/* Fixed background that stays in view while scrolling */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <BackgroundElements />
+      </div>
+
       {/* Navigation */}
-      <header className="bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm pt-4">
+      <header className="bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm relative z-10">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 justify-between items-center">
             <div className="flex items-center">
@@ -73,7 +67,7 @@ export function HomeLayout({ children }) {
       </header>
 
       {/* Main Content */}
-      <main>
+      <main className="relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {children}
         </div>
