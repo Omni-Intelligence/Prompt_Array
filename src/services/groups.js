@@ -45,17 +45,18 @@ export const getGroupPrompts = async (groupId) => {
     console.log('Fetching prompts for group:', groupId);
 
     // First verify the group exists and user has access
-    const { data: group, error: groupError } = await supabase
+    const { data: groups, error: groupError } = await supabase
       .from('groups')
       .select('id')
       .eq('id', groupId)
-      .eq('user_id', user.id)
-      .single();
+      .eq('user_id', user.id);
 
-    if (groupError || !group) {
+    if (groupError || !groups || groups.length === 0) {
       console.error('Group not found or access denied:', groupError);
       throw new Error('Group not found or access denied');
     }
+
+    const group = groups[0];
 
     // Get prompts for this group
     const { data: prompts, error: promptsError } = await supabase
