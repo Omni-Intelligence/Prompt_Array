@@ -20,23 +20,23 @@ export function UseCases() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="group relative p-8 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+          className="group relative p-8 rounded-xl bg-[#9333EA]/5 border border-[#9333EA]/10 hover:bg-[#9333EA]/10 hover:border-[#9333EA]/20 transition-all duration-300"
         >
-          <div className="mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-            <PencilRuler className="w-6 h-6 text-primary" />
+          <div className="mb-4 inline-flex p-3 bg-[#9333EA]/10 rounded-xl">
+            <PencilRuler className="w-6 h-6 text-[#9333EA]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Content Creation</h3>
-          <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Content Creation</h3>
+          <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Store blog post outlines and content templates
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Maintain consistent brand voice across platforms
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Organize social media post templates
             </li>
           </ul>
@@ -47,23 +47,23 @@ export function UseCases() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="group relative p-8 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+          className="group relative p-8 rounded-xl bg-[#9333EA]/5 border border-[#9333EA]/10 hover:bg-[#9333EA]/10 hover:border-[#9333EA]/20 transition-all duration-300"
         >
-          <div className="mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-            <Megaphone className="w-6 h-6 text-primary" />
+          <div className="mb-4 inline-flex p-3 bg-[#9333EA]/10 rounded-xl">
+            <Megaphone className="w-6 h-6 text-[#9333EA]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Marketing</h3>
-          <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Marketing</h3>
+          <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Create compelling ad copy templates
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Store campaign message frameworks
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Manage email marketing templates
             </li>
           </ul>
@@ -74,23 +74,23 @@ export function UseCases() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="group relative p-8 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+          className="group relative p-8 rounded-xl bg-[#9333EA]/5 border border-[#9333EA]/10 hover:bg-[#9333EA]/10 hover:border-[#9333EA]/20 transition-all duration-300"
         >
-          <div className="mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-            <BarChart3 className="w-6 h-6 text-primary" />
+          <div className="mb-4 inline-flex p-3 bg-[#9333EA]/10 rounded-xl">
+            <BarChart3 className="w-6 h-6 text-[#9333EA]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Data Analysis</h3>
-          <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Data Analysis</h3>
+          <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Save data interpretation prompts
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Organize report generation templates
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Store data visualization prompts
             </li>
           </ul>
@@ -101,23 +101,23 @@ export function UseCases() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="group relative p-8 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+          className="group relative p-8 rounded-xl bg-[#9333EA]/5 border border-[#9333EA]/10 hover:bg-[#9333EA]/10 hover:border-[#9333EA]/20 transition-all duration-300"
         >
-          <div className="mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-            <HeartHandshake className="w-6 h-6 text-primary" />
+          <div className="mb-4 inline-flex p-3 bg-[#9333EA]/10 rounded-xl">
+            <HeartHandshake className="w-6 h-6 text-[#9333EA]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Customer Support</h3>
-          <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Customer Support</h3>
+          <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Manage response templates for common issues
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Create consistent support messaging
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Organize troubleshooting guides
             </li>
           </ul>
@@ -128,23 +128,23 @@ export function UseCases() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="group relative p-8 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+          className="group relative p-8 rounded-xl bg-[#9333EA]/5 border border-[#9333EA]/10 hover:bg-[#9333EA]/10 hover:border-[#9333EA]/20 transition-all duration-300"
         >
-          <div className="mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-            <GraduationCap className="w-6 h-6 text-primary" />
+          <div className="mb-4 inline-flex p-3 bg-[#9333EA]/10 rounded-xl">
+            <GraduationCap className="w-6 h-6 text-[#9333EA]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Research & Academic</h3>
-          <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Research & Academic</h3>
+          <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Store literature review prompts
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Manage research methodology templates
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Organize citation and reference guides
             </li>
           </ul>
@@ -155,23 +155,23 @@ export function UseCases() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="group relative p-8 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+          className="group relative p-8 rounded-xl bg-[#9333EA]/5 border border-[#9333EA]/10 hover:bg-[#9333EA]/10 hover:border-[#9333EA]/20 transition-all duration-300"
         >
-          <div className="mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-            <Code2 className="w-6 h-6 text-primary" />
+          <div className="mb-4 inline-flex p-3 bg-[#9333EA]/10 rounded-xl">
+            <Code2 className="w-6 h-6 text-[#9333EA]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Software Development</h3>
-          <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Software Development</h3>
+          <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Save code documentation templates
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Store code review prompts
             </li>
             <li className="flex items-start">
-              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-primary" />
+              <CircleDot className="w-4 h-4 mr-2 mt-0.5 text-[#9333EA]" />
               Manage debugging assistance prompts
             </li>
           </ul>
