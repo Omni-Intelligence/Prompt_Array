@@ -1,6 +1,5 @@
 // State
 let currentTab = 'recent';
-let sidebarCollapsed = false;
 
 // Mock Data
 const quickAccessGroups = [
@@ -78,34 +77,6 @@ function setupEventListeners() {
     const searchTerm = e.target.value.toLowerCase();
     filterPrompts(searchTerm);
   });
-
-  // Sidebar collapse
-  const collapseBtn = document.getElementById('collapse-sidebar');
-  collapseBtn.addEventListener('click', toggleSidebar);
-}
-
-function toggleSidebar() {
-  const sidebar = document.querySelector('nav');
-  const collapseBtn = document.getElementById('collapse-sidebar');
-  sidebarCollapsed = !sidebarCollapsed;
-
-  if (sidebarCollapsed) {
-    sidebar.classList.remove('w-16');
-    sidebar.classList.add('w-0');
-    collapseBtn.innerHTML = `
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-      </svg>
-    `;
-  } else {
-    sidebar.classList.remove('w-0');
-    sidebar.classList.add('w-16');
-    collapseBtn.innerHTML = `
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-      </svg>
-    `;
-  }
 }
 
 function switchTab(tabName) {

@@ -83,22 +83,10 @@ const Index = () => {
               </Button>
             </div>
             <nav className="space-y-2">
-              {navItems.filter(item => !item.to.includes('feedback')).map((item) => {
+              {navItems.filter(item => !item.external && !item.to.includes('feedback')).map((item) => {
                 const isActive = location.pathname === `/app/${item.to}`;
-                let Component;
-                let componentProps = {};
-                
-                if (item.external) {
-                  Component = 'a';
-                  componentProps = {
-                    href: item.to,
-                    target: '_blank',
-                    rel: 'noopener noreferrer'
-                  };
-                } else {
-                  Component = item.disabled ? 'div' : Link;
-                  componentProps = item.disabled ? {} : { to: `/app/${item.to}` };
-                }
+                let Component = item.disabled ? 'div' : Link;
+                let componentProps = item.disabled ? {} : { to: `/app/${item.to}` };
 
                 return (
                   <Component 
@@ -127,6 +115,38 @@ const Index = () => {
                 );
               })}
             </nav>
+          </div>
+          
+          {/* Tutorial Link at Bottom */}
+          <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
+            {navItems.filter(item => item.external).map((item) => (
+              <a
+                key={item.to}
+                href={item.to}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button 
+                  variant="outline" 
+                  className={`w-full group relative overflow-hidden transition-all duration-300
+                    border-2 border-primary/50 hover:border-primary
+                    bg-primary/5 hover:bg-primary/10
+                    ${isCollapsed ? 'px-0 justify-center' : 'justify-start'}`}
+                >
+                  <span className={`relative z-10 flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
+                    <span className={`text-primary ${isCollapsed ? 'mr-0' : 'mr-3'}`}>
+                      {item.icon}
+                    </span>
+                    {!isCollapsed && (
+                      <span className="font-medium text-primary">
+                        {item.title}
+                      </span>
+                    )}
+                  </span>
+                </Button>
+              </a>
+            ))}
           </div>
           <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
             {/* Upgrade Button for Free Users */}

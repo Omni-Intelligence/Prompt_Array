@@ -1,23 +1,31 @@
 {
   "manifest_version": 3,
-  "name": "Prompt Central",
+  "name": "Prompt[Array]",
   "version": "1.0",
-  "description": "Access your Prompt Central library directly from Chrome",
+  "description": "A Chrome extension for managing and organizing prompts",
+  "action": {
+    "default_title": "Prompt[Array]",
+    "default_popup": "popup.html"
+  },
   "permissions": [
     "storage",
-    "identity"
+    "identity",
+    "contextMenus",
+    "activeTab",
+    "scripting"
   ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
+  "host_permissions": [
+    "https://chat.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
   },
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  }
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ]
 }

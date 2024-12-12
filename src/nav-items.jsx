@@ -9,7 +9,8 @@ import {
   GitBranchIcon,
   Link2Icon,
   WandIcon,
-  MessageSquareIcon
+  MessageSquareIcon,
+  VideoIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Library from "./pages/Library";
@@ -82,5 +83,12 @@ export const navItems = [
     icon: <WandIcon className="h-4 w-4" />,
     component: Techniques,
     color: "from-purple-500 to-pink-500"
+  },
+  {
+    title: "Tutorial",
+    to: "https://www.loom.com/share/952fd364c4c945ce8b6218b1cefd9915",
+    icon: <VideoIcon className="h-4 w-4" />,
+    external: true,
+    color: "from-red-500 to-pink-500"
   }
 ];
