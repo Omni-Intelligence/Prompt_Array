@@ -1,68 +1,92 @@
+import { createClient } from '@supabase/supabase-js'
+import { config } from './config.js'
+
+// Initialize Supabase client
+const supabase = createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY)
+
 // State
-let currentTab = 'recent';
+let currentTab = 'recent'
+let currentUser = null
+let userGroups = []
+let userPrompts = []
 
-// Mock Data
-const quickAccessGroups = [
-  { id: 1, name: 'Web Dev', promptCount: '12 prompts', color: 'bg-purple-400' },
-  { id: 2, name: 'Podcasts', promptCount: '8 prompts', color: 'bg-blue-400' },
-  { id: 3, name: 'Social Media', promptCount: '15 prompts', color: 'bg-green-400' },
-  { id: 4, name: 'Business Strategy', promptCount: '10 prompts', color: 'bg-orange-400' },
-  { id: 5, name: 'Email Marketing', promptCount: '6 prompts', color: 'bg-pink-400' }
-];
+// Authentication
+async function checkAuth() {
+  // Check auth status through background script
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: 'CHECK_AUTH' }, async (response) => {
+      if (response.isAuthenticated) {
+        // Get the user data from Supabase
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error) {
+          console.error('Error getting user:', error.message)
+          resolve(false)
+          return
+        }
+        currentUser = user
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+  })
+}
 
-const prompts = [
-  {
-    id: 1,
-    title: 'Financial Analysis Prompt',
-    lastUpdated: '12/12/2024',
-    isFavorite: false,
-    icon: '📊'
-  },
-  {
-    id: 2,
-    title: 'Email template',
-    lastUpdated: '12/12/2024',
-    isFavorite: true,
-    icon: '📧'
-  },
-  {
-    id: 3,
-    title: 'Social Post',
-    lastUpdated: '12/12/2024',
-    isFavorite: false,
-    icon: '📱'
-  },
-  {
-    id: 4,
-    title: 'Main - Email Broadcasts',
-    lastUpdated: '12/11/2024',
-    isFavorite: false,
-    icon: '📢'
-  },
-  {
-    id: 5,
-    title: 'EDNA details',
-    lastUpdated: '12/6/2024',
-    isFavorite: false,
-    icon: '📝'
-  },
-  {
-    id: 6,
-    title: 'Project Proposal',
-    lastUpdated: '12/6/2024',
-    isFavorite: false,
-    icon: '📋'
+// UI State Management
+function showLoadingState() {
+  document.getElementById('loading-state').style.display = 'flex'
+  document.getElementById('auth-state').style.display = 'none'
+  document.getElementById('main-content').style.display = 'none'
+}
+
+function showAuthState() {
+  document.getElementById('loading-state').style.display = 'none'
+  document.getElementById('auth-state').style.display = 'flex'
+  document.getElementById('main-content').style.display = 'none'
+}
+
+function showMainContent() {
+  document.getElementById('loading-state').style.display = 'none'
+  document.getElementById('auth-state').style.display = 'none'
+  document.getElementById('main-content').style.display = 'flex'
+}
+
+// Data Fetching
+async function fetchUserGroups() {
+  const { data, error } = await supabase
+    .from('groups')
+    .select('*')
+    .eq('user_id', currentUser.id)
+  
+  if (error) {
+    console.error('Error fetching groups:', error.message)
+    return
   }
-];
+  
+  userGroups = data
+  renderQuickAccessGroups()
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize UI
-  renderQuickAccessGroups();
-  renderPrompts();
-  setupEventListeners();
-});
+async function fetchUserPrompts() {
+  const { data, error } = await supabase
+    .from('prompts')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('updated_at', { ascending: false })
+  
+  if (error) {
+    console.error('Error fetching prompts:', error.message)
+    return
+  }
+  
+  userPrompts = data
+  renderPrompts()
+}
 
+// Event Listeners
 function setupEventListeners() {
+  console.log('Setting up event listeners');
+  
   // Tab switching
   document.querySelectorAll('[data-tab]').forEach(tab => {
     tab.addEventListener('click', (e) => {
@@ -79,6 +103,7 @@ function setupEventListeners() {
   });
 }
 
+// UI Rendering
 function switchTab(tabName) {
   currentTab = tabName;
   
@@ -98,64 +123,110 @@ function switchTab(tabName) {
 }
 
 function renderQuickAccessGroups() {
-  const container = document.querySelector('#quick-access-groups');
+  const container = document.getElementById('quick-access-groups')
+  if (!container) return
   
-  container.innerHTML = quickAccessGroups.map(group => `
-    <div class="p-4 ${group.color} rounded-lg cursor-pointer hover:opacity-90 transition-all transform hover:scale-[1.02]">
-      <h3 class="text-white font-medium text-lg">${group.name}</h3>
-      <p class="text-white/80 text-sm mt-1">${group.promptCount}</p>
+  container.innerHTML = userGroups.map(group => `
+    <div class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+      <div class="w-3 h-3 rounded-full ${group.color || 'bg-purple-400'}"></div>
+      <div class="flex-1">
+        <h3 class="text-sm font-medium text-gray-900">${group.name}</h3>
+        <p class="text-xs text-gray-500">${group.prompt_count || 0} prompts</p>
+      </div>
     </div>
-  `).join('');
+  `).join('')
 }
 
-function renderPrompts(filteredPrompts = prompts) {
-  const container = document.querySelector('#prompts-list');
+function renderPrompts(filteredPrompts = userPrompts) {
+  const container = document.getElementById('prompts-container')
+  if (!container) return
   
   container.innerHTML = filteredPrompts.map(prompt => `
-    <div class="flex items-center justify-between p-4 bg-purple-50 rounded-lg hover:bg-purple-100/70 transition-all transform hover:scale-[1.01] cursor-pointer">
-      <div class="flex items-center space-x-4">
-        <div class="text-2xl">${prompt.icon}</div>
-        <div>
-          <h3 class="font-medium text-gray-900">${prompt.title}</h3>
-          <p class="text-sm text-gray-500">Last updated ${prompt.lastUpdated}</p>
+    <div class="p-4 border-b border-gray-200 hover:bg-gray-50">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="text-2xl">${prompt.icon || '📝'}</span>
+          <div>
+            <h3 class="text-sm font-medium text-gray-900">${prompt.title}</h3>
+            <p class="text-xs text-gray-500">Last updated: ${new Date(prompt.updated_at).toLocaleDateString()}</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="toggleFavorite(${prompt.id})" class="text-gray-400 hover:text-yellow-400">
+            ${prompt.is_favorite ? '★' : '☆'}
+          </button>
+          <button onclick="deletePrompt(${prompt.id})" class="text-gray-400 hover:text-red-500">
+            🗑️
+          </button>
         </div>
       </div>
-      <div class="flex items-center space-x-3">
-        <button class="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors" onclick="toggleFavorite(${prompt.id})">
-          <svg class="w-5 h-5" fill="${prompt.isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-          </svg>
-        </button>
-        <button class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" onclick="deletePrompt(${prompt.id})">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-          </svg>
-        </button>
-      </div>
     </div>
-  `).join('');
+  `).join('')
 }
 
 function filterPrompts(searchTerm) {
-  const filtered = prompts.filter(prompt => 
-    prompt.title.toLowerCase().includes(searchTerm)
-  );
-  renderPrompts(filtered);
+  const filtered = userPrompts.filter(prompt => 
+    prompt.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  renderPrompts(filtered)
 }
 
 // Actions
-window.toggleFavorite = function(promptId) {
-  const prompt = prompts.find(p => p.id === promptId);
-  if (prompt) {
-    prompt.isFavorite = !prompt.isFavorite;
-    renderPrompts();
+async function toggleFavorite(promptId) {
+  const prompt = userPrompts.find(p => p.id === promptId)
+  if (!prompt) return
+  
+  const { error } = await supabase
+    .from('prompts')
+    .update({ is_favorite: !prompt.is_favorite })
+    .eq('id', promptId)
+  
+  if (error) {
+    console.error('Error toggling favorite:', error.message)
+    return
   }
-};
+  
+  await fetchUserPrompts()
+}
 
-window.deletePrompt = function(promptId) {
-  const index = prompts.findIndex(p => p.id === promptId);
-  if (index !== -1) {
-    prompts.splice(index, 1);
-    renderPrompts();
+async function deletePrompt(promptId) {
+  const { error } = await supabase
+    .from('prompts')
+    .delete()
+    .eq('id', promptId)
+  
+  if (error) {
+    console.error('Error deleting prompt:', error.message)
+    return
   }
-};
+  
+  await fetchUserPrompts()
+}
+
+// Initialize
+async function initialize() {
+  console.log('Initializing...');
+  showLoadingState();
+  
+  const isAuthenticated = await checkAuth();
+  if (!isAuthenticated) {
+    console.log('Not authenticated, showing auth state');
+    showAuthState();
+    return;
+  }
+  
+  console.log('Authenticated, loading data');
+  await Promise.all([
+    fetchUserGroups(),
+    fetchUserPrompts()
+  ]);
+  
+  showMainContent();
+}
+
+// Wait for DOM to be ready
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded');
+  setupEventListeners();
+  initialize();
+});

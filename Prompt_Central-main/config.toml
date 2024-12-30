@@ -1,0 +1,14 @@
+[auth]
+enabled = true
+
+[auth.email]
+enabled = true
+
+[functions]
+enabled = true
+
+[api]
+enabled = true
+
+[db]
+enabled = true

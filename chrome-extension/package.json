@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.3.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.5"
   }
 }

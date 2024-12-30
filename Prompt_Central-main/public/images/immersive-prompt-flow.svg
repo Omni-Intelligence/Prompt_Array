@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with deep gradient -->
+  <rect width="100%" height="100%" fill="url(#deepGradient)"/>
+  
+  <!-- Matrix-like falling prompt elements -->
+  <g class="falling-prompts" opacity="0.1">
+    <g font-family="monospace" font-size="14">
+      <!-- Column 1 -->
+      <text x="100" y="0" fill="#6366F1">
+        <animate attributeName="y" from="-50" to="1080" dur="10s" repeatCount="indefinite"/>
+        prompt.analyze()
+      </text>
+      <text x="100" y="-200" fill="#8B5CF6">
+        <animate attributeName="y" from="-250" to="1080" dur="15s" repeatCount="indefinite"/>
+        array.transform()
+      </text>
+      
+      <!-- Column 2 -->
+      <text x="300" y="-100" fill="#EC4899">
+        <animate attributeName="y" from="-100" to="1080" dur="12s" repeatCount="indefinite"/>
+        ai.process()
+      </text>
+      <text x="300" y="-400" fill="#6366F1">
+        <animate attributeName="y" from="-400" to="1080" dur="18s" repeatCount="indefinite"/>
+        data.optimize()
+      </text>
+
+      <!-- Repeat for more columns -->
+      <text x="500" y="-150" fill="#8B5CF6">
+        <animate attributeName="y" from="-150" to="1080" dur="14s" repeatCount="indefinite"/>
+        prompt.enhance()
+      </text>
+      <text x="700" y="-300" fill="#EC4899">
+        <animate attributeName="y" from="-300" to="1080" dur="16s" repeatCount="indefinite"/>
+        array.filter()
+      </text>
+    </g>
+  </g>
+
+  <!-- Floating Array Structures -->
+  <g class="array-structures">
+    <!-- Array 1 -->
+    <g transform="translate(200, 200)" opacity="0.15">
+      <rect width="200" height="60" rx="8" stroke="#6366F1" stroke-width="2" fill="none">
+        <animate attributeName="opacity" values="0.1;0.3;0.1" dur="4s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,20; 0,0" dur="6s" repeatCount="indefinite"/>
+      </rect>
+      <text x="20" y="35" font-family="monospace" font-size="12" fill="#6366F1">promptArray[0]</text>
+    </g>
+
+    <!-- Array 2 -->
+    <g transform="translate(500, 400)" opacity="0.15">
+      <rect width="200" height="60" rx="8" stroke="#8B5CF6" stroke-width="2" fill="none">
+        <animate attributeName="opacity" values="0.1;0.3;0.1" dur="5s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-20; 0,0" dur="7s" repeatCount="indefinite"/>
+      </rect>
+      <text x="20" y="35" font-family="monospace" font-size="12" fill="#8B5CF6">promptArray[1]</text>
+    </g>
+
+    <!-- Array 3 -->
+    <g transform="translate(800, 600)" opacity="0.15">
+      <rect width="200" height="60" rx="8" stroke="#EC4899" stroke-width="2" fill="none">
+        <animate attributeName="opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,20; 0,0" dur="8s" repeatCount="indefinite"/>
+      </rect>
+      <text x="20" y="35" font-family="monospace" font-size="12" fill="#EC4899">promptArray[2]</text>
+    </g>
+  </g>
+
+  <!-- Flowing Connection Lines -->
+  <g class="connection-lines" opacity="0.1">
+    <path d="M0,200 C300,250 600,150 900,200" stroke="url(#flowGradient)" stroke-width="2" stroke-dasharray="4,4">
+      <animate attributeName="d" 
+        values="M0,200 C300,250 600,150 900,200; M0,220 C300,270 600,170 900,220; M0,200 C300,250 600,150 900,200" 
+        dur="10s" repeatCount="indefinite"/>
+    </path>
+    <path d="M0,400 C300,450 600,350 900,400" stroke="url(#flowGradient)" stroke-width="2" stroke-dasharray="4,4">
+      <animate attributeName="d" 
+        values="M0,400 C300,450 600,350 900,400; M0,420 C300,470 600,370 900,420; M0,400 C300,450 600,350 900,400" 
+        dur="12s" repeatCount="indefinite"/>
+    </path>
+    <path d="M0,600 C300,650 600,550 900,600" stroke="url(#flowGradient)" stroke-width="2" stroke-dasharray="4,4">
+      <animate attributeName="d" 
+        values="M0,600 C300,650 600,550 900,600; M0,620 C300,670 600,570 900,620; M0,600 C300,650 600,550 900,600" 
+        dur="14s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Floating Particles -->
+  <g class="particles">
+    <circle cx="200" cy="300" r="2" fill="#6366F1" opacity="0.2">
+      <animate attributeName="cy" values="300;320;300" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.1;0.3;0.1" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="500" r="2" fill="#8B5CF6" opacity="0.2">
+      <animate attributeName="cy" values="500;520;500" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.1;0.3;0.1" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="600" cy="700" r="2" fill="#EC4899" opacity="0.2">
+      <animate attributeName="cy" values="700;720;700" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Grid Pattern -->
+  <pattern id="grid" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse" opacity="0.05">
+    <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#6366F1" stroke-width="0.5"/>
+  </pattern>
+  <rect width="100%" height="100%" fill="url(#grid)" opacity="0.05"/>
+
+  <!-- Definitions -->
+  <defs>
+    <linearGradient id="deepGradient" x1="0" y1="0" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="50%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <linearGradient id="flowGradient" x1="0" y1="0" x2="100%" y2="0">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

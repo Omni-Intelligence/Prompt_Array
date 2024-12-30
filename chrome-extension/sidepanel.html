@@ -46,6 +46,7 @@
       background: #a1a1aa;
     }
   </style>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-white slide-in">
   <div class="flex h-full">
@@ -77,6 +78,9 @@
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl font-semibold text-purple-600">Dashboard</h1>
           <div class="flex space-x-3">
+            <button id="login-button" type="button" class="px-4 py-2 text-sm text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors cursor-pointer">
+              Sign In
+            </button>
             <button class="px-4 py-2 text-sm text-gray-700 bg-white rounded-md border border-gray-300 hover:bg-gray-50 transition-colors">
               + New Group
             </button>
@@ -129,6 +133,7 @@
     </main>
   </div>
 
-  <script src="sidepanel.js"></script>
+  <script src="auth.js"></script>
+  <script type="module" src="sidepanel.js"></script>
 </body>
 </html>

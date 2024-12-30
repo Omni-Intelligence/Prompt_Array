@@ -3,19 +3,16 @@
   "name": "Prompt[Array]",
   "version": "1.0",
   "description": "A Chrome extension for managing and organizing prompts",
-  "action": {
-    "default_title": "Prompt[Array]",
-    "default_popup": "popup.html"
-  },
   "permissions": [
     "storage",
-    "identity",
-    "contextMenus",
+    "sidePanel",
     "activeTab",
-    "scripting"
+    "scripting",
+    "cookies",
+    "tabs"
   ],
   "host_permissions": [
-    "https://chat.openai.com/*"
+    "https://www.promptarray.ai/*"
   ],
   "background": {
     "service_worker": "background.js",
@@ -23,9 +20,21 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://chat.openai.com/*"],
+      "matches": ["https://www.promptarray.ai/*"],
       "js": ["content.js"],
       "css": ["content.css"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["config.js"],
+      "matches": ["<all_urls>"]
     }
   ]
 }

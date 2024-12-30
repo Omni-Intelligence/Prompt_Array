@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Prompt[Array]",
+  "version": "1.0",
+  "description": "A Chrome extension for managing and organizing prompts",
+  "action": {
+    "default_title": "Prompt[Array]",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "identity",
+    "contextMenus",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ]
+}

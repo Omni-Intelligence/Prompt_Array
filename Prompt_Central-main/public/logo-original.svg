@@ -1,0 +1,33 @@
+<svg width="300" height="60" viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Interconnected flowing shapes -->
+  <g transform="scale(1.5)">
+    <!-- Main flowing shape -->
+    <path d="M10 20C15 15 25 18 30 20C35 22 40 25 45 20" 
+          stroke="#8B5CF6" 
+          stroke-width="2"
+          fill="none"/>
+    
+    <!-- Additional flowing elements -->
+    <circle cx="15" cy="18" r="3" fill="#6D28D9" opacity="0.8"/>
+    <circle cx="35" cy="22" r="2" fill="#8B5CF6" opacity="0.9"/>
+    <circle cx="42" cy="19" r="2.5" fill="#6D28D9" opacity="0.85"/>
+    
+    <!-- Connecting lines -->
+    <path d="M15 18C25 20 35 22 42 19" 
+          stroke="#7C3AED" 
+          stroke-width="1.5"
+          fill="none"
+          opacity="0.95"/>
+  </g>
+  
+  <!-- Text "Prompt Array" with dark purple color -->
+  <text x="75" y="38" fill="#6E59A5" font-family="system-ui" font-size="28" font-weight="700">Prompt Array</text>
+  
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="paint0_linear" x1="0" y1="0" x2="200" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#6D28D9"/>
+    </linearGradient>
+  </defs>
+</svg>

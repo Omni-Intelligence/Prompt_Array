@@ -1,91 +1,51 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from './config.js';
 
+console.log('Background script loaded');
+
 // Initialize Supabase client
 const supabase = createClient(
   config.SUPABASE_URL,
   config.SUPABASE_ANON_KEY
 );
 
-// Create context menu items
-chrome.runtime.onInstalled.addListener(() => {
-  // Create parent menu item
-  chrome.contextMenus.create({
-    id: 'promptArrayMenu',
-    title: 'Prompt[Array]',
-    contexts: ['selection']
-  });
-
-  // Create child menu items
-  chrome.contextMenus.create({
-    id: 'savePrompt',
-    parentId: 'promptArrayMenu',
-    title: 'Save as New Prompt',
-    contexts: ['selection']
-  });
-
-  chrome.contextMenus.create({
-    id: 'usePrompt',
-    parentId: 'promptArrayMenu',
-    title: 'Use in ChatGPT',
-    contexts: ['selection']
-  });
-});
-
-// Handle context menu clicks
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  const selectedText = info.selectionText;
-
-  switch (info.menuItemId) {
-    case 'savePrompt':
-      // Check authentication
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        chrome.tabs.create({ url: `${config.WEBSITE_URL}/signin` });
-        return;
-      }
-
-      // Save the prompt
-      const { data, error } = await supabase
-        .from('prompts')
-        .insert([
-          {
-            title: selectedText.substring(0, 50) + '...',
-            content: selectedText,
-            user_id: session.user.id,
-            is_public: false
-          }
-        ]);
-
-      if (error) {
-        console.error('Error saving prompt:', error);
-      }
-      break;
-
-    case 'usePrompt':
-      // Send message to content script to use the prompt in ChatGPT
-      chrome.tabs.sendMessage(tab.id, {
-        action: 'usePrompt',
-        prompt: selectedText
-      });
-      break;
+// Listen for auth changes from the website
+chrome.cookies.onChanged.addListener(({ cookie, removed }) => {
+  console.log('Cookie changed:', cookie);
+  if (cookie.domain === 'promptarray.ai' && cookie.name === 'sb-auth-token' && !removed) {
+    // Update the extension's auth state
+    chrome.storage.local.set({ 'authToken': cookie.value });
   }
 });
 
-// Handle extension icon click
-chrome.action.onClicked.addListener((tab) => {
-  // Toggle the side panel
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, { action: 'toggleSidePanel' });
-  });
-});
-
-// Set the side panel options
-chrome.sidePanel.setPanel({ panel: 'side_panel.html' });
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-
-// Listen for messages from popup or content scripts
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // Handle messages here
+// Handle messages from content script or side panel
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('Received message:', message);
+  
+  if (message.type === 'SIGNIN') {
+    console.log('Opening signin page');
+    chrome.tabs.create({ 
+      url: config.SIGNIN_URL 
+    });
+    return true;
+  }
+  
+  if (message.type === 'CHECK_AUTH') {
+    // Check if we have a valid auth token
+    chrome.cookies.get({
+      url: 'https://www.promptarray.ai',
+      name: 'sb-auth-token'
+    }, (cookie) => {
+      if (cookie) {
+        chrome.storage.local.set({ 'authToken': cookie.value });
+        sendResponse({ isAuthenticated: true });
+      } else {
+        chrome.storage.local.remove('authToken');
+        sendResponse({ isAuthenticated: false });
+      }
+    });
+    return true;
+  }
+  
   return true;
 });
