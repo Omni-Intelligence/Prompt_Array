@@ -138,6 +138,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 💬 [Discord Community](https://discord.gg/your-discord)
 - 🐦 [Twitter](https://twitter.com/your-twitter)
 
+## Deployment
+
+### Netlify Deployment Setup
+
+1. Fork or clone this repository
+2. Connect your repository to Netlify
+3. In your Netlify dashboard, go to Site Settings > Build & Deploy > Environment Variables
+4. Add the following environment variables:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_STRIPE_PUBLIC_KEY`
+   - `VITE_STRIPE_PRICE_ID`
+
+Note: Never commit sensitive API keys to the repository. Always use environment variables for sensitive data.
+
 ---
 
 <div align="center">
