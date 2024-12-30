@@ -1,216 +1,145 @@
-# Prompt Central
+# Prompt Array
 
-<img src="public/logo.svg" alt="Prompt Central Logo" width="200"/>
+<div align="center">
+  <img src="public/logo.svg" alt="Prompt Array Logo" width="200"/>
+  <h3>🚀 The Modern Platform for AI Prompt Engineering</h3>
+  <p>Create, manage, and share your AI prompts with version control and real-time collaboration.</p>
 
-A modern, collaborative platform for managing and sharing AI prompts. Built with React, Vite, and Supabase.
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+  [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/EDNAHQ/Prompt_Array/issues)
+  
+</div>
 
-## Features
+## 🌟 Why Prompt Array?
 
-### 🎯 Core Features
-- **Prompt Management**: Create, edit, and organize AI prompts with rich text support
-- **Version Control**: Track changes with built-in version history for each prompt
-- **Collaboration**: Share prompts with team members and the community
-- **Groups & Tags**: Organize prompts into groups and add tags for easy discovery
-- **Templates**: Access a curated library of prompt templates for various use cases
+Prompt Array is not just another prompt management tool - it's a complete platform for prompt engineering excellence:
 
-### 💫 Advanced Features
-- **Real-time Updates**: Changes sync instantly across all users
-- **Version History**: Track and restore previous versions of prompts
-- **Smart Search**: Find prompts quickly with full-text search
-- **Access Control**: Fine-grained permissions for teams and groups
-- **Dark Mode**: Beautiful dark theme support
+- 📝 **Version Control**: Track every change in your prompts with detailed history
+- 🤝 **Real-time Collaboration**: Work together with your team in real-time
+- 🔍 **Smart Organization**: Use tags, groups, and powerful search to find prompts instantly
+- 🎯 **Templates**: Start with proven templates or create your own
+- 🔒 **Security First**: Enterprise-grade security with fine-grained access control
+- 🌙 **Dark Mode**: Beautiful dark theme support for comfortable viewing
 
-## Learning Paths
-
-This project serves as both a functional application and an educational resource. Here's what you can learn:
-
-### 🌱 Beginner Path
-- Building a modern React application with Vite
-- Chrome Extension development fundamentals
-- Component-based architecture
-- Styling with Tailwind CSS
-
-### 🌿 Intermediate Path
-- Authentication with Supabase
-- State management with React Query
-- Real-time data synchronization
-- Testing React components
-
-### 🌳 Advanced Path
-- Payment integration with Stripe
-- Security best practices
-- Performance optimization
-- Deployment strategies
-
-## Educational Resources
-
-### Step-by-Step Tutorials
-1. [Building the Chrome Extension](docs/tutorials/chrome-extension.md)
-2. [Setting up Supabase Authentication](docs/tutorials/auth-setup.md)
-3. [Implementing Stripe Payments](docs/tutorials/payments.md)
-4. [State Management with React Query](docs/tutorials/state-management.md)
-
-### Architecture Deep Dives
-- [Frontend Architecture](docs/architecture/frontend.md)
-- [Database Schema Design](docs/architecture/database.md)
-- [Authentication Flow](docs/architecture/auth-flow.md)
-- [Payment System](docs/architecture/payments.md)
-
-## Tech Stack
-
-- **Frontend**:
-  - React 18
-  - Vite
-  - TailwindCSS
-  - Shadcn/ui
-  - React Query
-  - React Router
-
-- **Backend**:
-  - Supabase (PostgreSQL)
-  - Row Level Security
-  - Real-time subscriptions
-  - Edge Functions
-
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+
 - npm or yarn
-- Supabase CLI
+- Git
 
 ### Installation
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/EDNAHQ/Prompt_Central.git
-cd Prompt_Central
-```
+# Clone the repository
+git clone https://github.com/EDNAHQ/Prompt_Array.git
 
-2. Install dependencies:
-```bash
+# Navigate to project directory
+cd Prompt_Array
+
+# Install dependencies
 npm install
+
+# Set up environment variables
+cp .env.example .env
+
+# Start development server
+npm run dev
 ```
 
-3. Set up environment variables:
+## 🎓 Educational Resources
+
+### Step-by-Step Tutorials
+1. [Building the Chrome Extension](docs/tutorials/chrome-extension.md)
+2. [Setting up Supabase Authentication](docs/tutorials/auth-setup.md)
+3. [API Documentation](docs/backend/API.md)
+4. [Database Schema and RLS Policies](docs/backend/DATABASE.md)
+
+### Architecture Documentation
+- [System Architecture](docs/backend/ARCHITECTURE.md)
+- [Database Design](docs/backend/DATABASE.md)
+- [Row Level Security](docs/backend/RLS_POLICIES.md)
+- [Deployment Guide](docs/backend/DEPLOYMENT.md)
+
+> 📝 **Note**: Additional documentation for Stripe payments, state management, and frontend architecture is currently being developed. We welcome contributions in these areas!
+
+## 🛠️ Tech Stack
+
+### Frontend
+- ⚛️ React 18 with Vite
+- 🎨 TailwindCSS & Shadcn/ui
+- 🔄 React Query
+- 🛣️ React Router
+
+### Backend
+- 🔥 Supabase
+- 🔒 Row Level Security
+- ⚡ Real-time subscriptions
+- 🌐 Edge Functions
+
+## 🤝 Contributing
+
+We love your input! We want to make contributing to Prompt Array as easy and transparent as possible. Check out our [Contributing Guide](CONTRIBUTING.md) to get started.
+
+### Ways to Contribute
+- 🐛 Report bugs and issues
+- 💡 Propose new features
+- 📝 Improve documentation
+- 🔧 Submit pull requests
+
+## 🔑 Environment Setup
+
+1. Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
 
-4. Update `.env` with your Supabase credentials:
-```
+2. Update with your credentials:
+```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-5. Start the development server:
+## 📦 Chrome Extension
+
+Our Chrome Extension brings Prompt Array directly into your browser:
+
+1. Build the extension:
 ```bash
-npm run dev
-```
-
-### Database Setup
-
-1. Install Supabase CLI:
-```bash
-npm install -g supabase
-```
-
-2. Initialize Supabase:
-```bash
-supabase init
-```
-
-3. Apply migrations:
-```bash
-supabase db push
-```
-
-## Project Structure
-
-```
-prompt-central/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── hooks/         # Custom React hooks
-│   ├── lib/           # Utility functions and configurations
-│   ├── pages/         # Page components
-│   ├── services/      # API and service functions
-│   └── styles/        # Global styles and Tailwind config
-├── supabase/
-│   └── migrations/    # Database migrations
-├── public/           # Static assets
-└── tests/           # Test files
-```
-
-## Key Components
-
-### Prompt Management
-- `CreatePromptSheet`: Modal for creating/editing prompts
-- `PromptForm`: Form component for prompt details
-- `PromptVersionHistory`: Version tracking interface
-
-### Groups & Organization
-- `GroupsList`: Display and manage prompt groups
-- `GroupDetail`: Group details and member management
-- `PromptTagsField`: Tag management interface
-
-### Templates & Community
-- `TemplatesList`: Browse template prompts
-- `CommunityPrompts`: Discover shared prompts
-- `PromptDetailCard`: Display prompt details
-
-## Database Schema
-
-### Core Tables
-- `prompts`: Store prompt data and metadata
-- `prompt_versions`: Version history for prompts
-- `groups`: Organize prompts into collections
-- `teams`: Team management and permissions
-
-### Junction Tables
-- `group_members`: Group membership
-- `team_members`: Team membership
-- `favorites`: User prompt favorites
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## Development Guidelines
-
-### Code Style
-- Use TypeScript for type safety
-- Follow ESLint configuration
-- Use Prettier for formatting
-- Write meaningful commit messages
-
-### Testing
-- Write unit tests for utilities
-- Add integration tests for key flows
-- Test across different themes/modes
-
-## Deployment
-
-### Production Build
-```bash
+cd chrome-extension
+npm install
 npm run build
 ```
 
-### Supabase Deployment
-```bash
-supabase db push
-```
+2. Load in Chrome:
+- Open `chrome://extensions/`
+- Enable Developer mode
+- Click "Load unpacked"
+- Select the `chrome-extension/dist` directory
 
-## License
+## 🌟 Star History
 
-This project is proprietary and confidential. All rights reserved by EnterpriseDNA.
+[![Star History Chart](https://api.star-history.com/svg?repos=EDNAHQ/Prompt_Array&type=Date)](https://star-history.com/#EDNAHQ/Prompt_Array&Date)
 
-## Support
+## 📄 License
 
-For support, please contact:
-- Email: support@promptcentral.pro
-- GitHub Issues: [Create an issue](https://github.com/EDNAHQ/Prompt_Central/issues)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Thanks to all our [contributors](https://github.com/EDNAHQ/Prompt_Array/graphs/contributors)
+- Built with [React](https://reactjs.org/), [Vite](https://vitejs.dev/), and [Supabase](https://supabase.io/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+
+## 📞 Support
+
+- 📧 Email: support@ednahq.com
+- 💬 [Discord Community](https://discord.gg/your-discord)
+- 🐦 [Twitter](https://twitter.com/your-twitter)
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by the EDNA HQ team</sub>
+</div>
