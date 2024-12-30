@@ -20,6 +20,42 @@ A modern, collaborative platform for managing and sharing AI prompts. Built with
 - **Access Control**: Fine-grained permissions for teams and groups
 - **Dark Mode**: Beautiful dark theme support
 
+## Learning Paths
+
+This project serves as both a functional application and an educational resource. Here's what you can learn:
+
+### 🌱 Beginner Path
+- Building a modern React application with Vite
+- Chrome Extension development fundamentals
+- Component-based architecture
+- Styling with Tailwind CSS
+
+### 🌿 Intermediate Path
+- Authentication with Supabase
+- State management with React Query
+- Real-time data synchronization
+- Testing React components
+
+### 🌳 Advanced Path
+- Payment integration with Stripe
+- Security best practices
+- Performance optimization
+- Deployment strategies
+
+## Educational Resources
+
+### Step-by-Step Tutorials
+1. [Building the Chrome Extension](docs/tutorials/chrome-extension.md)
+2. [Setting up Supabase Authentication](docs/tutorials/auth-setup.md)
+3. [Implementing Stripe Payments](docs/tutorials/payments.md)
+4. [State Management with React Query](docs/tutorials/state-management.md)
+
+### Architecture Deep Dives
+- [Frontend Architecture](docs/architecture/frontend.md)
+- [Database Schema Design](docs/architecture/database.md)
+- [Authentication Flow](docs/architecture/auth-flow.md)
+- [Payment System](docs/architecture/payments.md)
+
 ## Tech Stack
 
 - **Frontend**:

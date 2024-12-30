@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Secrets and keys
+*.pem
+*.key
+secrets.json
+credentials.json
+
+# Local development
+*.dev.js
+*.dev.jsx
+local.settings.json
