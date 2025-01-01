@@ -36,7 +36,9 @@ const Register = () => {
       const { data, requiresEmailConfirmation } = await signUp(email, password);
       
       if (requiresEmailConfirmation) {
-        navigate('/register-success');
+        // Store email for resend functionality
+        localStorage.setItem('registrationEmail', email);
+        navigate('/register-success', { state: { email } });
       } else {
         navigate('/app');
       }

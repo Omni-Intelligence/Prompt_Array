@@ -142,6 +142,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const resendVerificationEmail = async (email) => {
+    try {
+      console.log('Resending verification email to:', email);
+      const { data, error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        console.error('Error resending verification:', error);
+        throw error;
+      }
+
+      console.log('Verification email resent successfully:', data);
+      toast.success('Verification email has been resent. Please check your inbox.');
+      return data;
+    } catch (error) {
+      console.error('Failed to resend verification:', error);
+      toast.error(error.message);
+      throw error;
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -149,6 +175,7 @@ export const AuthProvider = ({ children }) => {
     signIn,
     signUp,
     signOut,
+    resendVerificationEmail,
   };
 
   return (

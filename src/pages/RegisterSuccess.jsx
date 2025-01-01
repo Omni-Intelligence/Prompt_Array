@@ -1,10 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, ArrowRight, Inbox } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 
 const RegisterSuccess = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { resendVerificationEmail } = useAuth();
+  const [isResending, setIsResending] = useState(false);
+
+  // Get email from location state or localStorage
+  const email = location.state?.email || localStorage.getItem('registrationEmail');
+
+  const handleResendVerification = async () => {
+    if (!email) {
+      // toast.error("Email address not found. Please try signing up again."); // toast is not defined
+      console.error("Email address not found. Please try signing up again.");
+      return;
+    }
+
+    try {
+      setIsResending(true);
+      await resendVerificationEmail(email);
+    } catch (error) {
+      console.error('Failed to resend verification:', error);
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col justify-center items-center p-4">
@@ -22,7 +47,7 @@ const RegisterSuccess = () => {
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Check your email</h1>
               <p className="text-gray-500 dark:text-gray-400">
-                We've sent you a verification link to your email address.
+                We've sent you a verification link to {email ? <strong>{email}</strong> : 'your email address'}.
                 Please click the link to activate your account.
               </p>
             </div>
@@ -36,7 +61,7 @@ const RegisterSuccess = () => {
                 <div>
                   <h3 className="font-medium">1. Check your inbox</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Open the email from PromptHub and click the verification link
+                    Open the email from Prompt Array and click the verification link
                   </p>
                 </div>
               </div>
@@ -45,7 +70,7 @@ const RegisterSuccess = () => {
                   <ArrowRight className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-medium">2. Start using PromptHub</h3>
+                  <h3 className="font-medium">2. Start using Prompt Array</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     After verification, you can sign in and start using all features
                   </p>
@@ -64,8 +89,12 @@ const RegisterSuccess = () => {
               </Button>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Didn't receive the email?{" "}
-                <button className="text-primary hover:underline">
-                  Click to resend
+                <button 
+                  className="text-primary hover:underline disabled:opacity-50"
+                  onClick={handleResendVerification}
+                  disabled={isResending}
+                >
+                  {isResending ? 'Resending...' : 'Click to resend'}
                 </button>
               </p>
             </div>
