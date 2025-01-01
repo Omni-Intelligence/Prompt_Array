@@ -76,14 +76,53 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (email, password) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      console.log('Starting sign-up process for:', email);
+      
+      // Check if user already exists
+      const { data: existingUser } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
-      toast.success('Sign up successful! Please check your email for verification.');
-      return data;
+      if (existingUser?.user) {
+        console.log('User already exists:', existingUser);
+        throw new Error('This email is already registered. Please sign in instead.');
+      }
+
+      // Proceed with sign up
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            email_confirm: false
+          }
+        }
+      });
+
+      console.log('Sign-up response:', { data, error });
+
+      if (error) {
+        console.error('Sign-up error:', error);
+        throw error;
+      }
+
+      if (!data.user) {
+        console.error('No user data returned');
+        throw new Error('Failed to create user account');
+      }
+
+      // Check if email confirmation is required
+      if (!data.user.email_confirmed_at) {
+        console.log('Email confirmation required');
+        toast.success('Sign up successful! Please check your email for verification.');
+        return { data, requiresEmailConfirmation: true };
+      } else {
+        console.log('Email already confirmed');
+        toast.success('Sign up successful! You can now sign in.');
+        return { data, requiresEmailConfirmation: false };
+      }
     } catch (error) {
       console.error('Sign up error:', error);
       toast.error('Sign up failed: ' + error.message);

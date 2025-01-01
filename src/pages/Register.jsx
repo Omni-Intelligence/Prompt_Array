@@ -5,14 +5,45 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("Registration successful!");
-    navigate('/register-success');
+    try {
+      const emailInput = e.target.querySelector('#email');
+      const passwordInput = e.target.querySelector('#password');
+      const confirmPasswordInput = e.target.querySelector('#confirmPassword');
+
+      const email = emailInput?.value;
+      const password = passwordInput?.value;
+      const confirmPassword = confirmPasswordInput?.value;
+
+      if (!email || !password) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+
+      console.log('Starting registration for:', email);
+      const { data, requiresEmailConfirmation } = await signUp(email, password);
+      
+      if (requiresEmailConfirmation) {
+        navigate('/register-success');
+      } else {
+        navigate('/app');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -74,6 +105,7 @@ const Register = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input 
                     id="email" 
+                    name="email" 
                     type="email" 
                     placeholder="m@example.com" 
                     required 
@@ -84,6 +116,7 @@ const Register = () => {
                   <Label htmlFor="password">Password</Label>
                   <Input 
                     id="password" 
+                    name="password" 
                     type="password" 
                     placeholder="Create a password" 
                     required 
@@ -94,6 +127,7 @@ const Register = () => {
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <Input 
                     id="confirmPassword" 
+                    name="confirmPassword" 
                     type="password" 
                     placeholder="Confirm your password" 
                     required 
