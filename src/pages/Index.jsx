@@ -108,7 +108,7 @@ const Index = () => {
                         <span className={`${isActive ? 'text-primary' : ''} ${isCollapsed ? 'mr-0' : 'mr-3'}`}>
                           {item.icon}
                         </span>
-                        {!isCollapsed && <span className="font-medium">{item.title}</span>}
+                        {!isCollapsed && <span className="font-medium text-gray-700 dark:text-gray-200">{item.title}</span>}
                       </span>
                     </Button>
                   </Component>
