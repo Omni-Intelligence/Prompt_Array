@@ -24,6 +24,7 @@ import Chains from "./pages/Chains";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Techniques from "./pages/Techniques";
+import WhyFree from "./pages/WhyFree";
 
 export const navItems = [
   {
@@ -96,6 +97,7 @@ export const navItems = [
     title: "Why Free?",
     to: "why-free",
     icon: <HelpCircleIcon className="h-4 w-4" />,
+    component: WhyFree,
     color: "from-violet-500 to-purple-500"
   }
 ];
