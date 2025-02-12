@@ -83,98 +83,85 @@ const Index = () => {
               </Button>
             </div>
             <nav className="space-y-2">
-              {navItems.filter(item => !item.external && !item.to.includes('feedback')).map((item) => {
-                const isActive = location.pathname === `/app/${item.to}`;
-                let Component = item.disabled ? 'div' : Link;
-                let componentProps = item.disabled ? {} : { to: `/app/${item.to}` };
+              {navItems
+                .filter(item => {
+                  // Include all items except external ones, feedback, and Why Free
+                  const isExternal = item.external && item.to.includes('loom.com');
+                  const isFeedback = item.to.includes('feedback');
+                  const isWhyFree = item.title === 'Why Free?';
+                  return !isExternal && !isFeedback && !isWhyFree;
+                })
+                .map((item) => {
+                  const isActive = location.pathname === `/app/${item.to}`;
+                  let Component = item.disabled ? 'div' : Link;
+                  let componentProps = item.disabled ? {} : { 
+                    to: item.to.startsWith('/') ? item.to : `/app/${item.to}`
+                  };
 
-                return (
-                  <Component 
-                    key={item.to}
-                    {...componentProps}
-                    className={`group w-full ${item.disabled ? 'cursor-not-allowed' : ''}`}
-                  >
-                    <Button 
-                      variant="ghost" 
-                      className={`w-full group relative overflow-hidden transition-all duration-300
-                        ${isActive 
-                          ? 'bg-primary/10 text-primary hover:bg-primary/15 dark:bg-primary/20 dark:hover:bg-primary/25' 
-                          : 'hover:bg-primary/5 dark:hover:bg-primary/10'}
-                        ${item.disabled ? 'opacity-80' : ''}
-                        ${isCollapsed ? 'px-0 justify-center' : 'justify-start'}`}
-                      disabled={item.disabled}
+                  return (
+                    <Component 
+                      key={item.to}
+                      {...componentProps}
+                      className={`group w-full ${item.disabled ? 'cursor-not-allowed' : ''}`}
                     >
-                      <span className={`relative z-10 flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-                        <span className={`${isActive ? 'text-primary' : ''} ${isCollapsed ? 'mr-0' : 'mr-3'}`}>
-                          {item.icon}
+                      <Button 
+                        variant="ghost" 
+                        className={`w-full group relative overflow-hidden transition-all duration-300
+                          ${isActive 
+                            ? 'bg-primary/10 text-primary hover:bg-primary/15 dark:bg-primary/20 dark:hover:bg-primary/25' 
+                            : 'hover:bg-primary/5 dark:hover:bg-primary/10'}
+                          ${item.disabled ? 'opacity-80' : ''}
+                          ${isCollapsed ? 'px-0 justify-center' : 'justify-start'}`}
+                        disabled={item.disabled}
+                      >
+                        <span className={`relative z-10 flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
+                          <span className={`${isActive ? 'text-primary' : ''} ${isCollapsed ? 'mr-0' : 'mr-3'}`}>
+                            {item.icon}
+                          </span>
+                          {!isCollapsed && <span className="font-medium text-gray-700 dark:text-gray-200">{item.title}</span>}
                         </span>
-                        {!isCollapsed && <span className="font-medium text-gray-700 dark:text-gray-200">{item.title}</span>}
-                      </span>
-                    </Button>
-                  </Component>
-                );
-              })}
+                      </Button>
+                    </Component>
+                  );
+                })}
             </nav>
           </div>
           
-          {/* Tutorial Link at Bottom */}
-          <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
-            {navItems.filter(item => item.external).map((item) => (
-              <a
-                key={item.to}
-                href={item.to}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <Button 
-                  variant="outline" 
-                  className={`w-full group relative overflow-hidden transition-all duration-300
-                    border-2 border-primary/50 hover:border-primary
-                    bg-primary/5 hover:bg-primary/10
-                    ${isCollapsed ? 'px-0 justify-center' : 'justify-start'}`}
-                >
-                  <span className={`relative z-10 flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-                    <span className={`text-primary ${isCollapsed ? 'mr-0' : 'mr-3'}`}>
-                      {item.icon}
-                    </span>
-                    {!isCollapsed && (
-                      <span className="font-medium text-primary">
-                        {item.title}
-                      </span>
-                    )}
-                  </span>
-                </Button>
-              </a>
-            ))}
+          {/* Bottom Links */}
+          <div className="mt-auto space-y-2 p-4">
+            <Button
+              variant="ghost"
+              className="w-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/20 dark:hover:bg-violet-900/30 text-violet-700 dark:text-violet-300"
+              onClick={() => window.open('https://www.loom.com/share/952fd364c4c945ce8b6218b1cefd9915', '_blank')}
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              Tutorial
+            </Button>
+
+            {navItems
+              .filter(item => item.title === 'Why Free?')
+              .map((item) => (
+                <Link key={item.to} to={`/app/${item.to}`} className="block">
+                  <Button 
+                    variant="ghost"
+                    className="w-full bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                  >
+                    {item.icon}
+                    <span className="ml-2">Why Free?</span>
+                  </Button>
+                </Link>
+              ))}
+
+            <Button
+              variant="ghost"
+              className="w-full bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 text-primary"
+              onClick={() => window.open('https://forms.gle/8JpZKaGvQrRhYY8y6', '_blank')}
+            >
+              <MessageSquareIcon className="h-4 w-4 mr-2" />
+              Send Feedback
+            </Button>
           </div>
           <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
-            {/* Upgrade Button for Free Users */}
-            {!isPremium && (
-              <Link to="/pricing" className="block mb-3">
-                <Button 
-                  className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white flex items-center gap-2 justify-center"
-                  size="sm"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  {!isCollapsed && "Upgrade to Premium"}
-                </Button>
-              </Link>
-            )}
-            <a
-              href="https://airtable.com/appa0Z1i2sjlaw5ZD/pagr7AN73UNC8NQjR/form"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block mb-3"
-            >
-              <Button 
-                className="w-full bg-primary hover:bg-primary/90 text-white flex items-center gap-2 justify-center"
-                size="sm"
-              >
-                <MessageSquareIcon className="h-4 w-4" />
-                {!isCollapsed && "Send Feedback"}
-              </Button>
-            </a>
             <UserNav isCollapsed={isCollapsed} />
           </div>
         </div>

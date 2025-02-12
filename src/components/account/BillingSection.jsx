@@ -4,13 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loader2, RefreshCw } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { toast } from 'sonner';
+import { FEATURES } from '@/config/features';
 
 export function BillingSection() {
+  if (!FEATURES.PAYMENTS_ENABLED) return null;
+
   const [isLoading, setIsLoading] = useState(false);
   const { subscription, refreshSubscription } = useSubscription();
 
-  const handleManageBilling = () => {
-    window.location.href = 'https://billing.stripe.com/p/login/3cs7vN4WK6QO1l64gg';
+  const handleManageSubscription = () => {
+    console.log('App is currently free');
   };
 
   const handleRefreshSubscription = async () => {
@@ -67,7 +70,7 @@ export function BillingSection() {
         )}
 
         <Button
-          onClick={handleManageBilling}
+          onClick={handleManageSubscription}
           disabled={isLoading}
           variant="outline"
           className="w-full"
@@ -78,7 +81,7 @@ export function BillingSection() {
               Loading...
             </>
           ) : (
-            'Manage Billing'
+            'Manage Subscription'
           )}
         </Button>
       </CardContent>

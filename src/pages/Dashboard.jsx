@@ -7,8 +7,6 @@ import PromptsList from '@/components/dashboard/PromptsList';
 import CreatePromptSheet from '@/components/CreatePromptSheet';
 import CreateGroupSheet from '@/components/CreateGroupSheet';
 import { useGroups } from '@/hooks/useGroups';
-import { usePromptLimits } from '@/hooks/usePromptLimits';
-import { toast } from "sonner";
 
 const DashboardShapes = () => (
   <>
@@ -24,22 +22,9 @@ const Dashboard = () => {
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const navigate = useNavigate();
   const { groups, isLoading: isLoadingGroups } = useGroups();
-  const { promptCount, promptLimit, isSubscribed, canCreatePrompt } = usePromptLimits();
+  const canCreatePrompt = true; // Always allow prompt creation
 
   const handleNewPromptClick = () => {
-    if (!canCreatePrompt) {
-      toast.error(
-        "You've reached the free prompt limit", 
-        { 
-          description: "Upgrade to Premium to create unlimited prompts",
-          action: {
-            label: "Upgrade Now",
-            onClick: () => navigate('/app/pricing')
-          }
-        }
-      );
-      return;
-    }
     setIsCreatePromptOpen(true);
   };
 
@@ -52,11 +37,6 @@ const Dashboard = () => {
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Dashboard
             </h1>
-            {!isSubscribed && (
-              <p className="text-sm md:text-base text-muted-foreground">
-                {promptCount}/{promptLimit} prompts used in free tier
-              </p>
-            )}
           </div>
           <div className="flex gap-2">
             <CreateGroupSheet
@@ -70,23 +50,13 @@ const Dashboard = () => {
                 </Button>
               }
             />
-            {!canCreatePrompt ? (
-              <Button
-                onClick={() => navigate('/app/pricing')}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Upgrade to Create More
-              </Button>
-            ) : (
-              <Button
-                onClick={handleNewPromptClick}
-                className="bg-primary hover:bg-primary/90 transition-colors"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                New Prompt
-              </Button>
-            )}
+            <Button
+              onClick={handleNewPromptClick}
+              className="bg-primary hover:bg-primary/90 transition-colors"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Prompt
+            </Button>
           </div>
         </div>
 

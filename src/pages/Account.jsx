@@ -11,14 +11,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { AvatarSelector } from "@/components/AvatarSelector";
-import { BillingSection } from '@/components/account/BillingSection';
 import { queryClient } from '@/lib/react-query';
-import { useSubscription } from '@/hooks/useSubscription';
 
 const Account = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const { data: { subscription } = {} } = useSubscription();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState({
     full_name: user?.user_metadata?.full_name || "",
@@ -300,40 +297,6 @@ const Account = () => {
                 {loading ? "Updating..." : "Update Password"}
               </Button>
             </form>
-          </CardContent>
-        </Card>
-
-        {/* Billing Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Billing</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                Account Settings
-              </h1>
-              <p className="text-muted-foreground">
-                Manage your account settings and subscription
-              </p>
-            </div>
-            <div className="flex flex-col gap-4">
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  console.log(' Manually refreshing subscription...');
-                  queryClient.invalidateQueries(['subscription']);
-                }}
-                className="bg-primary/10 text-primary hover:bg-primary/20"
-              >
-                Refresh Subscription Status
-              </Button>
-              <div className="text-sm text-muted-foreground">
-                <p>User ID: {user?.id}</p>
-                <p>Subscription Status: {subscription?.status || 'No subscription'}</p>
-              </div>
-            </div>
-            <BillingSection subscription={subscription} />
           </CardContent>
         </Card>
 

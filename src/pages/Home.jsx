@@ -59,6 +59,9 @@ const Home = () => {
             <Link to="/app/templates" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary">
               Templates
             </Link>
+            <Link to="/why-free" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary">
+              Why Free?
+            </Link>
             <Link to="/app/pricing" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary">
               Pricing
             </Link>

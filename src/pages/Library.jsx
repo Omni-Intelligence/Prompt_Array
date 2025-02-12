@@ -4,13 +4,12 @@ import { ArrowLeft, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PromptsList from "@/components/dashboard/PromptsList";
 import CreatePromptSheet from "@/components/CreatePromptSheet";
-import { usePromptLimits } from '@/hooks/usePromptLimits';
 
 const Library = () => {
   const navigate = useNavigate();
   const [isCreatePromptOpen, setIsCreatePromptOpen] = React.useState(false);
   const [selectedPrompt, setSelectedPrompt] = React.useState(null);
-  const { promptCount, promptLimit, isSubscribed } = usePromptLimits();
+  const canAccessLibrary = true; // Always allow library access
 
   const handlePromptClick = (prompt) => {
     console.log('Library - Navigating to prompt:', prompt);
@@ -37,24 +36,10 @@ const Library = () => {
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Library
             </h1>
-            {!isSubscribed && (
-              <p className="text-xs md:text-sm text-muted-foreground">
-                {promptCount}/{promptLimit} prompts used in free tier
-              </p>
-            )}
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          {!isSubscribed && promptCount >= promptLimit - 3 && (
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/pricing')}
-              className="bg-primary/10 text-primary hover:bg-primary/20"
-            >
-              Upgrade to Premium
-            </Button>
-          )}
           <Button 
             onClick={() => setIsCreatePromptOpen(true)} 
             className="bg-primary hover:bg-primary/90 transition-colors"

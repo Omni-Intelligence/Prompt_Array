@@ -20,6 +20,7 @@ import Techniques from "./pages/Techniques";
 import Chains from "./pages/Chains";
 import RegisterSuccess from "./pages/RegisterSuccess";
 import ResetPassword from "./pages/ResetPassword";
+import WhyFree from "./pages/WhyFree";
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -51,6 +52,7 @@ const AppRoutes = () => {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<Register />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/why-free" element={<WhyFree />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/register-success" element={<RegisterSuccess />} />
@@ -97,6 +99,7 @@ const AppRoutes = () => {
         
         {/* Detail pages */}
         <Route path="techniques" element={<Techniques />} />
+        <Route path="why-free" element={<WhyFree />} />
       </Route>
     </Routes>
   );

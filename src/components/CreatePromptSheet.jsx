@@ -58,16 +58,7 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
     
     // Check if user can create a prompt
     if (!canCreatePrompt && mode === 'create') {
-      toast.error(
-        "You've reached the free prompt limit", 
-        { 
-          description: "Upgrade to Premium to create unlimited prompts",
-          action: {
-            label: "Upgrade Now",
-            onClick: () => window.location.href = '/pricing'
-          }
-        }
-      );
+      toast.error("You've reached the free prompt limit");
       return;
     }
 

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -12,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
-const UserNav = ({ isCollapsed }) => {
+export function UserNav({ isCollapsed }) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
 
@@ -27,11 +26,6 @@ const UserNav = ({ isCollapsed }) => {
     );
   }
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/signin");
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,25 +36,13 @@ const UserNav = ({ isCollapsed }) => {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-xs leading-none text-muted-foreground">
-              Account Menu
-            </p>
-          </div>
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Account</DropdownMenuLabel>
+        <DropdownMenuItem onClick={() => navigate("/app/account")}>
+          Account Settings
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/app/dashboard")}>
-            Go to Dashboard
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/app/account")}>
-            Account Settings
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
+        <DropdownMenuItem onClick={signOut}>
           Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,8 +1,8 @@
 import React from 'react';
-import { StripeCheckout } from '@/components/StripeCheckout';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const PricingPage = () => {
   return (
@@ -110,12 +110,13 @@ const PricingPage = () => {
                 {/* CTA Section */}
                 <div className="mt-12">
                   <div className="flex flex-col items-center">
-                    <StripeCheckout />
-                    <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                      <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                      Secure payment via Stripe
+                    <div className="mt-8">
+                      <Button className="w-full" variant="default" disabled>
+                        Currently Free
+                      </Button>
+                    </div>
+                    <p className="mt-2 text-sm text-center text-gray-500">
+                      No payment required
                     </p>
                   </div>
                 </div>

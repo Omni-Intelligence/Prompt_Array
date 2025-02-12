@@ -3,6 +3,7 @@ import UserNav from "@/components/UserNav";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
 import { BackgroundElements } from "./BackgroundElements";
+import { FEATURES } from '@/config/features';
 
 export function HomeLayout({ children }) {
   const { user } = useAuth();
@@ -41,9 +42,11 @@ export function HomeLayout({ children }) {
                     User: {!!user ? 'yes' : 'no'}, 
                     Subscribed: {isSubscribed ? 'yes' : 'no'}
                   </div>
-                  <Link to="/pricing" className="text-base text-gray-600 dark:text-gray-300 hover:text-[#9333EA] transition-colors">
-                    Pricing
-                  </Link>
+                  {FEATURES.PAYMENTS_ENABLED && (
+                    <Link to="/pricing" className="text-base text-gray-600 dark:text-gray-300 hover:text-[#9333EA] transition-colors">
+                      Pricing
+                    </Link>
+                  )}
                 </>
               )}
               {!user ? (

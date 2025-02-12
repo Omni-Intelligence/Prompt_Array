@@ -10,7 +10,8 @@ import {
   Link2Icon,
   WandIcon,
   MessageSquareIcon,
-  VideoIcon
+  VideoIcon,
+  HelpCircleIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Library from "./pages/Library";
@@ -90,5 +91,11 @@ export const navItems = [
     icon: <VideoIcon className="h-4 w-4" />,
     external: true,
     color: "from-red-500 to-pink-500"
+  },
+  {
+    title: "Why Free?",
+    to: "why-free",
+    icon: <HelpCircleIcon className="h-4 w-4" />,
+    color: "from-violet-500 to-purple-500"
   }
 ];
