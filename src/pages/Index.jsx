@@ -131,11 +131,11 @@ const Index = () => {
           <div className="mt-auto space-y-2 p-4">
             <Button
               variant="ghost"
-              className="w-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/20 dark:hover:bg-violet-900/30 text-violet-700 dark:text-violet-300"
+              className={`w-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/20 dark:hover:bg-violet-900/30 text-violet-700 dark:text-violet-300 ${isCollapsed ? 'px-0 justify-center' : ''}`}
               onClick={() => window.open('https://www.loom.com/share/952fd364c4c945ce8b6218b1cefd9915', '_blank')}
             >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Tutorial
+              <Sparkles className="h-4 w-4" />
+              {!isCollapsed && <span className="ml-2">Tutorial</span>}
             </Button>
 
             {navItems
@@ -144,21 +144,21 @@ const Index = () => {
                 <Link key={item.to} to={`/app/${item.to}`} className="block">
                   <Button 
                     variant="ghost"
-                    className="w-full bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                    className={`w-full bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 text-purple-700 dark:text-purple-300 ${isCollapsed ? 'px-0 justify-center' : ''}`}
                   >
                     {item.icon}
-                    <span className="ml-2">Why Free?</span>
+                    {!isCollapsed && <span className="ml-2">Why Free?</span>}
                   </Button>
                 </Link>
               ))}
 
             <Button
               variant="ghost"
-              className="w-full bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 text-primary"
-              onClick={() => window.open('https://forms.gle/8JpZKaGvQrRhYY8y6', '_blank')}
+              className={`w-full bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 text-primary ${isCollapsed ? 'px-0 justify-center' : ''}`}
+              onClick={() => window.open('https://airtable.com/appa0Z1i2sjlaw5ZD/pagr7AN73UNC8NQjR/form', '_blank')}
             >
-              <MessageSquareIcon className="h-4 w-4 mr-2" />
-              Send Feedback
+              <MessageSquareIcon className="h-4 w-4" />
+              {!isCollapsed && <span className="ml-2">Send Feedback</span>}
             </Button>
           </div>
           <div className="p-4 border-t border-gray-200/50 dark:border-gray-800/50">
