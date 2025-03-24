@@ -39,11 +39,6 @@ const Groups = () => {
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Groups
             </h1>
-            {!isSubscribed && (
-              <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                {promptCount}/{promptLimit} prompts used in free tier
-              </p>
-            )}
           </div>
         </div>
         <CreateGroupSheet

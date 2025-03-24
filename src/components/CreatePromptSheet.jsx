@@ -56,12 +56,6 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
   const handleCreatePrompt = async (e) => {
     e.preventDefault();
     
-    // Check if user can create a prompt
-    if (!canCreatePrompt && mode === 'create') {
-      toast.error("You've reached the free prompt limit");
-      return;
-    }
-
     if (!newPrompt.title || !newPrompt.content) {
       toast.error("Please fill in all required fields");
       return;
@@ -123,11 +117,6 @@ const CreatePromptSheet = ({ trigger, isOpen, onOpenChange, initialData = null, 
                 ? 'Fork this prompt to your library' 
                 : <>
                     Add a new prompt to your library
-                    {!isSubscribed && (
-                      <div className="mt-2 text-xs text-muted-foreground">
-                        Free tier: {promptCount}/{promptLimit} prompts used
-                      </div>
-                    )}
                   </>
                 )
             }

@@ -154,11 +154,6 @@ const Favourites = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">
               Favourites
             </h1>
-            {!isSubscribed && (
-              <p className="text-sm text-muted-foreground mt-1">
-                {promptCount}/{promptLimit} prompts used in free tier
-              </p>
-            )}
             <p className="text-muted-foreground">Quick access to your favorite prompts</p>
           </div>
         </div>

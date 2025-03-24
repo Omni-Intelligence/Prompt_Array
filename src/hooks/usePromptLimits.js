@@ -2,11 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useSubscription } from './useSubscription';
 
-const FREE_PROMPT_LIMIT = 10;
-
 export const usePromptLimits = () => {
   const { subscription } = useSubscription();
-  const isPremium = subscription?.status === 'active';
+  const isPremium = true;
 
   const { data: promptCount = 0 } = useQuery({
     queryKey: ['prompt-count'],
@@ -38,10 +36,10 @@ export const usePromptLimits = () => {
   });
 
   return {
-    canCreatePrompt: isPremium || promptCount < FREE_PROMPT_LIMIT,
+    canCreatePrompt: true, // Always allow prompt creation
     promptCount,
-    promptLimit: isPremium ? Infinity : FREE_PROMPT_LIMIT,
-    isSubscribed: isPremium,
-    remainingPrompts: isPremium ? Infinity : Math.max(0, FREE_PROMPT_LIMIT - promptCount)
+    promptLimit: Infinity, // No limit on prompts
+    isSubscribed: true, // Always treat as subscribed
+    remainingPrompts: Infinity // Unlimited remaining prompts
   };
 };
